@@ -1,0 +1,1098 @@
+{
+ "note": "Paragraphs that failed the number check, sorted by why. Built by python -m bizagent.check_failures.",
+ "runs": [
+  {
+   "run": "test-oneshot",
+   "drafts": {
+    "first": {
+     "reviews": 36,
+     "held_back": 17,
+     "paragraphs_failed": 28,
+     "by_category": {
+      "number words only": 13,
+      "no row cited: number words only": 8,
+      "a number not in the cited row": 3,
+      "finding without a number": 4
+     },
+     "paragraphs": [
+      {
+       "case": "T02-r1",
+       "paragraph": 10,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "这两个"
+       ]
+      },
+      {
+       "case": "T05-r1",
+       "paragraph": 1,
+       "status": "no_evidence",
+       "category": "no row cited: number words only",
+       "missing_numbers": [],
+       "number_words": [
+        "两件"
+       ]
+      },
+      {
+       "case": "T05-r1",
+       "paragraph": 9,
+       "status": "no_evidence",
+       "category": "no row cited: number words only",
+       "missing_numbers": [],
+       "number_words": [
+        "这两个"
+       ]
+      },
+      {
+       "case": "T07-r1",
+       "paragraph": 6,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "这两个"
+       ]
+      },
+      {
+       "case": "T10-r1",
+       "paragraph": 8,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两者"
+       ]
+      },
+      {
+       "case": "T13-r1",
+       "paragraph": 6,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "33.54",
+        "83.27"
+       ],
+       "number_words": []
+      },
+      {
+       "case": "T13-r1",
+       "paragraph": 11,
+       "status": "no_evidence",
+       "category": "no row cited: number words only",
+       "missing_numbers": [],
+       "number_words": [
+        "这两个"
+       ]
+      },
+      {
+       "case": "T13-r1",
+       "paragraph": 12,
+       "status": "no_evidence",
+       "category": "no row cited: number words only",
+       "missing_numbers": [],
+       "number_words": [
+        "一周"
+       ]
+      },
+      {
+       "case": "T13-r1",
+       "paragraph": 13,
+       "status": "no_evidence",
+       "category": "no row cited: number words only",
+       "missing_numbers": [],
+       "number_words": [
+        "一周"
+       ]
+      },
+      {
+       "case": "T15-r1",
+       "paragraph": 1,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两个"
+       ]
+      },
+      {
+       "case": "T15-r1",
+       "paragraph": 6,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两家"
+       ]
+      },
+      {
+       "case": "T16-r1",
+       "paragraph": 10,
+       "status": "no_evidence",
+       "category": "no row cited: number words only",
+       "missing_numbers": [],
+       "number_words": [
+        "这两个"
+       ]
+      },
+      {
+       "case": "T17-r1",
+       "paragraph": 9,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "100"
+       ],
+       "number_words": []
+      },
+      {
+       "case": "T19-r1",
+       "paragraph": 7,
+       "status": "finding_without_number",
+       "category": "finding without a number",
+       "missing_numbers": [],
+       "number_words": []
+      },
+      {
+       "case": "T20-r1",
+       "paragraph": 4,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两者"
+       ]
+      },
+      {
+       "case": "T22-r1",
+       "paragraph": 12,
+       "status": "no_evidence",
+       "category": "no row cited: number words only",
+       "missing_numbers": [],
+       "number_words": [
+        "这两个"
+       ]
+      },
+      {
+       "case": "T27-r1",
+       "paragraph": 1,
+       "status": "no_evidence",
+       "category": "no row cited: number words only",
+       "missing_numbers": [],
+       "number_words": [
+        "两处"
+       ]
+      },
+      {
+       "case": "T27-r1",
+       "paragraph": 6,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "二者"
+       ]
+      },
+      {
+       "case": "T27-r1",
+       "paragraph": 9,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "2",
+        "100"
+       ],
+       "number_words": [
+        "这两个"
+       ]
+      },
+      {
+       "case": "T28-r1",
+       "paragraph": 1,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两者"
+       ]
+      },
+      {
+       "case": "T28-r1",
+       "paragraph": 5,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两者"
+       ]
+      },
+      {
+       "case": "T29-r1",
+       "paragraph": 10,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "二者"
+       ]
+      },
+      {
+       "case": "T29-r1",
+       "paragraph": 11,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "这两个"
+       ]
+      },
+      {
+       "case": "T31-r1",
+       "paragraph": 2,
+       "status": "finding_without_number",
+       "category": "finding without a number",
+       "missing_numbers": [],
+       "number_words": []
+      },
+      {
+       "case": "T33-r1",
+       "paragraph": 4,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两者"
+       ]
+      },
+      {
+       "case": "T34-r1",
+       "paragraph": 2,
+       "status": "finding_without_number",
+       "category": "finding without a number",
+       "missing_numbers": [],
+       "number_words": []
+      },
+      {
+       "case": "T34-r1",
+       "paragraph": 3,
+       "status": "finding_without_number",
+       "category": "finding without a number",
+       "missing_numbers": [],
+       "number_words": []
+      },
+      {
+       "case": "T34-r1",
+       "paragraph": 4,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两个"
+       ]
+      }
+     ]
+    },
+    "final": {
+     "reviews": 36,
+     "held_back": 1,
+     "paragraphs_failed": 2,
+     "by_category": {
+      "no row cited: number words only": 2
+     },
+     "paragraphs": [
+      {
+       "case": "T05-r1",
+       "paragraph": 1,
+       "status": "no_evidence",
+       "category": "no row cited: number words only",
+       "missing_numbers": [],
+       "number_words": [
+        "两个"
+       ]
+      },
+      {
+       "case": "T05-r1",
+       "paragraph": 9,
+       "status": "no_evidence",
+       "category": "no row cited: number words only",
+       "missing_numbers": [],
+       "number_words": [
+        "这两个"
+       ]
+      }
+     ]
+    }
+   }
+  },
+  {
+   "run": "test-agent",
+   "drafts": {
+    "first": {
+     "reviews": 36,
+     "held_back": 24,
+     "paragraphs_failed": 58,
+     "by_category": {
+      "a number not in the cited row": 19,
+      "number words only": 29,
+      "no row cited: other": 3,
+      "no row cited: number words only": 4,
+      "finding without a number": 2,
+      "quote not found": 1
+     },
+     "paragraphs": [
+      {
+       "case": "T02-r1",
+       "paragraph": 4,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "1",
+        "2500"
+       ],
+       "number_words": [
+        "前一天"
+       ]
+      },
+      {
+       "case": "T02-r1",
+       "paragraph": 6,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两者"
+       ]
+      },
+      {
+       "case": "T02-r1",
+       "paragraph": 8,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "1",
+        "42975.1",
+        "52063.6"
+       ],
+       "number_words": [
+        "一项"
+       ]
+      },
+      {
+       "case": "T03-r1",
+       "paragraph": 1,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "4"
+       ],
+       "number_words": [
+        "四项"
+       ]
+      },
+      {
+       "case": "T03-r1",
+       "paragraph": 3,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "39",
+        "86"
+       ],
+       "number_words": []
+      },
+      {
+       "case": "T03-r1",
+       "paragraph": 6,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "4"
+       ],
+       "number_words": [
+        "四个"
+       ]
+      },
+      {
+       "case": "T04-r1",
+       "paragraph": 1,
+       "status": "no_evidence",
+       "category": "no row cited: other",
+       "missing_numbers": [],
+       "number_words": []
+      },
+      {
+       "case": "T04-r1",
+       "paragraph": 6,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "4"
+       ],
+       "number_words": [
+        "四个"
+       ]
+      },
+      {
+       "case": "T04-r1",
+       "paragraph": 9,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "2",
+        "100.73"
+       ],
+       "number_words": [
+        "这两个"
+       ]
+      },
+      {
+       "case": "T05-r1",
+       "paragraph": 6,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两者"
+       ]
+      },
+      {
+       "case": "T05-r1",
+       "paragraph": 12,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "5"
+       ],
+       "number_words": []
+      },
+      {
+       "case": "T06-r1",
+       "paragraph": 1,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "7",
+        "9"
+       ],
+       "number_words": []
+      },
+      {
+       "case": "T06-r1",
+       "paragraph": 3,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "3"
+       ],
+       "number_words": [
+        "三成"
+       ]
+      },
+      {
+       "case": "T06-r1",
+       "paragraph": 4,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "9",
+        "3.69"
+       ],
+       "number_words": []
+      },
+      {
+       "case": "T06-r1",
+       "paragraph": 6,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "5.9",
+        "3.92",
+        "6.39",
+        "9.14"
+       ],
+       "number_words": []
+      },
+      {
+       "case": "T06-r1",
+       "paragraph": 12,
+       "status": "no_evidence",
+       "category": "no row cited: other",
+       "missing_numbers": [],
+       "number_words": []
+      },
+      {
+       "case": "T08-r1",
+       "paragraph": 1,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "0"
+       ],
+       "number_words": [
+        "归零"
+       ]
+      },
+      {
+       "case": "T08-r1",
+       "paragraph": 8,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "1",
+        "2"
+       ],
+       "number_words": [
+        "这两个",
+        "一周"
+       ]
+      },
+      {
+       "case": "T10-r1",
+       "paragraph": 1,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "0"
+       ],
+       "number_words": [
+        "归零"
+       ]
+      },
+      {
+       "case": "T10-r1",
+       "paragraph": 6,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "0"
+       ],
+       "number_words": [
+        "归零"
+       ]
+      },
+      {
+       "case": "T11-r1",
+       "paragraph": 1,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "3"
+       ],
+       "number_words": [
+        "三项"
+       ]
+      },
+      {
+       "case": "T12-r1",
+       "paragraph": 5,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两类"
+       ]
+      },
+      {
+       "case": "T12-r1",
+       "paragraph": 8,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两者"
+       ]
+      },
+      {
+       "case": "T12-r1",
+       "paragraph": 9,
+       "status": "no_evidence",
+       "category": "no row cited: number words only",
+       "missing_numbers": [],
+       "number_words": [
+        "一周"
+       ]
+      },
+      {
+       "case": "T14-r1",
+       "paragraph": 1,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两项"
+       ]
+      },
+      {
+       "case": "T14-r1",
+       "paragraph": 6,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "17160.5",
+        "25169.3"
+       ],
+       "number_words": []
+      },
+      {
+       "case": "T14-r1",
+       "paragraph": 10,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两者"
+       ]
+      },
+      {
+       "case": "T15-r1",
+       "paragraph": 1,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两项"
+       ]
+      },
+      {
+       "case": "T15-r1",
+       "paragraph": 6,
+       "status": "finding_without_number",
+       "category": "finding without a number",
+       "missing_numbers": [],
+       "number_words": []
+      },
+      {
+       "case": "T15-r1",
+       "paragraph": 10,
+       "status": "no_evidence",
+       "category": "no row cited: number words only",
+       "missing_numbers": [],
+       "number_words": [
+        "一次"
+       ]
+      },
+      {
+       "case": "T16-r1",
+       "paragraph": 10,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "8"
+       ],
+       "number_words": []
+      },
+      {
+       "case": "T18-r1",
+       "paragraph": 1,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "1"
+       ],
+       "number_words": [
+        "一项"
+       ]
+      },
+      {
+       "case": "T18-r1",
+       "paragraph": 6,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "2",
+        "4"
+       ],
+       "number_words": [
+        "这两个"
+       ]
+      },
+      {
+       "case": "T20-r1",
+       "paragraph": 2,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "1.22",
+        "5.53",
+        "6.75"
+       ],
+       "number_words": []
+      },
+      {
+       "case": "T20-r1",
+       "paragraph": 4,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "1993.2",
+        "5020.74"
+       ],
+       "number_words": []
+      },
+      {
+       "case": "T20-r1",
+       "paragraph": 5,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "185",
+        "262"
+       ],
+       "number_words": []
+      },
+      {
+       "case": "T22-r1",
+       "paragraph": 1,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两处",
+        "两者"
+       ]
+      },
+      {
+       "case": "T22-r1",
+       "paragraph": 9,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "这两个"
+       ]
+      },
+      {
+       "case": "T24-r1",
+       "paragraph": 1,
+       "status": "no_evidence",
+       "category": "no row cited: other",
+       "missing_numbers": [],
+       "number_words": []
+      },
+      {
+       "case": "T24-r1",
+       "paragraph": 3,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两者"
+       ]
+      },
+      {
+       "case": "T25-r1",
+       "paragraph": 4,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "50"
+       ],
+       "number_words": []
+      },
+      {
+       "case": "T25-r1",
+       "paragraph": 9,
+       "status": "no_evidence",
+       "category": "no row cited: number words only",
+       "missing_numbers": [],
+       "number_words": [
+        "一次"
+       ]
+      },
+      {
+       "case": "T26-r1",
+       "paragraph": 3,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "4"
+       ],
+       "number_words": [
+        "四项"
+       ]
+      },
+      {
+       "case": "T26-r1",
+       "paragraph": 5,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "4"
+       ],
+       "number_words": [
+        "四个"
+       ]
+      },
+      {
+       "case": "T26-r1",
+       "paragraph": 6,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "1/4"
+       ],
+       "number_words": [
+        "四分"
+       ]
+      },
+      {
+       "case": "T26-r1",
+       "paragraph": 8,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两者"
+       ]
+      },
+      {
+       "case": "T26-r1",
+       "paragraph": 9,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "这两个"
+       ]
+      },
+      {
+       "case": "T27-r1",
+       "paragraph": 1,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两条"
+       ]
+      },
+      {
+       "case": "T27-r1",
+       "paragraph": 5,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "1"
+       ],
+       "number_words": [
+        "上一日",
+        "一周"
+       ]
+      },
+      {
+       "case": "T27-r1",
+       "paragraph": 9,
+       "status": "finding_without_number",
+       "category": "finding without a number",
+       "missing_numbers": [],
+       "number_words": []
+      },
+      {
+       "case": "T28-r1",
+       "paragraph": 4,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "2",
+        "4.2",
+        "6.55"
+       ],
+       "number_words": [
+        "二者"
+       ]
+      },
+      {
+       "case": "T28-r1",
+       "paragraph": 8,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "这两项"
+       ]
+      },
+      {
+       "case": "T29-r1",
+       "paragraph": 6,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "590",
+        "866",
+        "31.87"
+       ],
+       "number_words": []
+      },
+      {
+       "case": "T30-r1",
+       "paragraph": 1,
+       "status": "no_evidence",
+       "category": "no row cited: number words only",
+       "missing_numbers": [],
+       "number_words": [
+        "两方"
+       ]
+      },
+      {
+       "case": "T31-r1",
+       "paragraph": 1,
+       "status": "quote_not_found",
+       "category": "quote not found",
+       "missing_numbers": [],
+       "number_words": [
+        "九个"
+       ]
+      },
+      {
+       "case": "T31-r1",
+       "paragraph": 6,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两个",
+        "这两项"
+       ]
+      },
+      {
+       "case": "T36-r1",
+       "paragraph": 1,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "3"
+       ],
+       "number_words": [
+        "三项"
+       ]
+      },
+      {
+       "case": "T36-r1",
+       "paragraph": 2,
+       "status": "numbers_not_in_quote",
+       "category": "a number not in the cited row",
+       "missing_numbers": [
+        "41"
+       ],
+       "number_words": []
+      }
+     ]
+    },
+    "final": {
+     "reviews": 36,
+     "held_back": 3,
+     "paragraphs_failed": 4,
+     "by_category": {
+      "number words only": 4
+     },
+     "paragraphs": [
+      {
+       "case": "T10-r1",
+       "paragraph": 6,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "0"
+       ],
+       "number_words": [
+        "归零"
+       ]
+      },
+      {
+       "case": "T24-r1",
+       "paragraph": 3,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "这两项"
+       ]
+      },
+      {
+       "case": "T27-r1",
+       "paragraph": 1,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "2"
+       ],
+       "number_words": [
+        "两处"
+       ]
+      },
+      {
+       "case": "T27-r1",
+       "paragraph": 5,
+       "status": "numbers_not_in_quote",
+       "category": "number words only",
+       "missing_numbers": [
+        "1"
+       ],
+       "number_words": [
+        "前一天"
+       ]
+      }
+     ]
+    }
+   }
+  }
+ ]
+}

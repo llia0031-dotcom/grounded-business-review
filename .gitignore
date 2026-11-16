@@ -1,0 +1,8 @@
+# local credentials
+.env
+# generated locally: databases, run outputs
+/data/
+/output/
+eval/results/*/*/
+__pycache__/
+*.pyc

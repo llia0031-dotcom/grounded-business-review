@@ -1,0 +1,41 @@
+{
+ "note": "Weekly monitor on worlds with no planted event; every alert listed here is a false alert.",
+ "seeds": [
+  101,
+  102,
+  103,
+  104,
+  105,
+  106
+ ],
+ "weeks": [
+  "2026-W34",
+  "2026-W35",
+  "2026-W36",
+  "2026-W37",
+  "2026-W38"
+ ],
+ "world_weeks": 30,
+ "false_alerts_total": 0,
+ "false_alerts_segment": 2,
+ "alerts": [
+  {
+   "seed": 105,
+   "week": "2026-W34",
+   "metric": "核销率",
+   "dim": "city",
+   "slice": "成都",
+   "robust_z": 19.77,
+   "change_vs_base": 15.52
+  },
+  {
+   "seed": 105,
+   "week": "2026-W35",
+   "metric": "退款率",
+   "dim": "category",
+   "slice": "运动健身",
+   "robust_z": -7.75,
+   "change_vs_base": -12.0
+  }
+ ]
+}

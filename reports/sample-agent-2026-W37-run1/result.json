@@ -1,0 +1,1110 @@
+{
+ "result": {
+  "week": "2026-W37",
+  "has_anomaly": true,
+  "causes": [
+   {
+    "segment": {
+     "channel": "直播"
+    },
+    "lever": "traffic",
+    "direction": "down"
+   },
+   {
+    "segment": {
+     "category": "美发美甲"
+    },
+    "lever": "refund",
+    "direction": "up"
+   }
+  ],
+  "blocks": [
+   {
+    "kind": "summary",
+    "text": "本周（2026-W37）有几项指标异动：访问、支付用户、支付订单、支付GMV、平台补贴、退款金额和退款率。主要原因有两类：直播渠道访问量大幅下滑，以及美发美甲品类的主动退款金额大幅上升。这些共同拉动了整体退款率和净收入的变化。",
+    "evidence": [
+     {
+      "source": "q01",
+      "quote": "分析周：2026-W37（2026-09-07 至 2026-09-13）。对比：基线，即本周之前最近 8 个非节假日周（2026-W29 至 2026-W36）。"
+     },
+     {
+      "source": "q01",
+      "quote": "| 访问次数 | 次 | 139997 | 152498 | 151552.5 | -8.20% | -7.62% | -6.17 | 是 |"
+     },
+     {
+      "source": "q01",
+      "quote": "| 退款金额 | 元 | 152228.8 | 117039.8 | 119317.5 | +30.07% | +27.58% | 8.46 | 是 |"
+     },
+     {
+      "source": "q01",
+      "quote": "| 退款率 | % | 23.34 | 16.65 | 16.96 | +6.69pp | +6.37pp | 9.73 | 是 |"
+     }
+    ]
+   },
+   {
+    "kind": "finding",
+    "text": "整体访问次数本周为139997次，上周为152498次，较上周下降8.20%，较基线下降7.62%，触发异动。",
+    "evidence": [
+     {
+      "source": "q01",
+      "quote": "| 访问次数 | 次 | 139997 | 152498 | 151552.5 | -8.20% | -7.62% | -6.17 | 是 |"
+     }
+    ]
+   },
+   {
+    "kind": "finding",
+    "text": "支付GMV本周为652288.6元，上周为703007.5元，较上周下降7.21%，较基线下降8.05%，触发异动；支付订单数本周9252单，上周9854单，较上周下降6.11%。",
+    "evidence": [
+     {
+      "source": "q01",
+      "quote": "| 支付GMV | 元 | 652288.6 | 703007.5 | 709366.7 | -7.21% | -8.05% | -3.65 | 是 |"
+     },
+     {
+      "source": "q01",
+      "quote": "| 支付订单数 | 单 | 9252 | 9854 | 9873 | -6.11% | -6.29% | -8.49 | 是 |"
+     }
+    ]
+   },
+   {
+    "kind": "finding",
+    "text": "退款金额本周为152228.8元，上周为117039.8元，较上周上升30.07%；退款率本周为23.34%，上周为16.65%，较上周上升6.69pp，它们都触发异动。",
+    "evidence": [
+     {
+      "source": "q01",
+      "quote": "| 退款金额 | 元 | 152228.8 | 117039.8 | 119317.5 | +30.07% | +27.58% | 8.46 | 是 |"
+     },
+     {
+      "source": "q01",
+      "quote": "| 退款率 | % | 23.34 | 16.65 | 16.96 | +6.69pp | +6.37pp | 9.73 | 是 |"
+     }
+    ]
+   },
+   {
+    "kind": "finding",
+    "text": "直播渠道访问次数本周为19346次，上周为32389次，较上周下降40.27%，较基线下降41.01%，是触发异动最明显的分组。直播渠道的访问支付转化率本周为5.78%，上周为6，只下降了0.22个百分点，转化本身变化不大。",
+    "evidence": [
+     {
+      "source": "q02",
+      "quote": "| 访问次数 | 次 | 渠道 | 直播 | 19346 | 32389 | 32797.5 | -40.27% | -41.01% | -22.83 | 是 |"
+     },
+     {
+      "source": "q07",
+      "quote": "| 访问支付转化率 | % | 6 | 5.78 | -0.22 | -3.62 |"
+     },
+     {
+      "source": "q07",
+      "quote": "| 访问次数 | 次 | 32389 | 19346 | -13043 | -40.27 |"
+     }
+    ]
+   },
+   {
+    "kind": "cause",
+    "text": "直播渠道访问量下滑是本周整体访问和支付下降的主要来源。按基线拆解，直播访问减少了13397.88次，贡献了整体访问降幅的120.12%；其中各城市都在降，比如深圳降了37.92%，昆明降了44.27%，说明是渠道层面的流量问题，而不是个别城市的问题。转化率基本稳定，因此原因在流量。",
+    "evidence": [
+     {
+      "source": "q04",
+      "quote": "| 直播 | 32743.88 | 19346 | -13397.88 | -40.92 | 120.12 | 21.66 | 13.82 |"
+     },
+     {
+      "source": "q06",
+      "quote": "| 深圳 | 3294.12 | 2045 | -1249.12 | -37.92 | 9.32 | 10.06 | 10.57 |"
+     },
+     {
+      "source": "q06",
+      "quote": "| 昆明 | 1638.38 | 913 | -725.38 | -44.27 | 5.41 | 5 | 4.72 |"
+     }
+    ]
+   },
+   {
+    "kind": "finding",
+    "text": "直播渠道支付GMV本周为93608.2元，上周为166666.8元，较上周下降43.84%；核销GMV为110496.4元，较上周下降20.41%，它们都受访问减少拖累。",
+    "evidence": [
+     {
+      "source": "q02",
+      "quote": "| 支付GMV | 元 | 渠道 | 直播 | 93608.2 | 166666.8 | 167382.4 | -43.84% | -44.08% | -21.21 | 是 |"
+     },
+     {
+      "source": "q07",
+      "quote": "| 核销GMV | 元 | 138840.4 | 110496.4 | -28344 | -20.41 |"
+     }
+    ]
+   },
+   {
+    "kind": "finding",
+    "text": "美发美甲品类本周退款金额为50834.7元，基线为16802.42元，较基线上升202.54%，贡献了整体退款增量的111.04%；美发美甲退款率本周为85.99%，基线为25.82%。",
+    "evidence": [
+     {
+      "source": "q03",
+      "quote": "| 美发美甲 | 16802.42 | 50834.7 | 34032.28 | 202.54 | 111.04 | 13.82 | 33.39 |"
+     },
+     {
+      "source": "q14",
+      "quote": "| 退款金额 | 元 | 16802.42 | 50834.7 | 34032.28 | 202.54 |"
+     },
+     {
+      "source": "q14",
+      "quote": "| 退款率 | % | 25.82 | 85.99 | 60.17 | 233.03 |"
+     }
+    ]
+   },
+   {
+    "kind": "cause",
+    "text": "美发美甲退款增加来自主动退。本周主动退款406单、43819.6元，而上一周只有76单、8185元；过期退基本没变，本周为66单、7015.1元。这些退款来自近几周支付的订单，并且从本周一起集中出现。这是退款本身上升，不是支付量变化导致的率效应，因为本周美发美甲的支付订单数相对基线只下降了5.65%。",
+    "evidence": [
+     {
+      "source": "q08",
+      "quote": "| 2026-W37 | 美发美甲 | 主动退 | 406 | 43819.6 |"
+     },
+     {
+      "source": "q08",
+      "quote": "| 2026-W36 | 美发美甲 | 主动退 | 76 | 8185 |"
+     },
+     {
+      "source": "q08",
+      "quote": "| 2026-W37 | 美发美甲 | 过期退 | 66 | 7015.1 |"
+     },
+     {
+      "source": "q11",
+      "quote": "| 2026-09-07 | 35 | 4198.2 |"
+     },
+     {
+      "source": "q14",
+      "quote": "| 支付订单数 | 单 | 612.62 | 578 | -34.62 | -5.65 |"
+     }
+    ]
+   },
+   {
+    "kind": "cause",
+    "text": "退款上升涉及的商家很多，不是个别商家的问题。单店和连锁的退款涨幅几乎相同，分别为203.52%和201.08%；其中连锁A、连锁B贡献最大。本周从W37支付的订单里产生的主动退，单店有28家商家，连锁有3家商家。",
+    "evidence": [
+     {
+      "source": "q13",
+      "quote": "| 单店 | 10105.99 | 30673.2 | 20567.21 | 203.52 | 60.43 | 60.15 | 60.34 |"
+     },
+     {
+      "source": "q13",
+      "quote": "| 连锁 | 6696.44 | 20161.5 | 13465.06 | 201.08 | 39.57 | 39.85 | 39.66 |"
+     },
+     {
+      "source": "q05",
+      "quote": "| 美发美甲连锁A | 3006.18 | 11220 | 8213.82 | 273.23 | 24.14 | 17.89 | 22.07 |"
+     },
+     {
+      "source": "q10",
+      "quote": "| 2026-W37 | 单店 | 66 | 6399.2 | 28 | 2026-09-07 | 2026-09-13 |"
+     },
+     {
+      "source": "q10",
+      "quote": "| 2026-W37 | 连锁 | 54 | 5563 | 3 | 2026-09-07 | 2026-09-13 |"
+     }
+    ]
+   },
+   {
+    "kind": "finding",
+    "text": "单店类型退款金额本周为75983.2元，上周为54638.3元，较上周上升39.07%，退款率上升8.54pp；但单店的退款增量主要来自美发美甲，所以这是同一个原因的表现，不单独列为原因。",
+    "evidence": [
+     {
+      "source": "q02",
+      "quote": "| 退款金额 | 元 | 商家类型 | 单店 | 75983.2 | 54638.3 | 55013.25 | +39.07% | +38.12% | 11.23 | 是 |"
+     },
+     {
+      "source": "q02",
+      "quote": "| 退款率 | % | 商家类型 | 单店 | 24.86 | 16.32 | 16.82 | +8.54pp | +8.04pp | 7.52 | 是 |"
+     },
+     {
+      "source": "q13",
+      "quote": "| 单店 | 10105.99 | 30673.2 | 20567.21 | 203.52 | 60.43 | 60.15 | 60.34 |"
+     }
+    ]
+   },
+   {
+    "kind": "advice",
+    "text": "直播渠道需要尽快排查流量下滑的原因，包括投放、直播排期和平台推荐是否有变化，并确认是否为全渠道的变化。同时关注其支付转化和补贴投放是否需要调整。",
+    "evidence": [
+     {
+      "source": "q07",
+      "quote": "| 访问次数 | 次 | 32389 | 19346 | -13043 | -40.27 |"
+     }
+    ]
+   },
+   {
+    "kind": "advice",
+    "text": "美发美甲的主动退款需要尽快核查，重点看退款原因、是否有政策或系统变化、以及连锁A、连锁B等大商家的服务与履约情况，必要时对异常商家先做处理。",
+    "evidence": [
+     {
+      "source": "q08",
+      "quote": "| 2026-W37 | 美发美甲 | 主动退 | 406 | 43819.6 |"
+     },
+     {
+      "source": "q05",
+      "quote": "| 美发美甲连锁B | 3184.16 | 7778.1 | 4593.94 | 144.27 | 13.5 | 18.95 | 15.3 |"
+     }
+    ]
+   },
+   {
+    "kind": "note",
+    "text": "口径说明：本周不是节假日周，基线是前8个非节假日周（2026-W29至2026-W36）。直播和美发美甲的退款率、核销率的变化，部分是支付GMV下降带来的机械影响，判断时以金额本身为准。直播的核销率升至118.04%，也是分母下降造成的，不代表核销出了问题。",
+    "evidence": [
+     {
+      "source": "q15",
+      "quote": "| 2026-W37 | 2026-09-07 | 2026-09-13 | 否 |  |"
+     },
+     {
+      "source": "q02",
+      "quote": "| 核销率 | % | 渠道 | 直播 | 118.04 | 83.3 | 82.18 | +34.74pp | +35.86pp | 13.51 | 是 |"
+     },
+     {
+      "source": "q01",
+      "quote": "分析周：2026-W37（2026-09-07 至 2026-09-13）。对比：基线，即本周之前最近 8 个非节假日周（2026-W29 至 2026-W36）。"
+     }
+    ]
+   },
+   {
+    "kind": "note",
+    "text": "新客数本周1568人，较上周下降9.57%，较基线下降13.27%，是否异动已触发，但本周没有找到单独的集中原因，它与直播渠道访问下降同时出现，可能是流量下降的连带结果，值得继续观察。",
+    "evidence": [
+     {
+      "source": "q01",
+      "quote": "| 新客数 | 人 | 1568 | 1734 | 1808 | -9.57% | -13.27% | -14.92 | 是 |"
+     }
+    ]
+   }
+  ],
+  "evidence": [
+   {
+    "id": "q01",
+    "title": "本周指标总览（全部指标，总量）",
+    "rows": 22
+   },
+   {
+    "id": "q02",
+    "title": "本周触发异动的分组",
+    "rows": 11
+   },
+   {
+    "id": "q03",
+    "title": "拆解：退款金额 按品类（范围：全部）",
+    "rows": 10
+   },
+   {
+    "id": "q04",
+    "title": "拆解：访问次数 按渠道（范围：全部）",
+    "rows": 4
+   },
+   {
+    "id": "q05",
+    "title": "拆解：退款金额 按商家（范围：品类=美发美甲）",
+    "rows": 12
+   },
+   {
+    "id": "q06",
+    "title": "拆解：访问次数 按城市（范围：渠道=直播）",
+    "rows": 12
+   },
+   {
+    "id": "q07",
+    "title": "分组体检（范围：渠道=直播）",
+    "rows": 10
+   },
+   {
+    "id": "q08",
+    "title": "查询：看美发美甲退款按周和退款类型（主动/过期）的变化",
+    "rows": 6
+   },
+   {
+    "id": "q09",
+    "title": "查询：看美发美甲本周支付的商家数与类型",
+    "rows": 2
+   },
+   {
+    "id": "q10",
+    "title": "查询：本周美发美甲主动退款按支付周和商家类型拆分，找来源订单",
+    "rows": 12
+   },
+   {
+    "id": "q11",
+    "title": "查询：看美发美甲主动退款按日的时间分布",
+    "rows": 25
+   },
+   {
+    "id": "q12",
+    "title": "拆解：退款金额 按城市（范围：品类=美发美甲）",
+    "rows": 12
+   },
+   {
+    "id": "q13",
+    "title": "拆解：退款金额 按商家类型（范围：品类=美发美甲）",
+    "rows": 2
+   },
+   {
+    "id": "q14",
+    "title": "分组体检（范围：品类=美发美甲）",
+    "rows": 12
+   },
+   {
+    "id": "q15",
+    "title": "查询：确认本周是否含节假日",
+    "rows": 3
+   }
+  ],
+  "first_check": {
+   "released": false,
+   "blocks": [
+    {
+     "index": 0,
+     "status": "numbers_not_in_quote",
+     "missing_numbers": [
+      "2"
+     ],
+     "problems": [
+      "numbers_not_in_quote"
+     ],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 1,
+     "status": "supported",
+     "missing_numbers": [],
+     "problems": [],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 2,
+     "status": "supported",
+     "missing_numbers": [],
+     "problems": [],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 3,
+     "status": "numbers_not_in_quote",
+     "missing_numbers": [
+      "2"
+     ],
+     "problems": [
+      "numbers_not_in_quote"
+     ],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 4,
+     "status": "supported",
+     "missing_numbers": [],
+     "problems": [],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 5,
+     "status": "numbers_not_in_quote",
+     "missing_numbers": [
+      "37.92"
+     ],
+     "problems": [
+      "numbers_not_in_quote"
+     ],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 6,
+     "status": "numbers_not_in_quote",
+     "missing_numbers": [
+      "2"
+     ],
+     "problems": [
+      "numbers_not_in_quote"
+     ],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 7,
+     "status": "supported",
+     "missing_numbers": [],
+     "problems": [],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 8,
+     "status": "numbers_not_in_quote",
+     "missing_numbers": [
+      "1",
+      "32"
+     ],
+     "problems": [
+      "numbers_not_in_quote"
+     ],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 9,
+     "status": "numbers_not_in_quote",
+     "missing_numbers": [
+      "2",
+      "3"
+     ],
+     "problems": [
+      "numbers_not_in_quote"
+     ],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 10,
+     "status": "numbers_not_in_quote",
+     "missing_numbers": [
+      "8.54"
+     ],
+     "problems": [
+      "numbers_not_in_quote"
+     ],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 11,
+     "status": "supported",
+     "missing_numbers": [],
+     "problems": [],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 12,
+     "status": "supported",
+     "missing_numbers": [],
+     "problems": [],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 13,
+     "status": "supported",
+     "missing_numbers": [],
+     "problems": [],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 14,
+     "status": "supported",
+     "missing_numbers": [],
+     "problems": [],
+     "rounded": [],
+     "quotes_not_found": []
+    }
+   ],
+   "report_problems": [],
+   "checked": 15,
+   "supported": 8,
+   "failed": 7
+  },
+  "first_answer": {
+   "has_anomaly": true,
+   "causes": [
+    {
+     "segment": {
+      "channel": "直播"
+     },
+     "lever": "traffic",
+     "direction": "down"
+    },
+    {
+     "segment": {
+      "category": "美发美甲"
+     },
+     "lever": "refund",
+     "direction": "up"
+    }
+   ],
+   "blocks": [
+    {
+     "kind": "summary",
+     "text": "本周（2026-W37）有几项指标异动：访问、支付用户、支付订单、支付GMV、平台补贴、退款金额和退款率。主要有两个原因：直播渠道访问量大幅下滑，美发美甲品类的主动退款金额大幅上升。两者合起来拉动了整体退款率和净收入的变化。",
+     "evidence": [
+      {
+       "source": "q01",
+       "quote": "| 访问次数 | 次 | 139997 | 152498 | 151552.5 | -8.20% | -7.62% | -6.17 | 是 |"
+      },
+      {
+       "source": "q01",
+       "quote": "| 退款金额 | 元 | 152228.8 | 117039.8 | 119317.5 | +30.07% | +27.58% | 8.46 | 是 |"
+      },
+      {
+       "source": "q01",
+       "quote": "| 退款率 | % | 23.34 | 16.65 | 16.96 | +6.69pp | +6.37pp | 9.73 | 是 |"
+      }
+     ]
+    },
+    {
+     "kind": "finding",
+     "text": "整体访问次数本周为139997次，上周为152498次，较上周下降8.20%，较基线下降7.62%，触发异动。",
+     "evidence": [
+      {
+       "source": "q01",
+       "quote": "| 访问次数 | 次 | 139997 | 152498 | 151552.5 | -8.20% | -7.62% | -6.17 | 是 |"
+      }
+     ]
+    },
+    {
+     "kind": "finding",
+     "text": "支付GMV本周为652288.6元，上周为703007.5元，较上周下降7.21%，较基线下降8.05%，触发异动；支付订单数本周9252单，上周9854单，较上周下降6.11%。",
+     "evidence": [
+      {
+       "source": "q01",
+       "quote": "| 支付GMV | 元 | 652288.6 | 703007.5 | 709366.7 | -7.21% | -8.05% | -3.65 | 是 |"
+      },
+      {
+       "source": "q01",
+       "quote": "| 支付订单数 | 单 | 9252 | 9854 | 9873 | -6.11% | -6.29% | -8.49 | 是 |"
+      }
+     ]
+    },
+    {
+     "kind": "finding",
+     "text": "退款金额本周为152228.8元，上周为117039.8元，较上周上升30.07%；退款率本周为23.34%，上周为16.65%，较上周上升6.69pp，两项均触发异动。",
+     "evidence": [
+      {
+       "source": "q01",
+       "quote": "| 退款金额 | 元 | 152228.8 | 117039.8 | 119317.5 | +30.07% | +27.58% | 8.46 | 是 |"
+      },
+      {
+       "source": "q01",
+       "quote": "| 退款率 | % | 23.34 | 16.65 | 16.96 | +6.69pp | +6.37pp | 9.73 | 是 |"
+      }
+     ]
+    },
+    {
+     "kind": "finding",
+     "text": "直播渠道访问次数本周为19346次，上周为32389次，较上周下降40.27%，较基线下降41.01%，是触发异动最明显的分组。直播渠道的访问支付转化率本周为5.78%，上周为6，只下降了0.22个百分点，转化本身变化不大。",
+     "evidence": [
+      {
+       "source": "q02",
+       "quote": "| 访问次数 | 次 | 渠道 | 直播 | 19346 | 32389 | 32797.5 | -40.27% | -41.01% | -22.83 | 是 |"
+      },
+      {
+       "source": "q07",
+       "quote": "| 访问支付转化率 | % | 6 | 5.78 | -0.22 | -3.62 |"
+      },
+      {
+       "source": "q07",
+       "quote": "| 访问次数 | 次 | 32389 | 19346 | -13043 | -40.27 |"
+      }
+     ]
+    },
+    {
+     "kind": "cause",
+     "text": "直播渠道访问量下滑是本周整体访问和支付下降的主要来源。按基线拆解，直播访问减少了13397.88次，贡献了整体访问降幅的120.12%；其中各城市都在降，降幅在37.92%到44.27%之间，说明是渠道层面的流量问题，而不是个别城市的问题。转化率基本稳定，因此原因在流量。",
+     "evidence": [
+      {
+       "source": "q04",
+       "quote": "| 直播 | 32743.88 | 19346 | -13397.88 | -40.92 | 120.12 | 21.66 | 13.82 |"
+      },
+      {
+       "source": "q06",
+       "quote": "| 上海 | 4361 | 2581 | -1780 | -40.82 | 13.29 | 13.32 | 13.34 |"
+      },
+      {
+       "source": "q06",
+       "quote": "| 昆明 | 1638.38 | 913 | -725.38 | -44.27 | 5.41 | 5 | 4.72 |"
+      }
+     ]
+    },
+    {
+     "kind": "finding",
+     "text": "直播渠道支付GMV本周为93608.2元，上周为166666.8元，较上周下降43.84%；核销GMV为110496.4元，较上周下降20.41%，两者都受访问减少拖累。",
+     "evidence": [
+      {
+       "source": "q02",
+       "quote": "| 支付GMV | 元 | 渠道 | 直播 | 93608.2 | 166666.8 | 167382.4 | -43.84% | -44.08% | -21.21 | 是 |"
+      },
+      {
+       "source": "q07",
+       "quote": "| 核销GMV | 元 | 138840.4 | 110496.4 | -28344 | -20.41 |"
+      }
+     ]
+    },
+    {
+     "kind": "finding",
+     "text": "美发美甲品类本周退款金额为50834.7元，基线为16802.42元，较基线上升202.54%，贡献了整体退款增量的111.04%；美发美甲退款率本周为85.99%，基线为25.82%。",
+     "evidence": [
+      {
+       "source": "q03",
+       "quote": "| 美发美甲 | 16802.42 | 50834.7 | 34032.28 | 202.54 | 111.04 | 13.82 | 33.39 |"
+      },
+      {
+       "source": "q14",
+       "quote": "| 退款金额 | 元 | 16802.42 | 50834.7 | 34032.28 | 202.54 |"
+      },
+      {
+       "source": "q14",
+       "quote": "| 退款率 | % | 25.82 | 85.99 | 60.17 | 233.03 |"
+      }
+     ]
+    },
+    {
+     "kind": "cause",
+     "text": "美发美甲退款增加来自主动退。本周主动退款406单、43819.6元，而前一周（W36）只有76单、8185元；过期退只有66单、7015.1元，基本没变。这些退款来自W32到W37之间支付的订单，并且从9月7日开始集中出现。这是退款本身上升，不是支付量变化导致的率效应，因为本周美发美甲的支付订单数只下降了5.65%。",
+     "evidence": [
+      {
+       "source": "q08",
+       "quote": "| 2026-W37 | 美发美甲 | 主动退 | 406 | 43819.6 |"
+      },
+      {
+       "source": "q08",
+       "quote": "| 2026-W36 | 美发美甲 | 主动退 | 76 | 8185 |"
+      },
+      {
+       "source": "q08",
+       "quote": "| 2026-W37 | 美发美甲 | 过期退 | 66 | 7015.1 |"
+      },
+      {
+       "source": "q11",
+       "quote": "| 2026-09-06 | 10 | 754.8 |"
+      },
+      {
+       "source": "q11",
+       "quote": "| 2026-09-07 | 35 | 4198.2 |"
+      },
+      {
+       "source": "q14",
+       "quote": "| 支付订单数 | 单 | 612.62 | 578 | -34.62 | -5.65 |"
+      }
+     ]
+    },
+    {
+     "kind": "cause",
+     "text": "退款上升涉及的商家很多，不是个别商家的问题。单店和连锁的退款都大约翻了两倍，其中连锁A、连锁B贡献最大；本周从W37支付的订单里产生的主动退，单店有28家商家、连锁有3家。",
+     "evidence": [
+      {
+       "source": "q13",
+       "quote": "| 单店 | 10105.99 | 30673.2 | 20567.21 | 203.52 | 60.43 | 60.15 | 60.34 |"
+      },
+      {
+       "source": "q13",
+       "quote": "| 连锁 | 6696.44 | 20161.5 | 13465.06 | 201.08 | 39.57 | 39.85 | 39.66 |"
+      },
+      {
+       "source": "q05",
+       "quote": "| 美发美甲连锁A | 3006.18 | 11220 | 8213.82 | 273.23 | 24.14 | 17.89 | 22.07 |"
+      },
+      {
+       "source": "q10",
+       "quote": "| 2026-W37 | 单店 | 66 | 6399.2 | 28 | 2026-09-07 | 2026-09-13 |"
+      }
+     ]
+    },
+    {
+     "kind": "finding",
+     "text": "单店类型退款金额本周为75983.2元，上周为54638.3元，较上周上升39.07%，退款率上升8.54pp；但单店的退款增量主要来自美发美甲，所以这是同一个原因的表现，不单独列为原因。",
+     "evidence": [
+      {
+       "source": "q02",
+       "quote": "| 退款金额 | 元 | 商家类型 | 单店 | 75983.2 | 54638.3 | 55013.25 | +39.07% | +38.12% | 11.23 | 是 |"
+      },
+      {
+       "source": "q13",
+       "quote": "| 单店 | 10105.99 | 30673.2 | 20567.21 | 203.52 | 60.43 | 60.15 | 60.34 |"
+      }
+     ]
+    },
+    {
+     "kind": "advice",
+     "text": "直播渠道需要尽快排查流量下滑的原因，包括投放、直播排期和平台推荐是否有变化，并确认是否为全渠道的变化。同时关注其支付转化和补贴投放是否需要调整。",
+     "evidence": [
+      {
+       "source": "q07",
+       "quote": "| 访问次数 | 次 | 32389 | 19346 | -13043 | -40.27 |"
+      }
+     ]
+    },
+    {
+     "kind": "advice",
+     "text": "美发美甲的主动退款需要尽快核查，重点看退款原因、是否有政策或系统变化、以及连锁A、连锁B等大商家的服务与履约情况，必要时对异常商家先做处理。",
+     "evidence": [
+      {
+       "source": "q08",
+       "quote": "| 2026-W37 | 美发美甲 | 主动退 | 406 | 43819.6 |"
+      },
+      {
+       "source": "q05",
+       "quote": "| 美发美甲连锁B | 3184.16 | 7778.1 | 4593.94 | 144.27 | 13.5 | 18.95 | 15.3 |"
+      }
+     ]
+    },
+    {
+     "kind": "note",
+     "text": "口径说明：本周不是节假日周，基线是前8个非节假日周（2026-W29至2026-W36）。直播和美发美甲的退款率、核销率的变化，部分是支付GMV下降带来的机械影响，判断时以金额本身为准。直播的核销率升至118.04%，也是分母下降造成的，不代表核销出了问题。",
+     "evidence": [
+      {
+       "source": "q15",
+       "quote": "| 2026-W37 | 2026-09-07 | 2026-09-13 | 否 |  |"
+      },
+      {
+       "source": "q02",
+       "quote": "| 核销率 | % | 渠道 | 直播 | 118.04 | 83.3 | 82.18 | +34.74pp | +35.86pp | 13.51 | 是 |"
+      },
+      {
+       "source": "q01",
+       "quote": "分析周：2026-W37（2026-09-07 至 2026-09-13）。对比：基线，即本周之前最近 8 个非节假日周（2026-W29 至 2026-W36）。"
+      }
+     ]
+    },
+    {
+     "kind": "note",
+     "text": "新客数本周1568人，较上周下降9.57%，较基线下降13.27%，是否异动已触发，但本周没有找到单独的集中原因，它与直播渠道访问下降同时出现，可能是流量下降的连带结果，值得继续观察。",
+     "evidence": [
+      {
+       "source": "q01",
+       "quote": "| 新客数 | 人 | 1568 | 1734 | 1808 | -9.57% | -13.27% | -14.92 | 是 |"
+      }
+     ]
+    }
+   ]
+  },
+  "revisions": 1,
+  "error": null,
+  "usage": {
+   "calls": 9,
+   "input_tokens": 22,
+   "cache_write_tokens": 27714,
+   "cache_read_tokens": 113947,
+   "output_tokens": 17249,
+   "cost_usd": 0.01323,
+   "model_seconds": 78.23,
+   "pricing": "standard"
+  },
+  "stop_reasons": [
+   "tool_use",
+   "tool_use",
+   "tool_use",
+   "tool_use",
+   "tool_use",
+   "tool_use",
+   "tool_use",
+   "end_turn",
+   "end_turn"
+  ],
+  "trace": [
+   {
+    "tool": "overview",
+    "input": {},
+    "evidence": "q02",
+    "error": false
+   },
+   {
+    "tool": "breakdown",
+    "input": {
+     "metric": "refund_amt",
+     "dimension": "category",
+     "filters": [],
+     "compare": "baseline"
+    },
+    "evidence": "q03",
+    "error": false
+   },
+   {
+    "tool": "breakdown",
+    "input": {
+     "metric": "visits",
+     "dimension": "channel",
+     "filters": [],
+     "compare": "baseline"
+    },
+    "evidence": "q04",
+    "error": false
+   },
+   {
+    "tool": "breakdown",
+    "input": {
+     "metric": "refund_amt",
+     "dimension": "merchant",
+     "filters": [
+      {
+       "dimension": "category",
+       "value": "美发美甲"
+      }
+     ],
+     "compare": "baseline"
+    },
+    "evidence": "q05",
+    "error": false
+   },
+   {
+    "tool": "run_sql",
+    "input": {
+     "sql": "SELECT w.week_id, o.category, f.refund_type, COUNT(*) AS n, ROUND(SUM(f.refund_amount),2) AS amt FROM fact_refund f JOIN order_wide o USING(order_id) JOIN dim_week w ON strftime(f.refund_date,'%Y-%m-%d') BETWEEN w.week_start AND w.week_end WHERE w.week_id IN ('2026-W35','2026-W36','2026-W37') AND o.category='美发美甲' GROUP BY 1,2,3 ORDER BY 1,3",
+     "purpose": "看美发美甲退款按周和退款类型（主动/过期）的变化"
+    },
+    "evidence": null,
+    "error": true
+   },
+   {
+    "tool": "breakdown",
+    "input": {
+     "metric": "visits",
+     "dimension": "city",
+     "filters": [
+      {
+       "dimension": "channel",
+       "value": "直播"
+      }
+     ],
+     "compare": "baseline"
+    },
+    "evidence": "q06",
+    "error": false
+   },
+   {
+    "tool": "funnel",
+    "input": {
+     "filters": [
+      {
+       "dimension": "channel",
+       "value": "直播"
+      }
+     ],
+     "compare": "last_week"
+    },
+    "evidence": "q07",
+    "error": false
+   },
+   {
+    "tool": "run_sql",
+    "input": {
+     "sql": "SELECT w.week_id, o.category, f.refund_type, COUNT(*) AS n, ROUND(SUM(f.refund_amount),2) AS amt FROM fact_refund f JOIN order_wide o USING(order_id) JOIN dim_week w ON CAST(f.refund_date AS VARCHAR) BETWEEN CAST(w.week_start AS VARCHAR) AND CAST(w.week_end AS VARCHAR) WHERE w.week_id IN ('2026-W35','2026-W36','2026-W37') AND o.category='美发美甲' GROUP BY 1,2,3 ORDER BY 1,3",
+     "purpose": "看美发美甲退款按周和退款类型（主动/过期）的变化"
+    },
+    "evidence": "q08",
+    "error": false
+   },
+   {
+    "tool": "run_sql",
+    "input": {
+     "sql": "SELECT o.category, o.merchant_type, COUNT(DISTINCT o.merchant) AS merchants, COUNT(*) AS orders_by_pay_week FROM order_wide o WHERE o.pay_week='2026-W37' AND o.category='美发美甲' GROUP BY 1,2",
+     "purpose": "看美发美甲本周支付的商家数与类型"
+    },
+    "evidence": "q09",
+    "error": false
+   },
+   {
+    "tool": "run_sql",
+    "input": {
+     "sql": "SELECT o.pay_week, o.merchant_type, COUNT(*) AS n, ROUND(SUM(f.refund_amount),2) AS amt, COUNT(DISTINCT o.merchant) AS merchants, MIN(CAST(f.refund_date AS VARCHAR)) AS d_min, MAX(CAST(f.refund_date AS VARCHAR)) AS d_max FROM fact_refund f JOIN order_wide o USING(order_id) WHERE o.category='美发美甲' AND f.refund_type='主动退' AND CAST(f.refund_date AS VARCHAR) BETWEEN '2026-09-07' AND '2026-09-13' GROUP BY 1,2 ORDER BY 1,2",
+     "purpose": "本周美发美甲主动退款按支付周和商家类型拆分，找来源订单"
+    },
+    "evidence": "q10",
+    "error": false
+   },
+   {
+    "tool": "run_sql",
+    "input": {
+     "sql": "SELECT CAST(f.refund_date AS VARCHAR) AS d, COUNT(*) AS n, ROUND(SUM(f.refund_amount),2) AS amt FROM fact_refund f JOIN order_wide o USING(order_id) WHERE o.category='美发美甲' AND f.refund_type='主动退' AND CAST(f.refund_date AS VARCHAR) BETWEEN '2026-08-20' AND '2026-09-13' GROUP BY 1 ORDER BY 1",
+     "purpose": "看美发美甲主动退款按日的时间分布"
+    },
+    "evidence": "q11",
+    "error": false
+   },
+   {
+    "tool": "breakdown",
+    "input": {
+     "metric": "refund_amt",
+     "dimension": "city",
+     "filters": [
+      {
+       "dimension": "category",
+       "value": "美发美甲"
+      }
+     ],
+     "compare": "baseline"
+    },
+    "evidence": "q12",
+    "error": false
+   },
+   {
+    "tool": "breakdown",
+    "input": {
+     "metric": "refund_amt",
+     "dimension": "merchant_type",
+     "filters": [
+      {
+       "dimension": "category",
+       "value": "美发美甲"
+      }
+     ],
+     "compare": "baseline"
+    },
+    "evidence": "q13",
+    "error": false
+   },
+   {
+    "tool": "funnel",
+    "input": {
+     "filters": [
+      {
+       "dimension": "category",
+       "value": "美发美甲"
+      }
+     ],
+     "compare": "baseline"
+    },
+    "evidence": "q14",
+    "error": false
+   },
+   {
+    "tool": "run_sql",
+    "input": {
+     "sql": "SELECT week_id, week_start, week_end, is_holiday_week, holiday_names FROM dim_week WHERE week_id IN ('2026-W35','2026-W36','2026-W37')",
+     "purpose": "确认本周是否含节假日"
+    },
+    "evidence": "q15",
+    "error": false
+   }
+  ],
+  "prompt_version": "v4"
+ },
+ "check": {
+  "released": false,
+  "blocks": [
+   {
+    "index": 0,
+    "status": "numbers_not_in_quote",
+    "missing_numbers": [
+     "2"
+    ],
+    "problems": [
+     "numbers_not_in_quote"
+    ],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 1,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 2,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 3,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 4,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 5,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 6,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 7,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 8,
+    "status": "numbers_not_in_quote",
+    "missing_numbers": [
+     "1"
+    ],
+    "problems": [
+     "numbers_not_in_quote"
+    ],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 9,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 10,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 11,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 12,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 13,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 14,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   }
+  ],
+  "report_problems": [],
+  "checked": 15,
+  "supported": 13,
+  "failed": 2
+ }
+}

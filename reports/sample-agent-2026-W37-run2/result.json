@@ -1,0 +1,920 @@
+{
+ "result": {
+  "week": "2026-W37",
+  "has_anomaly": true,
+  "causes": [
+   {
+    "segment": {
+     "channel": "直播"
+    },
+    "lever": "traffic",
+    "direction": "down"
+   },
+   {
+    "segment": {
+     "category": "美发美甲"
+    },
+    "lever": "refund",
+    "direction": "up"
+   }
+  ],
+  "blocks": [
+   {
+    "kind": "summary",
+    "text": "本周主要异动有直播渠道访问断崖式下滑，以及美发美甲退款激增。前者带动支付、订单和核销下降，后者推高全站退款金额和退款率。",
+    "evidence": [
+     {
+      "source": "q01",
+      "quote": "| 访问次数 | 次 | 139997 | 152498 | 151552.5 | -8.20% | -7.62% | -6.17 | 是 |"
+     },
+     {
+      "source": "q01",
+      "quote": "| 退款金额 | 元 | 152228.8 | 117039.8 | 119317.5 | +30.07% | +27.58% | 8.46 | 是 |"
+     }
+    ]
+   },
+   {
+    "kind": "finding",
+    "text": "全站访问次数本周为139997次，上周为152498次，下降8.20%，较基线下降7.62%。",
+    "evidence": [
+     {
+      "source": "q01",
+      "quote": "| 访问次数 | 次 | 139997 | 152498 | 151552.5 | -8.20% | -7.62% | -6.17 | 是 |"
+     }
+    ]
+   },
+   {
+    "kind": "finding",
+    "text": "直播渠道本周访问19346次，上周为32389次，下降40.27%；同期访问支付转化率从5.96%变为5.78%，基本持平。",
+    "evidence": [
+     {
+      "source": "q02",
+      "quote": "| 访问次数 | 次 | 渠道 | 直播 | 19346 | 32389 | 32797.5 | -40.27% | -41.01% | -22.83 | 是 |"
+     },
+     {
+      "source": "q03",
+      "quote": "| 访问支付转化率 | % | 5.96 | 5.78 | -0.18 | -2.99 |"
+     }
+    ]
+   },
+   {
+    "kind": "finding",
+    "text": "直播访问从2026-09-07起突然下滑，当天只有2377次，上一日2026-09-06为5432次；直播支付GMV本周为93608.2元，上周为166666.8元，下降43.84%。",
+    "evidence": [
+     {
+      "source": "q11",
+      "quote": "| 2026-09-06 | 5432 |"
+     },
+     {
+      "source": "q11",
+      "quote": "| 2026-09-07 | 2377 |"
+     },
+     {
+      "source": "q02",
+      "quote": "| 支付GMV | 元 | 渠道 | 直播 | 93608.2 | 166666.8 | 167382.4 | -43.84% | -44.08% | -21.21 | 是 |"
+     }
+    ]
+   },
+   {
+    "kind": "cause",
+    "text": "直播渠道的访问量在2026-09-07起断崖式下滑，各城市同步下降，转化率基本没变，属于流量问题；支付、订单、核销随访问量一起下降，不是独立的原因。",
+    "evidence": [
+     {
+      "source": "q06",
+      "quote": "访问次数（范围：渠道=直播）：上周 32389.00，本周 19346.00，变化 -13043.00 次"
+     },
+     {
+      "source": "q11",
+      "quote": "| 2026-09-07 | 2377 |"
+     },
+     {
+      "source": "q03",
+      "quote": "| 访问支付转化率 | % | 5.96 | 5.78 | -0.18 | -2.99 |"
+     }
+    ]
+   },
+   {
+    "kind": "finding",
+    "text": "美发美甲本周退款金额为50834.7元，上周为14988.8元，上涨239.15%，占全站退款的33.39%；退款率从22.91%升至85.99%。",
+    "evidence": [
+     {
+      "source": "q04",
+      "quote": "| 美发美甲 | 14988.8 | 50834.7 | 35845.9 | 239.15 | 101.87 | 12.81 | 33.39 |"
+     },
+     {
+      "source": "q09",
+      "quote": "| 退款率 | % | 22.91 | 85.99 | 63.08 | 275.3 |"
+     }
+    ]
+   },
+   {
+    "kind": "finding",
+    "text": "美发美甲同期支付GMV为59117.8元，上周为65419.7元，下降9.63%，支付端没有大幅变化，退款率飙升主要是退款分子大涨造成的。",
+    "evidence": [
+     {
+      "source": "q09",
+      "quote": "| 支付GMV | 元 | 65419.7 | 59117.8 | -6301.9 | -9.63 |"
+     }
+    ]
+   },
+   {
+    "kind": "cause",
+    "text": "退款增加来自美发美甲的主动退：按支付周看，美发美甲主动退金额从2026-W34的8998.6元上升到2026-W36的15594.1元，本周退款仍有11962.2元是这批订单的退款，支付端基本正常，属于退款问题。",
+    "evidence": [
+     {
+      "source": "q10",
+      "quote": "| 2026-W34 | 主动退 | 美发美甲 | 86 | 8998.6 |"
+     },
+     {
+      "source": "q10",
+      "quote": "| 2026-W36 | 主动退 | 美发美甲 | 136 | 15594.1 |"
+     },
+     {
+      "source": "q10",
+      "quote": "| 2026-W37 | 主动退 | 美发美甲 | 120 | 11962.2 |"
+     }
+    ]
+   },
+   {
+    "kind": "finding",
+    "text": "单店退款金额本周为75983.2元，上周为54638.3元；其中美发美甲单店的增量为21118.5元，与单店整体的增幅基本一致，说明单店退款上涨主要也是美发美甲造成的。",
+    "evidence": [
+     {
+      "source": "q02",
+      "quote": "| 退款金额 | 元 | 商家类型 | 单店 | 75983.2 | 54638.3 | 55013.25 | +39.07% | +38.12% | 11.23 | 是 |"
+     },
+     {
+      "source": "q05",
+      "quote": "| 单店 | 9554.7 | 30673.2 | 21118.5 | 221.03 | 58.91 | 63.75 | 60.34 |"
+     }
+    ]
+   },
+   {
+    "kind": "finding",
+    "text": "成都退款率本周为23.83%，基线为14.8%，上涨8.09pp；成都退款金额的增量主要来自美发美甲。",
+    "evidence": [
+     {
+      "source": "q02",
+      "quote": "| 退款率 | % | 城市 | 成都 | 23.83 | 18.95 | 14.8 | +4.88pp | +9.03pp | 7.24 | 是 |"
+     },
+     {
+      "source": "q13",
+      "quote": "| 退款率 | % | 15.75 | 23.83 | 8.09 | 51.36 |"
+     },
+     {
+      "source": "q12",
+      "quote": "退款金额（范围：城市=成都）：上周 12631.30，本周 14197.40，变化 1566.10 元"
+     },
+     {
+      "source": "q12",
+      "quote": "| 美发美甲 | 1754.7 | 4219.3 | 2464.6 | 140.46 | 157.37 | 13.89 | 29.72 |"
+     }
+    ]
+   },
+   {
+    "kind": "advice",
+    "text": "直播渠道：尽快排查访问量从本周初开始断崖下滑的原因，包括投放、直播排期、平台流量分配和直播间运营，确认是否可以恢复。",
+    "evidence": []
+   },
+   {
+    "kind": "advice",
+    "text": "美发美甲：重点核查主动退的原因，包括服务履约质量、退款政策执行和商家活动口径，优先看退款集中的连锁商家和高退款城市，并跟进对应商家的整改。",
+    "evidence": []
+   },
+   {
+    "kind": "note",
+    "text": "核销率和退款率是当周核销或退款金额除以当周支付GMV，分子分母不是同一批订单。直播支付量下降会机械推高这些率，直播核销率本周为118.04%，不代表核销出了问题；直播退款金额本身只涨了8.95%。",
+    "evidence": [
+     {
+      "source": "q03",
+      "quote": "| 核销率 | % | 81.92 | 118.04 | 36.12 | 44.09 |"
+     },
+     {
+      "source": "q03",
+      "quote": "| 退款金额 | 元 | 28581.45 | 31140.3 | 2558.85 | 8.95 |"
+     }
+    ]
+   },
+   {
+    "kind": "note",
+    "text": "在线门店数与动销门店数没有明显变化，供给侧不是本周异动的原因。新上线门店数本周为0，属于正常波动，值得继续观察。",
+    "evidence": [
+     {
+      "source": "q01",
+      "quote": "| 在线门店数 | 家 | 924 | 924 | 918.5 | +0.00% | +0.60% | 1.48 | 否 |"
+     }
+    ]
+   }
+  ],
+  "evidence": [
+   {
+    "id": "q01",
+    "title": "本周指标总览（全部指标，总量）",
+    "rows": 22
+   },
+   {
+    "id": "q02",
+    "title": "本周触发异动的分组",
+    "rows": 11
+   },
+   {
+    "id": "q03",
+    "title": "分组体检（范围：渠道=直播）",
+    "rows": 10
+   },
+   {
+    "id": "q04",
+    "title": "拆解：退款金额 按品类（范围：全部）",
+    "rows": 10
+   },
+   {
+    "id": "q05",
+    "title": "拆解：退款金额 按商家类型（范围：品类=美发美甲）",
+    "rows": 2
+   },
+   {
+    "id": "q06",
+    "title": "拆解：访问次数 按城市（范围：渠道=直播）",
+    "rows": 12
+   },
+   {
+    "id": "q07",
+    "title": "拆解：退款金额 按商家（范围：品类=美发美甲）",
+    "rows": 12
+   },
+   {
+    "id": "q08",
+    "title": "拆解：退款金额 按城市（范围：品类=美发美甲）",
+    "rows": 12
+   },
+   {
+    "id": "q09",
+    "title": "分组体检（范围：品类=美发美甲）",
+    "rows": 12
+   },
+   {
+    "id": "q10",
+    "title": "查询：美发美甲退款按支付周和退款类型拆分，看退款来自哪批订单、什么类型",
+    "rows": 11
+   },
+   {
+    "id": "q11",
+    "title": "查询：直播渠道访问次数按日，看下降是从哪天开始的",
+    "rows": 21
+   },
+   {
+    "id": "q12",
+    "title": "拆解：退款金额 按品类（范围：城市=成都）",
+    "rows": 10
+   },
+   {
+    "id": "q13",
+    "title": "分组体检（范围：城市=成都）",
+    "rows": 12
+   }
+  ],
+  "first_check": {
+   "released": false,
+   "blocks": [
+    {
+     "index": 0,
+     "status": "numbers_not_in_quote",
+     "missing_numbers": [
+      "2"
+     ],
+     "problems": [
+      "numbers_not_in_quote"
+     ],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 1,
+     "status": "supported",
+     "missing_numbers": [],
+     "problems": [],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 2,
+     "status": "supported",
+     "missing_numbers": [],
+     "problems": [],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 3,
+     "status": "numbers_not_in_quote",
+     "missing_numbers": [
+      "1"
+     ],
+     "problems": [
+      "numbers_not_in_quote"
+     ],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 4,
+     "status": "supported",
+     "missing_numbers": [],
+     "problems": [],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 5,
+     "status": "supported",
+     "missing_numbers": [],
+     "problems": [],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 6,
+     "status": "supported",
+     "missing_numbers": [],
+     "problems": [],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 7,
+     "status": "supported",
+     "missing_numbers": [],
+     "problems": [],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 8,
+     "status": "numbers_not_in_quote",
+     "missing_numbers": [
+      "54638.3",
+      "75983.2"
+     ],
+     "problems": [
+      "numbers_not_in_quote"
+     ],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 9,
+     "status": "numbers_not_in_quote",
+     "missing_numbers": [
+      "14.8"
+     ],
+     "problems": [
+      "numbers_not_in_quote"
+     ],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 10,
+     "status": "no_evidence",
+     "missing_numbers": [],
+     "problems": [
+      "no_evidence"
+     ],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 11,
+     "status": "no_number",
+     "missing_numbers": [],
+     "problems": []
+    },
+    {
+     "index": 12,
+     "status": "numbers_not_in_quote",
+     "missing_numbers": [
+      "2"
+     ],
+     "problems": [
+      "numbers_not_in_quote"
+     ],
+     "rounded": [],
+     "quotes_not_found": []
+    },
+    {
+     "index": 13,
+     "status": "supported",
+     "missing_numbers": [],
+     "problems": [],
+     "rounded": [],
+     "quotes_not_found": []
+    }
+   ],
+   "report_problems": [],
+   "checked": 13,
+   "supported": 7,
+   "failed": 6
+  },
+  "first_answer": {
+   "has_anomaly": true,
+   "causes": [
+    {
+     "segment": {
+      "channel": "直播"
+     },
+     "lever": "traffic",
+     "direction": "down"
+    },
+    {
+     "segment": {
+      "category": "美发美甲"
+     },
+     "lever": "refund",
+     "direction": "up"
+    }
+   ],
+   "blocks": [
+    {
+     "kind": "summary",
+     "text": "本周主要异动有两条线：直播渠道访问断崖式下滑，带动支付、订单和核销下降；美发美甲退款激增，推高全站退款金额和退款率。",
+     "evidence": [
+      {
+       "source": "q01",
+       "quote": "| 访问次数 | 次 | 139997 | 152498 | 151552.5 | -8.20% | -7.62% | -6.17 | 是 |"
+      },
+      {
+       "source": "q01",
+       "quote": "| 退款金额 | 元 | 152228.8 | 117039.8 | 119317.5 | +30.07% | +27.58% | 8.46 | 是 |"
+      }
+     ]
+    },
+    {
+     "kind": "finding",
+     "text": "全站访问次数本周为139997次，上周为152498次，下降8.20%，较基线下降7.62%。",
+     "evidence": [
+      {
+       "source": "q01",
+       "quote": "| 访问次数 | 次 | 139997 | 152498 | 151552.5 | -8.20% | -7.62% | -6.17 | 是 |"
+      }
+     ]
+    },
+    {
+     "kind": "finding",
+     "text": "直播渠道本周访问19346次，上周为32389次，下降40.27%；同期访问支付转化率从5.96%变为5.78%，基本持平。",
+     "evidence": [
+      {
+       "source": "q02",
+       "quote": "| 访问次数 | 次 | 渠道 | 直播 | 19346 | 32389 | 32797.5 | -40.27% | -41.01% | -22.83 | 是 |"
+      },
+      {
+       "source": "q03",
+       "quote": "| 访问支付转化率 | % | 5.96 | 5.78 | -0.18 | -2.99 |"
+      }
+     ]
+    },
+    {
+     "kind": "finding",
+     "text": "直播访问从2026-09-07起突然下滑，当天只有2377次，前一天2026-09-06为5432次；直播支付GMV本周为93608.2元，上周为166666.8元，下降43.84%。",
+     "evidence": [
+      {
+       "source": "q11",
+       "quote": "| 2026-09-06 | 5432 |"
+      },
+      {
+       "source": "q11",
+       "quote": "| 2026-09-07 | 2377 |"
+      },
+      {
+       "source": "q02",
+       "quote": "| 支付GMV | 元 | 渠道 | 直播 | 93608.2 | 166666.8 | 167382.4 | -43.84% | -44.08% | -21.21 | 是 |"
+      }
+     ]
+    },
+    {
+     "kind": "cause",
+     "text": "直播渠道的访问量在2026-09-07起断崖式下滑，各城市同步下降，转化率基本没变，属于流量问题；支付、订单、核销随访问量一起下降，不是独立的原因。",
+     "evidence": [
+      {
+       "source": "q06",
+       "quote": "访问次数（范围：渠道=直播）：上周 32389.00，本周 19346.00，变化 -13043.00 次"
+      },
+      {
+       "source": "q11",
+       "quote": "| 2026-09-07 | 2377 |"
+      },
+      {
+       "source": "q03",
+       "quote": "| 访问支付转化率 | % | 5.96 | 5.78 | -0.18 | -2.99 |"
+      }
+     ]
+    },
+    {
+     "kind": "finding",
+     "text": "美发美甲本周退款金额为50834.7元，上周为14988.8元，上涨239.15%，占全站退款的33.39%；退款率从22.91%升至85.99%。",
+     "evidence": [
+      {
+       "source": "q04",
+       "quote": "| 美发美甲 | 14988.8 | 50834.7 | 35845.9 | 239.15 | 101.87 | 12.81 | 33.39 |"
+      },
+      {
+       "source": "q09",
+       "quote": "| 退款率 | % | 22.91 | 85.99 | 63.08 | 275.3 |"
+      }
+     ]
+    },
+    {
+     "kind": "finding",
+     "text": "美发美甲同期支付GMV为59117.8元，上周为65419.7元，下降9.63%，支付端没有大幅变化，退款率飙升主要是退款分子大涨造成的。",
+     "evidence": [
+      {
+       "source": "q09",
+       "quote": "| 支付GMV | 元 | 65419.7 | 59117.8 | -6301.9 | -9.63 |"
+      }
+     ]
+    },
+    {
+     "kind": "cause",
+     "text": "退款增加来自美发美甲的主动退：按支付周看，美发美甲主动退金额从2026-W34的8998.6元上升到2026-W36的15594.1元，本周退款仍有11962.2元是这批订单的退款，支付端基本正常，属于退款问题。",
+     "evidence": [
+      {
+       "source": "q10",
+       "quote": "| 2026-W34 | 主动退 | 美发美甲 | 86 | 8998.6 |"
+      },
+      {
+       "source": "q10",
+       "quote": "| 2026-W36 | 主动退 | 美发美甲 | 136 | 15594.1 |"
+      },
+      {
+       "source": "q10",
+       "quote": "| 2026-W37 | 主动退 | 美发美甲 | 120 | 11962.2 |"
+      }
+     ]
+    },
+    {
+     "kind": "finding",
+     "text": "单店退款金额本周为75983.2元，上周为54638.3元；其中美发美甲单店的增量为21118.5元，与单店整体的增幅基本一致，说明单店退款上涨主要也是美发美甲造成的。",
+     "evidence": [
+      {
+       "source": "q05",
+       "quote": "| 单店 | 9554.7 | 30673.2 | 21118.5 | 221.03 | 58.91 | 63.75 | 60.34 |"
+      }
+     ]
+    },
+    {
+     "kind": "finding",
+     "text": "成都退款率本周为23.83%，基线为14.8%，上涨8.09pp；成都退款金额的增量主要来自美发美甲。",
+     "evidence": [
+      {
+       "source": "q13",
+       "quote": "| 退款率 | % | 15.75 | 23.83 | 8.09 | 51.36 |"
+      },
+      {
+       "source": "q12",
+       "quote": "退款金额（范围：城市=成都）：上周 12631.30，本周 14197.40，变化 1566.10 元"
+      },
+      {
+       "source": "q12",
+       "quote": "| 美发美甲 | 1754.7 | 4219.3 | 2464.6 | 140.46 | 157.37 | 13.89 | 29.72 |"
+      }
+     ]
+    },
+    {
+     "kind": "advice",
+     "text": "直播渠道：尽快排查访问量从2026-09-07起断崖下滑的原因，包括投放、直播排期、平台流量分配和直播间运营，确认是否可以恢复。",
+     "evidence": []
+    },
+    {
+     "kind": "advice",
+     "text": "美发美甲：重点核查主动退的原因，包括服务履约质量、退款政策执行和商家活动口径，优先看退款集中的连锁商家和高退款城市，并跟进对应商家的整改。",
+     "evidence": []
+    },
+    {
+     "kind": "note",
+     "text": "核销率和退款率是当周核销或退款金额除以当周支付GMV，分子分母不是同一批订单。直播支付量下降会机械推高这两个率，直播核销率本周为118.04%，不代表核销出了问题；直播退款金额本身只涨了8.95%。",
+     "evidence": [
+      {
+       "source": "q03",
+       "quote": "| 核销率 | % | 81.92 | 118.04 | 36.12 | 44.09 |"
+      },
+      {
+       "source": "q03",
+       "quote": "| 退款金额 | 元 | 28581.45 | 31140.3 | 2558.85 | 8.95 |"
+      }
+     ]
+    },
+    {
+     "kind": "note",
+     "text": "在线门店数与动销门店数没有明显变化，供给侧不是本周异动的原因。新上线门店数本周为0，属于正常波动，值得继续观察。",
+     "evidence": [
+      {
+       "source": "q01",
+       "quote": "| 在线门店数 | 家 | 924 | 924 | 918.5 | +0.00% | +0.60% | 1.48 | 否 |"
+      }
+     ]
+    }
+   ]
+  },
+  "revisions": 1,
+  "error": null,
+  "usage": {
+   "calls": 7,
+   "input_tokens": 18,
+   "cache_write_tokens": 18312,
+   "cache_read_tokens": 85941,
+   "output_tokens": 14303,
+   "cost_usd": 0.010302,
+   "model_seconds": 70.89,
+   "pricing": "standard"
+  },
+  "stop_reasons": [
+   "tool_use",
+   "tool_use",
+   "tool_use",
+   "tool_use",
+   "tool_use",
+   "end_turn",
+   "end_turn"
+  ],
+  "trace": [
+   {
+    "tool": "overview",
+    "input": {},
+    "evidence": "q02",
+    "error": false
+   },
+   {
+    "tool": "funnel",
+    "input": {
+     "filters": [
+      {
+       "dimension": "channel",
+       "value": "直播"
+      }
+     ],
+     "compare": "baseline"
+    },
+    "evidence": "q03",
+    "error": false
+   },
+   {
+    "tool": "breakdown",
+    "input": {
+     "metric": "refund_amt",
+     "dimension": "category",
+     "filters": [],
+     "compare": "last_week"
+    },
+    "evidence": "q04",
+    "error": false
+   },
+   {
+    "tool": "breakdown",
+    "input": {
+     "metric": "refund_amt",
+     "dimension": "merchant_type",
+     "filters": [
+      {
+       "dimension": "category",
+       "value": "美发美甲"
+      }
+     ],
+     "compare": "last_week"
+    },
+    "evidence": "q05",
+    "error": false
+   },
+   {
+    "tool": "breakdown",
+    "input": {
+     "metric": "visits",
+     "dimension": "city",
+     "filters": [
+      {
+       "dimension": "channel",
+       "value": "直播"
+      }
+     ],
+     "compare": "last_week"
+    },
+    "evidence": "q06",
+    "error": false
+   },
+   {
+    "tool": "breakdown",
+    "input": {
+     "metric": "refund_amt",
+     "dimension": "merchant",
+     "filters": [
+      {
+       "dimension": "category",
+       "value": "美发美甲"
+      }
+     ],
+     "compare": "last_week"
+    },
+    "evidence": "q07",
+    "error": false
+   },
+   {
+    "tool": "breakdown",
+    "input": {
+     "metric": "refund_amt",
+     "dimension": "city",
+     "filters": [
+      {
+       "dimension": "category",
+       "value": "美发美甲"
+      }
+     ],
+     "compare": "last_week"
+    },
+    "evidence": "q08",
+    "error": false
+   },
+   {
+    "tool": "funnel",
+    "input": {
+     "filters": [
+      {
+       "dimension": "category",
+       "value": "美发美甲"
+      }
+     ],
+     "compare": "last_week"
+    },
+    "evidence": "q09",
+    "error": false
+   },
+   {
+    "tool": "run_sql",
+    "input": {
+     "sql": "SELECT o.pay_week, r.refund_type, o.category, COUNT(*) AS n, ROUND(SUM(r.refund_amount),1) AS refund_amt FROM fact_refund r JOIN order_wide o ON o.order_id=r.order_id WHERE r.refund_date >= '2026-08-24' AND r.refund_date <= '2026-09-13' AND o.category IN ('美发美甲') GROUP BY 1,2,3 ORDER BY 1,2",
+     "purpose": "美发美甲退款按支付周和退款类型拆分，看退款来自哪批订单、什么类型"
+    },
+    "evidence": "q10",
+    "error": false
+   },
+   {
+    "tool": "run_sql",
+    "input": {
+     "sql": "SELECT visit_date, SUM(visit_cnt) AS v FROM fact_traffic_daily WHERE channel='直播' AND visit_date >= '2026-08-24' AND visit_date <= '2026-09-13' GROUP BY 1 ORDER BY 1",
+     "purpose": "直播渠道访问次数按日，看下降是从哪天开始的"
+    },
+    "evidence": "q11",
+    "error": false
+   },
+   {
+    "tool": "breakdown",
+    "input": {
+     "metric": "refund_amt",
+     "dimension": "category",
+     "filters": [
+      {
+       "dimension": "city",
+       "value": "成都"
+      }
+     ],
+     "compare": "last_week"
+    },
+    "evidence": "q12",
+    "error": false
+   },
+   {
+    "tool": "funnel",
+    "input": {
+     "filters": [
+      {
+       "dimension": "city",
+       "value": "成都"
+      }
+     ],
+     "compare": "baseline"
+    },
+    "evidence": "q13",
+    "error": false
+   }
+  ],
+  "prompt_version": "v4"
+ },
+ "check": {
+  "released": false,
+  "blocks": [
+   {
+    "index": 0,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 1,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 2,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 3,
+    "status": "numbers_not_in_quote",
+    "missing_numbers": [
+     "1"
+    ],
+    "problems": [
+     "numbers_not_in_quote"
+    ],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 4,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 5,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 6,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 7,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 8,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 9,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 10,
+    "status": "no_number",
+    "missing_numbers": [],
+    "problems": []
+   },
+   {
+    "index": 11,
+    "status": "no_number",
+    "missing_numbers": [],
+    "problems": []
+   },
+   {
+    "index": 12,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   },
+   {
+    "index": 13,
+    "status": "supported",
+    "missing_numbers": [],
+    "problems": [],
+    "rounded": [],
+    "quotes_not_found": []
+   }
+  ],
+  "report_problems": [],
+  "checked": 12,
+  "supported": 11,
+  "failed": 1
+ }
+}

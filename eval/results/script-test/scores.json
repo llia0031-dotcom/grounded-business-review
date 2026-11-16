@@ -1,0 +1,1144 @@
+[
+ {
+  "case": "T01",
+  "family": "traffic_channel",
+  "week": "2026-W34",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "traffic",
+    "segment": {
+     "channel": "短视频"
+    },
+    "found": "same",
+    "lever_named": "traffic",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 6,
+  "blocks_failed": 0,
+  "seconds": 0.86,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T02",
+  "family": "traffic_channel",
+  "week": "2026-W35",
+  "truth_events": 1,
+  "named": 2,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 1,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": false,
+  "levers_right": false,
+  "events": [
+   {
+    "lever": "traffic",
+    "segment": {
+     "channel": "搜索"
+    },
+    "found": "same",
+    "lever_named": "traffic",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 8,
+  "blocks_failed": 0,
+  "seconds": 1.13,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T03",
+  "family": "traffic_city",
+  "week": "2026-W34",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "traffic",
+    "segment": {
+     "city": "武汉"
+    },
+    "found": "same",
+    "lever_named": "traffic",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 6,
+  "blocks_failed": 0,
+  "seconds": 0.63,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T04",
+  "family": "traffic_category",
+  "week": "2026-W36",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "traffic",
+    "segment": {
+     "category": "快餐小吃"
+    },
+    "found": "same",
+    "lever_named": "traffic",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 6,
+  "blocks_failed": 0,
+  "seconds": 0.7,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T05",
+  "family": "conversion_city",
+  "week": "2026-W34",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "conversion",
+    "segment": {
+     "city": "武汉"
+    },
+    "found": "same",
+    "lever_named": "conversion",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 6,
+  "blocks_failed": 0,
+  "seconds": 0.76,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T06",
+  "family": "conversion_city",
+  "week": "2026-W37",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "conversion",
+    "segment": {
+     "city": "成都"
+    },
+    "found": "same",
+    "lever_named": "conversion",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 6,
+  "blocks_failed": 0,
+  "seconds": 0.69,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T07",
+  "family": "conversion_category",
+  "week": "2026-W36",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "conversion",
+    "segment": {
+     "category": "地方菜"
+    },
+    "found": "same",
+    "lever_named": "conversion",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 6,
+  "blocks_failed": 0,
+  "seconds": 0.7,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T08",
+  "family": "supply_merchant",
+  "week": "2026-W34",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "supply",
+    "segment": {
+     "merchant": "地方菜连锁A"
+    },
+    "found": "same",
+    "lever_named": "supply",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 6,
+  "blocks_failed": 0,
+  "seconds": 0.67,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T09",
+  "family": "supply_merchant",
+  "week": "2026-W34",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "supply",
+    "segment": {
+     "merchant": "快餐小吃连锁A"
+    },
+    "found": "same",
+    "lever_named": "supply",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 6,
+  "blocks_failed": 0,
+  "seconds": 0.63,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T10",
+  "family": "supply_merchant",
+  "week": "2026-W34",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "supply",
+    "segment": {
+     "merchant": "烧烤连锁A"
+    },
+    "found": "same",
+    "lever_named": "supply",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 6,
+  "blocks_failed": 0,
+  "seconds": 0.59,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T11",
+  "family": "redemption_city",
+  "week": "2026-W35",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "redemption",
+    "segment": {
+     "city": "武汉"
+    },
+    "found": "same",
+    "lever_named": "redemption",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 5,
+  "blocks_failed": 0,
+  "seconds": 0.62,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T12",
+  "family": "redemption_category",
+  "week": "2026-W35",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "redemption",
+    "segment": {
+     "category": "美发美甲"
+    },
+    "found": "same",
+    "lever_named": "redemption",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 5,
+  "blocks_failed": 0,
+  "seconds": 0.59,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T13",
+  "family": "redemption_merchant_type",
+  "week": "2026-W38",
+  "truth_events": 1,
+  "named": 4,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 3,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": false,
+  "levers_right": false,
+  "events": [
+   {
+    "lever": "redemption",
+    "segment": {
+     "merchant_type": "单店"
+    },
+    "found": "same",
+    "lever_named": "redemption",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 12,
+  "blocks_failed": 0,
+  "seconds": 2.35,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T14",
+  "family": "refund_category",
+  "week": "2026-W36",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "refund",
+    "segment": {
+     "category": "地方菜"
+    },
+    "found": "same",
+    "lever_named": "refund",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 6,
+  "blocks_failed": 0,
+  "seconds": 0.73,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T15",
+  "family": "refund_city",
+  "week": "2026-W37",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "refund",
+    "segment": {
+     "city": "广州"
+    },
+    "found": "same",
+    "lever_named": "refund",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 5,
+  "blocks_failed": 0,
+  "seconds": 0.62,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T16",
+  "family": "refund_merchant",
+  "week": "2026-W36",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "refund",
+    "segment": {
+     "merchant": "自助餐连锁A"
+    },
+    "found": "same",
+    "lever_named": "refund",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 6,
+  "blocks_failed": 0,
+  "seconds": 0.75,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T17",
+  "family": "refund_merchant",
+  "week": "2026-W36",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "refund",
+    "segment": {
+     "merchant": "茶饮咖啡连锁A"
+    },
+    "found": "same",
+    "lever_named": "refund",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 5,
+  "blocks_failed": 0,
+  "seconds": 0.72,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T18",
+  "family": "traffic_city_channel",
+  "week": "2026-W36",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "traffic",
+    "segment": {
+     "city": "广州",
+     "channel": "搜索"
+    },
+    "found": "same",
+    "lever_named": "traffic",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 5,
+  "blocks_failed": 0,
+  "seconds": 0.71,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T19",
+  "family": "traffic_category_channel",
+  "week": "2026-W35",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "traffic",
+    "segment": {
+     "category": "快餐小吃",
+     "channel": "搜索"
+    },
+    "found": "same",
+    "lever_named": "traffic",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 6,
+  "blocks_failed": 0,
+  "seconds": 0.73,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T20",
+  "family": "conversion_city_category",
+  "week": "2026-W34",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "conversion",
+    "segment": {
+     "city": "深圳",
+     "category": "快餐小吃"
+    },
+    "found": "same",
+    "lever_named": "conversion",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 4,
+  "blocks_failed": 0,
+  "seconds": 0.73,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T21",
+  "family": "conversion_city_category",
+  "week": "2026-W34",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "conversion",
+    "segment": {
+     "city": "广州",
+     "category": "快餐小吃"
+    },
+    "found": "same",
+    "lever_named": "conversion",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 5,
+  "blocks_failed": 0,
+  "seconds": 0.75,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T22",
+  "family": "redemption_city_category",
+  "week": "2026-W38",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "redemption",
+    "segment": {
+     "city": "上海",
+     "category": "茶饮咖啡"
+    },
+    "found": "same",
+    "lever_named": "redemption",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 5,
+  "blocks_failed": 0,
+  "seconds": 0.84,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T23",
+  "family": "refund_city_category",
+  "week": "2026-W35",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "refund",
+    "segment": {
+     "city": "北京",
+     "category": "快餐小吃"
+    },
+    "found": "same",
+    "lever_named": "refund",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 4,
+  "blocks_failed": 0,
+  "seconds": 0.8,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T24",
+  "family": "traffic_up_category",
+  "week": "2026-W35",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "traffic",
+    "segment": {
+     "category": "茶饮咖啡"
+    },
+    "found": "same",
+    "lever_named": "traffic",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 6,
+  "blocks_failed": 0,
+  "seconds": 0.91,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T25",
+  "family": "traffic_up_category",
+  "week": "2026-W36",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "traffic",
+    "segment": {
+     "category": "快餐小吃"
+    },
+    "found": "same",
+    "lever_named": "traffic",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 6,
+  "blocks_failed": 0,
+  "seconds": 0.48,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T26",
+  "family": "traffic_up_category",
+  "week": "2026-W34",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "traffic",
+    "segment": {
+     "category": "快餐小吃"
+    },
+    "found": "same",
+    "lever_named": "traffic",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 6,
+  "blocks_failed": 0,
+  "seconds": 0.48,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T27",
+  "family": "traffic_channel+refund_category",
+  "week": "2026-W38",
+  "truth_events": 2,
+  "named": 2,
+  "located": 1,
+  "coarser": 0,
+  "missed": 1,
+  "extra": 1,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": false,
+  "levers_right": false,
+  "events": [
+   {
+    "lever": "traffic",
+    "segment": {
+     "channel": "直播"
+    },
+    "found": "same",
+    "lever_named": "traffic",
+    "lever_right": true
+   },
+   {
+    "lever": "refund",
+    "segment": {
+     "category": "自助餐"
+    },
+    "found": "missed",
+    "lever_named": null,
+    "lever_right": false
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 8,
+  "blocks_failed": 0,
+  "seconds": 1.56,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T28",
+  "family": "conversion_city+redemption_category",
+  "week": "2026-W38",
+  "truth_events": 2,
+  "named": 2,
+  "located": 2,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "conversion",
+    "segment": {
+     "city": "上海"
+    },
+    "found": "same",
+    "lever_named": "conversion",
+    "lever_right": true
+   },
+   {
+    "lever": "redemption",
+    "segment": {
+     "category": "美发美甲"
+    },
+    "found": "same",
+    "lever_named": "redemption",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 8,
+  "blocks_failed": 0,
+  "seconds": 1.18,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T29",
+  "family": "traffic_up_category+conversion_city",
+  "week": "2026-W38",
+  "truth_events": 2,
+  "named": 2,
+  "located": 1,
+  "coarser": 0,
+  "missed": 1,
+  "extra": 1,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": false,
+  "levers_right": false,
+  "events": [
+   {
+    "lever": "traffic",
+    "segment": {
+     "category": "茶饮咖啡"
+    },
+    "found": "same",
+    "lever_named": "traffic",
+    "lever_right": true
+   },
+   {
+    "lever": "conversion",
+    "segment": {
+     "city": "杭州"
+    },
+    "found": "missed",
+    "lever_named": null,
+    "lever_right": false
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 8,
+  "blocks_failed": 0,
+  "seconds": 2.2,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T30",
+  "family": "supply_merchant+traffic_channel",
+  "week": "2026-W34",
+  "truth_events": 2,
+  "named": 2,
+  "located": 2,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "supply",
+    "segment": {
+     "merchant": "烧烤连锁A"
+    },
+    "found": "same",
+    "lever_named": "supply",
+    "lever_right": true
+   },
+   {
+    "lever": "traffic",
+    "segment": {
+     "channel": "搜索"
+    },
+    "found": "same",
+    "lever_named": "traffic",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 8,
+  "blocks_failed": 0,
+  "seconds": 1.68,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T31",
+  "family": "none",
+  "week": "2026-W34",
+  "truth_events": 0,
+  "named": 0,
+  "located": 0,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 1,
+  "blocks_failed": 0,
+  "seconds": 0.1,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T32",
+  "family": "none",
+  "week": "2026-W38",
+  "truth_events": 0,
+  "named": 0,
+  "located": 0,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 1,
+  "blocks_failed": 0,
+  "seconds": 0.09,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T33",
+  "family": "none",
+  "week": "2026-W36",
+  "truth_events": 0,
+  "named": 0,
+  "located": 0,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 1,
+  "blocks_failed": 0,
+  "seconds": 0.09,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T34",
+  "family": "none",
+  "week": "2026-W37",
+  "truth_events": 0,
+  "named": 0,
+  "located": 0,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 1,
+  "blocks_failed": 0,
+  "seconds": 0.1,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T35",
+  "family": "holiday",
+  "week": "2026-W40",
+  "truth_events": 1,
+  "named": 1,
+  "located": 1,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 0,
+  "holiday_aftermath_named": 0,
+  "detection_right": true,
+  "located_all": true,
+  "levers_right": true,
+  "events": [
+   {
+    "lever": "holiday",
+    "segment": {},
+    "found": "same",
+    "lever_named": "holiday",
+    "lever_right": true
+   }
+  ],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 5,
+  "blocks_failed": 0,
+  "seconds": 0.11,
+  "cost_usd": 0.0
+ },
+ {
+  "case": "T36",
+  "family": "after_holiday",
+  "week": "2026-W42",
+  "truth_events": 0,
+  "named": 1,
+  "located": 0,
+  "coarser": 0,
+  "missed": 0,
+  "extra": 1,
+  "holiday_aftermath_named": 0,
+  "detection_right": false,
+  "located_all": false,
+  "levers_right": false,
+  "events": [],
+  "arm": "script",
+  "released": true,
+  "blocks_checked": 5,
+  "blocks_failed": 0,
+  "seconds": 0.56,
+  "cost_usd": 0.0
+ }
+]

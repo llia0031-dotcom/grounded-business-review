@@ -1,0 +1,292 @@
+# 指标字典：到店团购经营监控的四个维度。
+# 口径是为这份合成数据拟的，不等于任何平台的官方口径。
+#
+# 格式说明
+#   measures  可以直接相加的基础量，每个都来自一张周汇总表（sql/build/ 里建的）。
+#   metrics   对外的指标。type 有三种：
+#               simple  一个基础量本身，可以按维度相加；
+#               ratio   两个基础量相除（numerator / denominator），不能按维度相加，
+#                       拆解时要分“各组的率变了”和“各组的占比变了”；
+#               distinct 去重计数，不能按维度相加，只看数、不拆贡献。
+#   direction up 表示越高越好，down 表示越低越好，neutral 表示要结合别的指标看。
+#   min_change 监控用：相对基线的变化不到这个幅度就不报。simple 和金额类比率用相对变化（%），
+#             百分比类比率用绝对变化（个百分点，写作 pp）。
+#   monitor   false 表示只展示、不做异动判定。
+#   monitor_slices true 表示除了总量，还按城市、品类、渠道、商家类型逐个分组监控。
+#   drivers   这个指标由哪些下一层指标驱动（指标树）。
+#   sql       从明细表直接算这个指标每周总值的 SQL 在哪个文件（sql/metrics/）。
+# 字段名参照 dbt MetricFlow（type、numerator、denominator）和 Lightdash（drivers）。
+
+dimensions:
+  city:          {label: 城市}
+  category:      {label: 品类}
+  channel:       {label: 渠道}
+  merchant_type: {label: 商家类型}
+  merchant:      {label: 商家}
+
+measures:
+  visits:         {label: 访问次数,     table: cube_traffic, expr: "SUM(visits)",         dims: [city, category, channel]}
+  orders:         {label: 支付订单数,   table: cube_trade,   expr: "SUM(orders)",         dims: [city, category, channel, merchant_type, merchant]}
+  gmv:            {label: 支付GMV,      table: cube_trade,   expr: "SUM(gmv)",            dims: [city, category, channel, merchant_type, merchant]}
+  subsidy:        {label: 平台补贴,     table: cube_trade,   expr: "SUM(subsidy)",        dims: [city, category, channel, merchant_type, merchant]}
+  new_orders:     {label: 新客首单数,   table: cube_trade,   expr: "SUM(new_orders)",     dims: [city, category, channel, merchant_type, merchant]}
+  redeem_gmv:     {label: 核销GMV,      table: cube_trade,   expr: "SUM(redeem_gmv)",     dims: [city, category, channel, merchant_type, merchant]}
+  commission:     {label: 佣金收入,     table: cube_trade,   expr: "SUM(commission)",     dims: [city, category, channel, merchant_type, merchant]}
+  refund_amt:     {label: 退款金额,     table: cube_trade,   expr: "SUM(refund_amt)",     dims: [city, category, channel, merchant_type, merchant]}
+  net_revenue:    {label: 净收入,       table: cube_trade,   expr: "SUM(commission) - SUM(subsidy)", dims: [city, category, channel, merchant_type, merchant]}
+  online_stores:  {label: 在线门店数,   table: cube_store,   expr: "SUM(online_stores)",  dims: [city, category, merchant_type, merchant]}
+  active_stores:  {label: 动销门店数,   table: cube_store,   expr: "SUM(active_stores)",  dims: [city, category, merchant_type, merchant]}
+  new_stores:     {label: 新上线门店数, table: cube_store,   expr: "SUM(new_stores)",     dims: [city, category, merchant_type, merchant]}
+  buyers:         {label: 支付用户数,   table: order_wide,   expr: "COUNT(DISTINCT user_id)", week: pay_week, additive: false, dims: [city, category, channel, merchant_type, merchant]}
+
+metrics:
+  # ---------------- 用户增长 ----------------
+  - name: visits
+    monitor_slices: true
+    label: 访问次数
+    group: 用户增长
+    type: simple
+    measure: visits
+    unit: 次
+    direction: up
+    min_change: 5
+    description: 团购商品详情页的访问次数，按访问日所在周汇总。只能按城市、品类、渠道拆。
+    sql: sql/metrics/01_user_growth.sql
+  - name: buyers
+    label: 支付用户数
+    group: 用户增长
+    type: distinct
+    measure: buyers
+    unit: 人
+    direction: up
+    min_change: 5
+    description: 当周至少支付过一笔团购订单的去重用户数。同一个用户在两个品类下单会在两个品类里各算一次，所以各组相加会大于总数。
+    sql: sql/metrics/01_user_growth.sql
+  - name: new_buyers
+    label: 新客数
+    group: 用户增长
+    type: simple
+    measure: new_orders
+    unit: 人
+    direction: up
+    min_change: 6
+    description: 当周完成有记录以来第一笔支付的用户数（一人只算一次，记在首单所在的城市、品类、渠道和商家上）。
+    sql: sql/metrics/01_user_growth.sql
+  - name: new_buyer_share
+    label: 新客订单占比
+    group: 用户增长
+    type: ratio
+    numerator: new_orders
+    denominator: orders
+    unit: "%"
+    direction: neutral
+    min_change: 1.5
+    description: 新客首单数 ÷ 支付订单数。
+    sql: sql/metrics/01_user_growth.sql
+  # ---------------- 交易效率 ----------------
+  - name: orders
+    monitor_slices: true
+    label: 支付订单数
+    group: 交易效率
+    type: simple
+    measure: orders
+    unit: 单
+    direction: up
+    min_change: 5
+    drivers: [visits, conversion_rate]
+    description: 当周支付成功的团购订单数，按支付日入账。后来退款的订单也算在内。
+    sql: sql/metrics/02_trade.sql
+  - name: gmv
+    monitor_slices: true
+    label: 支付GMV
+    group: 交易效率
+    type: simple
+    measure: gmv
+    unit: 元
+    direction: up
+    min_change: 5
+    drivers: [orders, aov]
+    description: 当周支付订单的团购售价之和（含平台补贴的部分），按支付日入账，不扣退款。
+    sql: sql/metrics/02_trade.sql
+  - name: conversion_rate
+    monitor_slices: true
+    label: 访问支付转化率
+    group: 交易效率
+    type: ratio
+    numerator: orders
+    denominator: visits
+    unit: "%"
+    direction: up
+    min_change: 0.35
+    drivers: [subsidy_rate, online_stores]
+    description: 支付订单数 ÷ 访问次数。分子分母都按当周发生入账。只能按城市、品类、渠道拆。
+    sql: sql/metrics/02_trade.sql
+  - name: aov
+    label: 客单价
+    group: 交易效率
+    type: ratio
+    numerator: gmv
+    denominator: orders
+    unit: 元
+    direction: neutral
+    min_change: 3
+    description: 支付GMV ÷ 支付订单数。各品类价格差别大，品类占比一变它就会变。
+    sql: sql/metrics/02_trade.sql
+  - name: redeem_gmv
+    monitor_slices: true
+    label: 核销GMV
+    group: 交易效率
+    type: simple
+    measure: redeem_gmv
+    unit: 元
+    direction: up
+    min_change: 6
+    drivers: [gmv, redeem_rate]
+    description: 当周到店核销的订单金额之和，按核销日入账（订单可能是前几周支付的）。
+    sql: sql/metrics/02_trade.sql
+  - name: redeem_rate
+    monitor_slices: true
+    label: 核销率
+    group: 交易效率
+    type: ratio
+    numerator: redeem_gmv
+    denominator: gmv
+    unit: "%"
+    direction: up
+    min_change: 4
+    description: 当周核销GMV ÷ 当周支付GMV。分子分母不是同一批订单：支付突然放量的那一周它会被拉低，下一周又被抬高。要看同一批订单最终核销了多少，用 sql/metrics/05_cohort_redeem.sql 的 7 日核销率。
+    sql: sql/metrics/02_trade.sql
+  # ---------------- 商家运营 ----------------
+  - name: online_stores
+    monitor_slices: true
+    label: 在线门店数
+    group: 商家运营
+    type: simple
+    measure: online_stores
+    unit: 家
+    direction: up
+    min_change: 2
+    description: 已开业并且当周没有整周下线的门店数。不能按渠道拆。
+    sql: sql/metrics/03_merchant.sql
+  - name: active_stores
+    label: 动销门店数
+    group: 商家运营
+    type: simple
+    measure: active_stores
+    unit: 家
+    direction: up
+    min_change: 3
+    drivers: [online_stores, active_store_rate]
+    description: 当周至少有一笔支付订单的门店数。不能按渠道拆。
+    sql: sql/metrics/03_merchant.sql
+  - name: active_store_rate
+    label: 动销率
+    group: 商家运营
+    type: ratio
+    numerator: active_stores
+    denominator: online_stores
+    unit: "%"
+    direction: up
+    min_change: 2.5
+    description: 动销门店数 ÷ 在线门店数。
+    sql: sql/metrics/03_merchant.sql
+  - name: gmv_per_active_store
+    label: 店均GMV
+    group: 商家运营
+    type: ratio
+    numerator: gmv
+    denominator: active_stores
+    unit: 元
+    direction: up
+    min_change: 6
+    description: 支付GMV ÷ 动销门店数。
+    sql: sql/metrics/03_merchant.sql
+  - name: new_stores
+    label: 新上线门店数
+    group: 商家运营
+    type: simple
+    measure: new_stores
+    unit: 家
+    direction: up
+    min_change: 100
+    monitor: false
+    description: 开业日落在当周的门店数。每周只有个位数，波动大，只展示、不做异动判定。
+    sql: sql/metrics/03_merchant.sql
+  # ---------------- 收入健康度 ----------------
+  - name: commission
+    label: 佣金收入
+    group: 收入健康度
+    type: simple
+    measure: commission
+    unit: 元
+    direction: up
+    min_change: 6
+    drivers: [redeem_gmv, take_rate]
+    description: 当周核销订单金额 × 所属品类的佣金率，按核销日入账（核销后才计佣金）。
+    sql: sql/metrics/04_revenue.sql
+  - name: take_rate
+    label: 货币化率
+    group: 收入健康度
+    type: ratio
+    numerator: commission
+    denominator: redeem_gmv
+    unit: "%"
+    direction: neutral
+    min_change: 0.08
+    description: 佣金收入 ÷ 核销GMV。每个品类的佣金率是固定的，所以它只会因为品类占比变化而变。
+    sql: sql/metrics/04_revenue.sql
+  - name: subsidy
+    label: 平台补贴
+    group: 收入健康度
+    type: simple
+    measure: subsidy
+    unit: 元
+    direction: neutral
+    min_change: 10
+    description: 当周支付订单里由平台承担的补贴金额之和，按支付日入账。
+    sql: sql/metrics/04_revenue.sql
+  - name: subsidy_rate
+    label: 补贴率
+    group: 收入健康度
+    type: ratio
+    numerator: subsidy
+    denominator: gmv
+    unit: "%"
+    direction: neutral
+    min_change: 0.4
+    description: 平台补贴 ÷ 支付GMV。
+    sql: sql/metrics/04_revenue.sql
+  - name: refund_amt
+    monitor_slices: true
+    label: 退款金额
+    group: 收入健康度
+    type: simple
+    measure: refund_amt
+    unit: 元
+    direction: down
+    min_change: 12
+    description: 当周退款成功的订单金额之和，按退款日入账。包括用户主动退和过期自动退。
+    sql: sql/metrics/04_revenue.sql
+  - name: refund_rate
+    monitor_slices: true
+    label: 退款率
+    group: 收入健康度
+    type: ratio
+    numerator: refund_amt
+    denominator: gmv
+    unit: "%"
+    direction: down
+    min_change: 2.5
+    description: 当周退款金额 ÷ 当周支付GMV。和核销率一样，分子分母不是同一批订单。
+    sql: sql/metrics/04_revenue.sql
+  - name: net_revenue
+    label: 净收入
+    group: 收入健康度
+    type: simple
+    measure: net_revenue
+    unit: 元
+    direction: up
+    min_change: 100
+    monitor: false
+    description: 佣金收入 − 平台补贴。两项的入账时点不同（核销日和支付日），而且它可以是负数，按比例看变化没有意义，所以只展示、不做异动判定。
+    sql: sql/metrics/04_revenue.sql

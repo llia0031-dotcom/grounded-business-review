@@ -1,0 +1,571 @@
+- id: T01
+  family: traffic_channel
+  seed: 5000
+  week: 2026-W34
+  events:
+  - lever: traffic
+    segment: &id001
+      channel: 短视频
+    size: -0.428
+  truth:
+    causes:
+    - segment: *id001
+      lever: traffic
+      direction: down
+  drafts: 1
+  alerts: 29
+- id: T02
+  family: traffic_channel
+  seed: 5001
+  week: 2026-W35
+  events:
+  - lever: traffic
+    segment: &id002
+      channel: 搜索
+    size: -0.323
+  truth:
+    causes:
+    - segment: *id002
+      lever: traffic
+      direction: down
+  drafts: 1
+  alerts: 20
+- id: T03
+  family: traffic_city
+  seed: 5002
+  week: 2026-W34
+  events:
+  - lever: traffic
+    segment: &id003
+      city: 武汉
+    size: -0.471
+  truth:
+    causes:
+    - segment: *id003
+      lever: traffic
+      direction: down
+  drafts: 1
+  alerts: 4
+- id: T04
+  family: traffic_category
+  seed: 5003
+  week: 2026-W36
+  events:
+  - lever: traffic
+    segment: &id004
+      category: 快餐小吃
+    size: -0.344
+  truth:
+    causes:
+    - segment: *id004
+      lever: traffic
+      direction: down
+  drafts: 1
+  alerts: 8
+- id: T05
+  family: conversion_city
+  seed: 5004
+  week: 2026-W34
+  events:
+  - lever: conversion
+    segment: &id005
+      city: 武汉
+    size: -0.371
+  truth:
+    causes:
+    - segment: *id005
+      lever: conversion
+      direction: down
+  drafts: 1
+  alerts: 5
+- id: T06
+  family: conversion_city
+  seed: 5005
+  week: 2026-W37
+  events:
+  - lever: conversion
+    segment: &id006
+      city: 成都
+    size: -0.352
+  truth:
+    causes:
+    - segment: *id006
+      lever: conversion
+      direction: down
+  drafts: 1
+  alerts: 4
+- id: T07
+  family: conversion_category
+  seed: 5006
+  week: 2026-W36
+  events:
+  - lever: conversion
+    segment: &id007
+      category: 地方菜
+    size: -0.368
+  truth:
+    causes:
+    - segment: *id007
+      lever: conversion
+      direction: down
+  drafts: 1
+  alerts: 6
+- id: T08
+  family: supply_merchant
+  seed: 5007
+  week: 2026-W34
+  events:
+  - lever: supply
+    segment: &id008
+      merchant: 地方菜连锁A
+    size: -1.0
+  truth:
+    causes:
+    - segment: *id008
+      lever: supply
+      direction: down
+  drafts: 1
+  alerts: 4
+- id: T09
+  family: supply_merchant
+  seed: 5008
+  week: 2026-W34
+  events:
+  - lever: supply
+    segment: &id009
+      merchant: 快餐小吃连锁A
+    size: -1.0
+  truth:
+    causes:
+    - segment: *id009
+      lever: supply
+      direction: down
+  drafts: 1
+  alerts: 11
+- id: T10
+  family: supply_merchant
+  seed: 5009
+  week: 2026-W34
+  events:
+  - lever: supply
+    segment: &id010
+      merchant: 烧烤连锁A
+    size: -1.0
+  truth:
+    causes:
+    - segment: *id010
+      lever: supply
+      direction: down
+  drafts: 1
+  alerts: 4
+- id: T11
+  family: redemption_city
+  seed: 5010
+  week: 2026-W35
+  events:
+  - lever: redemption
+    segment: &id011
+      city: 武汉
+    size: -0.525
+  truth:
+    causes:
+    - segment: *id011
+      lever: redemption
+      direction: down
+  drafts: 1
+  alerts: 5
+- id: T12
+  family: redemption_category
+  seed: 5012
+  week: 2026-W35
+  events:
+  - lever: redemption
+    segment: &id012
+      category: 美发美甲
+    size: -0.508
+  truth:
+    causes:
+    - segment: *id012
+      lever: redemption
+      direction: down
+  drafts: 2
+  alerts: 2
+- id: T13
+  family: redemption_merchant_type
+  seed: 5013
+  week: 2026-W38
+  events:
+  - lever: redemption
+    segment: &id013
+      merchant_type: 单店
+    size: -0.588
+  truth:
+    causes:
+    - segment: *id013
+      lever: redemption
+      direction: down
+  drafts: 1
+  alerts: 39
+- id: T14
+  family: refund_category
+  seed: 5014
+  week: 2026-W36
+  events:
+  - lever: refund
+    segment: &id014
+      category: 地方菜
+    size: 0.228
+  truth:
+    causes:
+    - segment: *id014
+      lever: refund
+      direction: up
+  drafts: 1
+  alerts: 14
+- id: T15
+  family: refund_city
+  seed: 5015
+  week: 2026-W37
+  events:
+  - lever: refund
+    segment: &id015
+      city: 广州
+    size: 0.201
+  truth:
+    causes:
+    - segment: *id015
+      lever: refund
+      direction: up
+  drafts: 1
+  alerts: 4
+- id: T16
+  family: refund_merchant
+  seed: 5016
+  week: 2026-W36
+  events:
+  - lever: refund
+    segment: &id016
+      merchant: 自助餐连锁A
+    size: 0.754
+  truth:
+    causes:
+    - segment: *id016
+      lever: refund
+      direction: up
+  drafts: 1
+  alerts: 14
+- id: T17
+  family: refund_merchant
+  seed: 5017
+  week: 2026-W36
+  events:
+  - lever: refund
+    segment: &id017
+      merchant: 茶饮咖啡连锁A
+    size: 0.69
+  truth:
+    causes:
+    - segment: *id017
+      lever: refund
+      direction: up
+  drafts: 1
+  alerts: 3
+- id: T18
+  family: traffic_city_channel
+  seed: 5020
+  week: 2026-W36
+  events:
+  - lever: traffic
+    segment: &id018
+      city: 广州
+      channel: 搜索
+    size: -0.699
+  truth:
+    causes:
+    - segment: *id018
+      lever: traffic
+      direction: down
+  drafts: 3
+  alerts: 3
+- id: T19
+  family: traffic_category_channel
+  seed: 5022
+  week: 2026-W35
+  events:
+  - lever: traffic
+    segment: &id019
+      category: 快餐小吃
+      channel: 搜索
+    size: -0.744
+  truth:
+    causes:
+    - segment: *id019
+      lever: traffic
+      direction: down
+  drafts: 2
+  alerts: 5
+- id: T20
+  family: conversion_city_category
+  seed: 5024
+  week: 2026-W34
+  events:
+  - lever: conversion
+    segment: &id020
+      city: 深圳
+      category: 快餐小吃
+    size: -0.617
+  truth:
+    causes:
+    - segment: *id020
+      lever: conversion
+      direction: down
+  drafts: 2
+  alerts: 1
+- id: T21
+  family: conversion_city_category
+  seed: 5026
+  week: 2026-W34
+  events:
+  - lever: conversion
+    segment: &id021
+      city: 广州
+      category: 快餐小吃
+    size: -0.55
+  truth:
+    causes:
+    - segment: *id021
+      lever: conversion
+      direction: down
+  drafts: 2
+  alerts: 2
+- id: T22
+  family: redemption_city_category
+  seed: 5036
+  week: 2026-W38
+  events:
+  - lever: redemption
+    segment: &id022
+      city: 上海
+      category: 茶饮咖啡
+    size: -0.793
+  truth:
+    causes:
+    - segment: *id022
+      lever: redemption
+      direction: down
+  drafts: 10
+  alerts: 2
+- id: T23
+  family: refund_city_category
+  seed: 5037
+  week: 2026-W35
+  events:
+  - lever: refund
+    segment: &id023
+      city: 北京
+      category: 快餐小吃
+    size: 0.735
+  truth:
+    causes:
+    - segment: *id023
+      lever: refund
+      direction: up
+  drafts: 1
+  alerts: 2
+- id: T24
+  family: traffic_up_category
+  seed: 5038
+  week: 2026-W35
+  events:
+  - lever: traffic
+    segment: &id024
+      category: 茶饮咖啡
+    size: 0.824
+  truth:
+    causes:
+    - segment: *id024
+      lever: traffic
+      direction: up
+  drafts: 1
+  alerts: 28
+- id: T25
+  family: traffic_up_category
+  seed: 5039
+  week: 2026-W36
+  events:
+  - lever: traffic
+    segment: &id025
+      category: 快餐小吃
+    size: 0.611
+  truth:
+    causes:
+    - segment: *id025
+      lever: traffic
+      direction: up
+  drafts: 1
+  alerts: 8
+- id: T26
+  family: traffic_up_category
+  seed: 5040
+  week: 2026-W34
+  events:
+  - lever: traffic
+    segment: &id026
+      category: 快餐小吃
+    size: 0.688
+  truth:
+    causes:
+    - segment: *id026
+      lever: traffic
+      direction: up
+  drafts: 1
+  alerts: 8
+- id: T27
+  family: traffic_channel+refund_category
+  seed: 5041
+  week: 2026-W38
+  events:
+  - lever: traffic
+    segment: &id027
+      channel: 直播
+    size: -0.443
+  - lever: refund
+    segment: &id028
+      category: 自助餐
+    size: 0.178
+  truth:
+    causes:
+    - segment: *id027
+      lever: traffic
+      direction: down
+    - segment: *id028
+      lever: refund
+      direction: up
+  drafts: 1
+  alerts: 26
+- id: T28
+  family: conversion_city+redemption_category
+  seed: 5042
+  week: 2026-W38
+  events:
+  - lever: conversion
+    segment: &id029
+      city: 上海
+    size: -0.373
+  - lever: redemption
+    segment: &id030
+      category: 美发美甲
+    size: -0.533
+  truth:
+    causes:
+    - segment: *id029
+      lever: conversion
+      direction: down
+    - segment: *id030
+      lever: redemption
+      direction: down
+  drafts: 1
+  alerts: 9
+- id: T29
+  family: traffic_up_category+conversion_city
+  seed: 5043
+  week: 2026-W38
+  events:
+  - lever: traffic
+    segment: &id031
+      category: 茶饮咖啡
+    size: 0.898
+  - lever: conversion
+    segment: &id032
+      city: 杭州
+    size: -0.4
+  truth:
+    causes:
+    - segment: *id031
+      lever: traffic
+      direction: up
+    - segment: *id032
+      lever: conversion
+      direction: down
+  drafts: 1
+  alerts: 28
+- id: T30
+  family: supply_merchant+traffic_channel
+  seed: 5044
+  week: 2026-W34
+  events:
+  - lever: supply
+    segment: &id033
+      merchant: 烧烤连锁A
+    size: -1.0
+  - lever: traffic
+    segment: &id034
+      channel: 搜索
+    size: -0.317
+  truth:
+    causes:
+    - segment: *id033
+      lever: supply
+      direction: down
+    - segment: *id034
+      lever: traffic
+      direction: down
+  drafts: 1
+  alerts: 22
+- id: T31
+  family: none
+  seed: 5045
+  week: 2026-W34
+  events: []
+  truth:
+    causes: []
+  drafts: 1
+  alerts: 0
+- id: T32
+  family: none
+  seed: 5046
+  week: 2026-W38
+  events: []
+  truth:
+    causes: []
+  drafts: 1
+  alerts: 0
+- id: T33
+  family: none
+  seed: 5047
+  week: 2026-W36
+  events: []
+  truth:
+    causes: []
+  drafts: 1
+  alerts: 0
+- id: T34
+  family: none
+  seed: 5048
+  week: 2026-W37
+  events: []
+  truth:
+    causes: []
+  drafts: 1
+  alerts: 0
+- id: T35
+  family: holiday
+  seed: 5049
+  week: 2026-W40
+  events: []
+  truth:
+    causes:
+    - segment: {}
+      lever: holiday
+      direction: up
+  drafts: 1
+  alerts: 83
+- id: T36
+  family: after_holiday
+  seed: 5050
+  week: 2026-W42
+  events: []
+  truth:
+    causes: []
+  drafts: 1
+  alerts: 3

@@ -1,0 +1,83 @@
+{
+ "arm": "agent",
+ "set": "dev",
+ "repeat": 1,
+ "batch": true,
+ "model": "claude-haiku-5-5",
+ "effort": "medium",
+ "minutes_this_process": 63.6,
+ "cost_usd": 0.083,
+ "batches": [
+  {
+   "requests": 3,
+   "minutes": 5.4,
+   "succeeded": 3,
+   "errored": 0,
+   "expired": 0
+  },
+  {
+   "requests": 16,
+   "minutes": 7.0,
+   "succeeded": 16,
+   "errored": 0,
+   "expired": 0
+  },
+  {
+   "requests": 16,
+   "minutes": 5.7,
+   "succeeded": 16,
+   "errored": 0,
+   "expired": 0
+  },
+  {
+   "requests": 16,
+   "minutes": 6.2,
+   "succeeded": 16,
+   "errored": 0,
+   "expired": 0
+  },
+  {
+   "requests": 15,
+   "minutes": 6.2,
+   "succeeded": 15,
+   "errored": 0,
+   "expired": 0
+  },
+  {
+   "requests": 11,
+   "minutes": 6.5,
+   "succeeded": 11,
+   "errored": 0,
+   "expired": 0
+  },
+  {
+   "requests": 10,
+   "minutes": 6.2,
+   "succeeded": 10,
+   "errored": 0,
+   "expired": 0
+  },
+  {
+   "requests": 6,
+   "minutes": 6.2,
+   "succeeded": 6,
+   "errored": 0,
+   "expired": 0
+  },
+  {
+   "requests": 4,
+   "minutes": 6.5,
+   "succeeded": 4,
+   "errored": 0,
+   "expired": 0
+  },
+  {
+   "requests": 2,
+   "minutes": 7.0,
+   "succeeded": 2,
+   "errored": 0,
+   "expired": 0
+  }
+ ],
+ "answers_reused_after_interruption": 0
+}

@@ -1,0 +1,2420 @@
+{
+ "runs": {
+  "script": "script-test",
+  "oneshot": "test-oneshot",
+  "agent": "test-agent"
+ },
+ "arms": {
+  "script": {
+   "runs": 36,
+   "scored": 36,
+   "failed_to_run": 0,
+   "located_all": {
+    "k": 31,
+    "n": 36,
+    "pct": 86.1,
+    "ci95": [
+     71.3,
+     93.9
+    ]
+   },
+   "levers_right": {
+    "k": 31,
+    "n": 36,
+    "pct": 86.1,
+    "ci95": [
+     71.3,
+     93.9
+    ]
+   },
+   "detection_right": {
+    "k": 35,
+    "n": 36,
+    "pct": 97.2,
+    "ci95": [
+     85.8,
+     99.5
+    ]
+   },
+   "released": {
+    "k": 36,
+    "n": 36,
+    "pct": 100.0,
+    "ci95": [
+     90.4,
+     100.0
+    ]
+   },
+   "events": 35,
+   "events_located": 33,
+   "events_coarser": 0,
+   "events_missed": 2,
+   "extra_causes": 7,
+   "runs_with_extra": 5,
+   "cost_usd": 0.0,
+   "cost_per_run_usd": 0.0,
+   "seconds_per_run": 0.8
+  },
+  "oneshot": {
+   "runs": 36,
+   "scored": 36,
+   "failed_to_run": 0,
+   "located_all": {
+    "k": 28,
+    "n": 36,
+    "pct": 77.8,
+    "ci95": [
+     61.9,
+     88.3
+    ]
+   },
+   "levers_right": {
+    "k": 28,
+    "n": 36,
+    "pct": 77.8,
+    "ci95": [
+     61.9,
+     88.3
+    ]
+   },
+   "detection_right": {
+    "k": 35,
+    "n": 36,
+    "pct": 97.2,
+    "ci95": [
+     85.8,
+     99.5
+    ]
+   },
+   "released": {
+    "k": 35,
+    "n": 36,
+    "pct": 97.2,
+    "ci95": [
+     85.8,
+     99.5
+    ]
+   },
+   "events": 35,
+   "events_located": 28,
+   "events_coarser": 6,
+   "events_missed": 1,
+   "extra_causes": 3,
+   "runs_with_extra": 3,
+   "cost_usd": 0.1139,
+   "cost_per_run_usd": 0.00316,
+   "seconds_per_run": 669.1,
+   "released_first_try": {
+    "k": 19,
+    "n": 36,
+    "pct": 52.8,
+    "ci95": [
+     37.0,
+     68.0
+    ]
+   },
+   "runs_revised": 17,
+   "model_calls_per_run": 1.47,
+   "tool_calls_per_run": 0.0,
+   "blocks_checked_first_try": 297,
+   "blocks_failed_first_try": 28,
+   "blocks_checked_final": 291,
+   "blocks_failed_final": 2,
+   "input_tokens": 1019887,
+   "output_tokens": 258807,
+   "run": {
+    "arm": "oneshot",
+    "set": "test",
+    "repeat": 1,
+    "batch": true,
+    "model": "claude-haiku-5-5",
+    "effort": "medium",
+    "minutes_this_process": 15.3,
+    "cost_usd": 0.1139,
+    "batches": [
+     {
+      "requests": 36,
+      "minutes": 6.7,
+      "succeeded": 36,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 17,
+      "minutes": 7.8,
+      "succeeded": 17,
+      "errored": 0,
+      "expired": 0
+     }
+    ],
+    "answers_reused_after_interruption": 0
+   }
+  },
+  "agent": {
+   "runs": 36,
+   "scored": 36,
+   "failed_to_run": 0,
+   "located_all": {
+    "k": 34,
+    "n": 36,
+    "pct": 94.4,
+    "ci95": [
+     81.9,
+     98.5
+    ]
+   },
+   "levers_right": {
+    "k": 34,
+    "n": 36,
+    "pct": 94.4,
+    "ci95": [
+     81.9,
+     98.5
+    ]
+   },
+   "detection_right": {
+    "k": 36,
+    "n": 36,
+    "pct": 100.0,
+    "ci95": [
+     90.4,
+     100.0
+    ]
+   },
+   "released": {
+    "k": 33,
+    "n": 36,
+    "pct": 91.7,
+    "ci95": [
+     78.2,
+     97.1
+    ]
+   },
+   "events": 35,
+   "events_located": 34,
+   "events_coarser": 0,
+   "events_missed": 1,
+   "extra_causes": 2,
+   "runs_with_extra": 2,
+   "cost_usd": 0.2068,
+   "cost_per_run_usd": 0.00574,
+   "seconds_per_run": 2534.6,
+   "released_first_try": {
+    "k": 12,
+    "n": 36,
+    "pct": 33.3,
+    "ci95": [
+     20.2,
+     49.7
+    ]
+   },
+   "runs_revised": 24,
+   "model_calls_per_run": 6.28,
+   "tool_calls_per_run": 9.56,
+   "blocks_checked_first_try": 333,
+   "blocks_failed_first_try": 58,
+   "blocks_checked_final": 327,
+   "blocks_failed_final": 4,
+   "input_tokens": 3172190,
+   "output_tokens": 388302,
+   "run": {
+    "arm": "agent",
+    "set": "test",
+    "repeat": 1,
+    "batch": true,
+    "model": "claude-haiku-5-5",
+    "effort": "medium",
+    "minutes_this_process": 72.0,
+    "cost_usd": 0.2068,
+    "batches": [
+     {
+      "requests": 36,
+      "minutes": 7.0,
+      "succeeded": 36,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 36,
+      "minutes": 8.0,
+      "succeeded": 36,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 33,
+      "minutes": 6.0,
+      "succeeded": 33,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 31,
+      "minutes": 5.7,
+      "succeeded": 31,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 31,
+      "minutes": 6.2,
+      "succeeded": 31,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 24,
+      "minutes": 6.5,
+      "succeeded": 24,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 18,
+      "minutes": 7.2,
+      "succeeded": 18,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 7,
+      "minutes": 6.5,
+      "succeeded": 7,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 5,
+      "minutes": 5.9,
+      "succeeded": 5,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 3,
+      "minutes": 5.9,
+      "succeeded": 3,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 2,
+      "minutes": 6.2,
+      "succeeded": 2,
+      "errored": 0,
+      "expired": 0
+     }
+    ],
+    "answers_reused_after_interruption": 0
+   }
+  }
+ },
+ "by_group": {
+  "one segment, one dimension": {
+   "script": {
+    "runs": 20,
+    "scored": 20,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 18,
+     "n": 20,
+     "pct": 90.0,
+     "ci95": [
+      69.9,
+      97.2
+     ]
+    },
+    "levers_right": {
+     "k": 18,
+     "n": 20,
+     "pct": 90.0,
+     "ci95": [
+      69.9,
+      97.2
+     ]
+    },
+    "detection_right": {
+     "k": 20,
+     "n": 20,
+     "pct": 100.0,
+     "ci95": [
+      83.9,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 20,
+     "n": 20,
+     "pct": 100.0,
+     "ci95": [
+      83.9,
+      100.0
+     ]
+    },
+    "events": 20,
+    "events_located": 20,
+    "events_coarser": 0,
+    "events_missed": 0,
+    "extra_causes": 4,
+    "runs_with_extra": 2,
+    "cost_usd": 0.0,
+    "cost_per_run_usd": 0.0,
+    "seconds_per_run": 0.8
+   },
+   "oneshot": {
+    "runs": 20,
+    "scored": 20,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 20,
+     "n": 20,
+     "pct": 100.0,
+     "ci95": [
+      83.9,
+      100.0
+     ]
+    },
+    "levers_right": {
+     "k": 20,
+     "n": 20,
+     "pct": 100.0,
+     "ci95": [
+      83.9,
+      100.0
+     ]
+    },
+    "detection_right": {
+     "k": 20,
+     "n": 20,
+     "pct": 100.0,
+     "ci95": [
+      83.9,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 19,
+     "n": 20,
+     "pct": 95.0,
+     "ci95": [
+      76.4,
+      99.1
+     ]
+    },
+    "events": 20,
+    "events_located": 20,
+    "events_coarser": 0,
+    "events_missed": 0,
+    "extra_causes": 0,
+    "runs_with_extra": 0,
+    "cost_usd": 0.0674,
+    "cost_per_run_usd": 0.00337,
+    "seconds_per_run": 635.2,
+    "released_first_try": {
+     "k": 12,
+     "n": 20,
+     "pct": 60.0,
+     "ci95": [
+      38.7,
+      78.1
+     ]
+    },
+    "runs_revised": 8,
+    "model_calls_per_run": 1.4,
+    "tool_calls_per_run": 0.0,
+    "blocks_checked_first_try": 176,
+    "blocks_failed_first_try": 13,
+    "blocks_checked_final": 172,
+    "blocks_failed_final": 2,
+    "input_tokens": 601987,
+    "output_tokens": 150162
+   },
+   "agent": {
+    "runs": 20,
+    "scored": 20,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 20,
+     "n": 20,
+     "pct": 100.0,
+     "ci95": [
+      83.9,
+      100.0
+     ]
+    },
+    "levers_right": {
+     "k": 20,
+     "n": 20,
+     "pct": 100.0,
+     "ci95": [
+      83.9,
+      100.0
+     ]
+    },
+    "detection_right": {
+     "k": 20,
+     "n": 20,
+     "pct": 100.0,
+     "ci95": [
+      83.9,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 18,
+     "n": 20,
+     "pct": 90.0,
+     "ci95": [
+      69.9,
+      97.2
+     ]
+    },
+    "events": 20,
+    "events_located": 20,
+    "events_coarser": 0,
+    "events_missed": 0,
+    "extra_causes": 0,
+    "runs_with_extra": 0,
+    "cost_usd": 0.1248,
+    "cost_per_run_usd": 0.00624,
+    "seconds_per_run": 2749.6,
+    "released_first_try": {
+     "k": 5,
+     "n": 20,
+     "pct": 25.0,
+     "ci95": [
+      11.2,
+      46.9
+     ]
+    },
+    "runs_revised": 15,
+    "model_calls_per_run": 6.85,
+    "tool_calls_per_run": 10.4,
+    "blocks_checked_first_try": 202,
+    "blocks_failed_first_try": 40,
+    "blocks_checked_final": 197,
+    "blocks_failed_final": 2,
+    "input_tokens": 1916876,
+    "output_tokens": 236303
+   }
+  },
+  "one segment, two dimensions": {
+   "script": {
+    "runs": 6,
+    "scored": 6,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 6,
+     "n": 6,
+     "pct": 100.0,
+     "ci95": [
+      61.0,
+      100.0
+     ]
+    },
+    "levers_right": {
+     "k": 6,
+     "n": 6,
+     "pct": 100.0,
+     "ci95": [
+      61.0,
+      100.0
+     ]
+    },
+    "detection_right": {
+     "k": 6,
+     "n": 6,
+     "pct": 100.0,
+     "ci95": [
+      61.0,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 6,
+     "n": 6,
+     "pct": 100.0,
+     "ci95": [
+      61.0,
+      100.0
+     ]
+    },
+    "events": 6,
+    "events_located": 6,
+    "events_coarser": 0,
+    "events_missed": 0,
+    "extra_causes": 0,
+    "runs_with_extra": 0,
+    "cost_usd": 0.0,
+    "cost_per_run_usd": 0.0,
+    "seconds_per_run": 0.8
+   },
+   "oneshot": {
+    "runs": 6,
+    "scored": 6,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 0,
+     "n": 6,
+     "pct": 0.0,
+     "ci95": [
+      0.0,
+      39.0
+     ]
+    },
+    "levers_right": {
+     "k": 0,
+     "n": 6,
+     "pct": 0.0,
+     "ci95": [
+      0.0,
+      39.0
+     ]
+    },
+    "detection_right": {
+     "k": 6,
+     "n": 6,
+     "pct": 100.0,
+     "ci95": [
+      61.0,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 6,
+     "n": 6,
+     "pct": 100.0,
+     "ci95": [
+      61.0,
+      100.0
+     ]
+    },
+    "events": 6,
+    "events_located": 0,
+    "events_coarser": 5,
+    "events_missed": 1,
+    "extra_causes": 2,
+    "runs_with_extra": 2,
+    "cost_usd": 0.0192,
+    "cost_per_run_usd": 0.00319,
+    "seconds_per_run": 682.0,
+    "released_first_try": {
+     "k": 3,
+     "n": 6,
+     "pct": 50.0,
+     "ci95": [
+      18.8,
+      81.2
+     ]
+    },
+    "runs_revised": 3,
+    "model_calls_per_run": 1.5,
+    "tool_calls_per_run": 0.0,
+    "blocks_checked_first_try": 50,
+    "blocks_failed_first_try": 3,
+    "blocks_checked_final": 49,
+    "blocks_failed_final": 0,
+    "input_tokens": 161492,
+    "output_tokens": 46296
+   },
+   "agent": {
+    "runs": 6,
+    "scored": 6,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 4,
+     "n": 6,
+     "pct": 66.7,
+     "ci95": [
+      30.0,
+      90.3
+     ]
+    },
+    "levers_right": {
+     "k": 4,
+     "n": 6,
+     "pct": 66.7,
+     "ci95": [
+      30.0,
+      90.3
+     ]
+    },
+    "detection_right": {
+     "k": 6,
+     "n": 6,
+     "pct": 100.0,
+     "ci95": [
+      61.0,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 6,
+     "n": 6,
+     "pct": 100.0,
+     "ci95": [
+      61.0,
+      100.0
+     ]
+    },
+    "events": 6,
+    "events_located": 5,
+    "events_coarser": 0,
+    "events_missed": 1,
+    "extra_causes": 2,
+    "runs_with_extra": 2,
+    "cost_usd": 0.0306,
+    "cost_per_run_usd": 0.00511,
+    "seconds_per_run": 2424.5,
+    "released_first_try": {
+     "k": 3,
+     "n": 6,
+     "pct": 50.0,
+     "ci95": [
+      18.8,
+      81.2
+     ]
+    },
+    "runs_revised": 3,
+    "model_calls_per_run": 6.0,
+    "tool_calls_per_run": 9.83,
+    "blocks_checked_first_try": 50,
+    "blocks_failed_first_try": 7,
+    "blocks_checked_final": 50,
+    "blocks_failed_final": 0,
+    "input_tokens": 467539,
+    "output_tokens": 59933
+   }
+  },
+  "two causes": {
+   "script": {
+    "runs": 4,
+    "scored": 4,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 2,
+     "n": 4,
+     "pct": 50.0,
+     "ci95": [
+      15.0,
+      85.0
+     ]
+    },
+    "levers_right": {
+     "k": 2,
+     "n": 4,
+     "pct": 50.0,
+     "ci95": [
+      15.0,
+      85.0
+     ]
+    },
+    "detection_right": {
+     "k": 4,
+     "n": 4,
+     "pct": 100.0,
+     "ci95": [
+      51.0,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 4,
+     "n": 4,
+     "pct": 100.0,
+     "ci95": [
+      51.0,
+      100.0
+     ]
+    },
+    "events": 8,
+    "events_located": 6,
+    "events_coarser": 0,
+    "events_missed": 2,
+    "extra_causes": 2,
+    "runs_with_extra": 2,
+    "cost_usd": 0.0,
+    "cost_per_run_usd": 0.0,
+    "seconds_per_run": 1.7
+   },
+   "oneshot": {
+    "runs": 4,
+    "scored": 4,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 3,
+     "n": 4,
+     "pct": 75.0,
+     "ci95": [
+      30.1,
+      95.4
+     ]
+    },
+    "levers_right": {
+     "k": 3,
+     "n": 4,
+     "pct": 75.0,
+     "ci95": [
+      30.1,
+      95.4
+     ]
+    },
+    "detection_right": {
+     "k": 4,
+     "n": 4,
+     "pct": 100.0,
+     "ci95": [
+      51.0,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 4,
+     "n": 4,
+     "pct": 100.0,
+     "ci95": [
+      51.0,
+      100.0
+     ]
+    },
+    "events": 8,
+    "events_located": 7,
+    "events_coarser": 1,
+    "events_missed": 0,
+    "extra_causes": 0,
+    "runs_with_extra": 0,
+    "cost_usd": 0.0184,
+    "cost_per_run_usd": 0.00459,
+    "seconds_per_run": 800.0,
+    "released_first_try": {
+     "k": 1,
+     "n": 4,
+     "pct": 25.0,
+     "ci95": [
+      4.6,
+      69.9
+     ]
+    },
+    "runs_revised": 3,
+    "model_calls_per_run": 1.75,
+    "tool_calls_per_run": 0.0,
+    "blocks_checked_first_try": 42,
+    "blocks_failed_first_try": 7,
+    "blocks_checked_final": 41,
+    "blocks_failed_final": 0,
+    "input_tokens": 163898,
+    "output_tokens": 40237
+   },
+   "agent": {
+    "runs": 4,
+    "scored": 4,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 4,
+     "n": 4,
+     "pct": 100.0,
+     "ci95": [
+      51.0,
+      100.0
+     ]
+    },
+    "levers_right": {
+     "k": 4,
+     "n": 4,
+     "pct": 100.0,
+     "ci95": [
+      51.0,
+      100.0
+     ]
+    },
+    "detection_right": {
+     "k": 4,
+     "n": 4,
+     "pct": 100.0,
+     "ci95": [
+      51.0,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 3,
+     "n": 4,
+     "pct": 75.0,
+     "ci95": [
+      30.1,
+      95.4
+     ]
+    },
+    "events": 8,
+    "events_located": 8,
+    "events_coarser": 0,
+    "events_missed": 0,
+    "extra_causes": 0,
+    "runs_with_extra": 0,
+    "cost_usd": 0.0401,
+    "cost_per_run_usd": 0.01002,
+    "seconds_per_run": 3492.1,
+    "released_first_try": {
+     "k": 0,
+     "n": 4,
+     "pct": 0.0,
+     "ci95": [
+      0.0,
+      49.0
+     ]
+    },
+    "runs_revised": 4,
+    "model_calls_per_run": 8.75,
+    "tool_calls_per_run": 14.75,
+    "blocks_checked_first_try": 43,
+    "blocks_failed_first_try": 7,
+    "blocks_checked_final": 42,
+    "blocks_failed_final": 2,
+    "input_tokens": 608755,
+    "output_tokens": 66493
+   }
+  },
+  "controls": {
+   "script": {
+    "runs": 6,
+    "scored": 6,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 5,
+     "n": 6,
+     "pct": 83.3,
+     "ci95": [
+      43.6,
+      97.0
+     ]
+    },
+    "levers_right": {
+     "k": 5,
+     "n": 6,
+     "pct": 83.3,
+     "ci95": [
+      43.6,
+      97.0
+     ]
+    },
+    "detection_right": {
+     "k": 5,
+     "n": 6,
+     "pct": 83.3,
+     "ci95": [
+      43.6,
+      97.0
+     ]
+    },
+    "released": {
+     "k": 6,
+     "n": 6,
+     "pct": 100.0,
+     "ci95": [
+      61.0,
+      100.0
+     ]
+    },
+    "events": 1,
+    "events_located": 1,
+    "events_coarser": 0,
+    "events_missed": 0,
+    "extra_causes": 1,
+    "runs_with_extra": 1,
+    "cost_usd": 0.0,
+    "cost_per_run_usd": 0.0,
+    "seconds_per_run": 0.2
+   },
+   "oneshot": {
+    "runs": 6,
+    "scored": 6,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 5,
+     "n": 6,
+     "pct": 83.3,
+     "ci95": [
+      43.6,
+      97.0
+     ]
+    },
+    "levers_right": {
+     "k": 5,
+     "n": 6,
+     "pct": 83.3,
+     "ci95": [
+      43.6,
+      97.0
+     ]
+    },
+    "detection_right": {
+     "k": 5,
+     "n": 6,
+     "pct": 83.3,
+     "ci95": [
+      43.6,
+      97.0
+     ]
+    },
+    "released": {
+     "k": 6,
+     "n": 6,
+     "pct": 100.0,
+     "ci95": [
+      61.0,
+      100.0
+     ]
+    },
+    "events": 1,
+    "events_located": 1,
+    "events_coarser": 0,
+    "events_missed": 0,
+    "extra_causes": 1,
+    "runs_with_extra": 1,
+    "cost_usd": 0.009,
+    "cost_per_run_usd": 0.0015,
+    "seconds_per_run": 681.8,
+    "released_first_try": {
+     "k": 3,
+     "n": 6,
+     "pct": 50.0,
+     "ci95": [
+      18.8,
+      81.2
+     ]
+    },
+    "runs_revised": 3,
+    "model_calls_per_run": 1.5,
+    "tool_calls_per_run": 0.0,
+    "blocks_checked_first_try": 29,
+    "blocks_failed_first_try": 5,
+    "blocks_checked_final": 29,
+    "blocks_failed_final": 0,
+    "input_tokens": 92510,
+    "output_tokens": 22112
+   },
+   "agent": {
+    "runs": 6,
+    "scored": 6,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 6,
+     "n": 6,
+     "pct": 100.0,
+     "ci95": [
+      61.0,
+      100.0
+     ]
+    },
+    "levers_right": {
+     "k": 6,
+     "n": 6,
+     "pct": 100.0,
+     "ci95": [
+      61.0,
+      100.0
+     ]
+    },
+    "detection_right": {
+     "k": 6,
+     "n": 6,
+     "pct": 100.0,
+     "ci95": [
+      61.0,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 6,
+     "n": 6,
+     "pct": 100.0,
+     "ci95": [
+      61.0,
+      100.0
+     ]
+    },
+    "events": 1,
+    "events_located": 1,
+    "events_coarser": 0,
+    "events_missed": 0,
+    "extra_causes": 0,
+    "runs_with_extra": 0,
+    "cost_usd": 0.0113,
+    "cost_per_run_usd": 0.00188,
+    "seconds_per_run": 1289.4,
+    "released_first_try": {
+     "k": 4,
+     "n": 6,
+     "pct": 66.7,
+     "ci95": [
+      30.0,
+      90.3
+     ]
+    },
+    "runs_revised": 2,
+    "model_calls_per_run": 3.0,
+    "tool_calls_per_run": 3.0,
+    "blocks_checked_first_try": 38,
+    "blocks_failed_first_try": 4,
+    "blocks_checked_final": 38,
+    "blocks_failed_final": 0,
+    "input_tokens": 179020,
+    "output_tokens": 25573
+   }
+  }
+ },
+ "by_case": {
+  "T01": {
+   "family": "traffic_channel",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T02": {
+   "family": "traffic_channel",
+   "script": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 1,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T03": {
+   "family": "traffic_city",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T04": {
+   "family": "traffic_category",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T05": {
+   "family": "conversion_city",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": false,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T06": {
+   "family": "conversion_city",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T07": {
+   "family": "conversion_category",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T08": {
+   "family": "supply_merchant",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T09": {
+   "family": "supply_merchant",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T10": {
+   "family": "supply_merchant",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": false,
+     "error": null
+    }
+   ]
+  },
+  "T11": {
+   "family": "redemption_city",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T12": {
+   "family": "redemption_category",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T13": {
+   "family": "redemption_merchant_type",
+   "script": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 3,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T14": {
+   "family": "refund_category",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T15": {
+   "family": "refund_city",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T16": {
+   "family": "refund_merchant",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T17": {
+   "family": "refund_merchant",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T18": {
+   "family": "traffic_city_channel",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 0,
+     "coarser": 1,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T19": {
+   "family": "traffic_category_channel",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 0,
+     "coarser": 1,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T20": {
+   "family": "conversion_city_category",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 0,
+     "coarser": 1,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T21": {
+   "family": "conversion_city_category",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 0,
+     "coarser": 1,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T22": {
+   "family": "redemption_city_category",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 1,
+     "coarser": 1,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 1,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T23": {
+   "family": "refund_city_category",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 1,
+     "coarser": 0,
+     "missed": 1,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 1,
+     "coarser": 0,
+     "missed": 1,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T24": {
+   "family": "traffic_up_category",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": false,
+     "error": null
+    }
+   ]
+  },
+  "T25": {
+   "family": "traffic_up_category",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T26": {
+   "family": "traffic_up_category",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T27": {
+   "family": "traffic_channel+refund_category",
+   "script": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 1,
+     "coarser": 0,
+     "missed": 1,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": false,
+     "error": null
+    }
+   ]
+  },
+  "T28": {
+   "family": "conversion_city+redemption_category",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T29": {
+   "family": "traffic_up_category+conversion_city",
+   "script": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 1,
+     "coarser": 0,
+     "missed": 1,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T30": {
+   "family": "supply_merchant+traffic_channel",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 0,
+     "coarser": 1,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T31": {
+   "family": "none",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T32": {
+   "family": "none",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T33": {
+   "family": "none",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T34": {
+   "family": "none",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T35": {
+   "family": "holiday",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "T36": {
+   "family": "after_holiday",
+   "script": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 1,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 1,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  }
+ },
+ "paired": {
+  "script vs oneshot": {
+   "located_all": {
+    "pairs": 36,
+    "both": 24,
+    "only_first": 7,
+    "only_second": 4,
+    "neither": 1,
+    "p_exact": 0.5488
+   },
+   "levers_right": {
+    "pairs": 36,
+    "both": 24,
+    "only_first": 7,
+    "only_second": 4,
+    "neither": 1,
+    "p_exact": 0.5488
+   }
+  },
+  "script vs agent": {
+   "located_all": {
+    "pairs": 36,
+    "both": 29,
+    "only_first": 2,
+    "only_second": 5,
+    "neither": 0,
+    "p_exact": 0.4531
+   },
+   "levers_right": {
+    "pairs": 36,
+    "both": 29,
+    "only_first": 2,
+    "only_second": 5,
+    "neither": 0,
+    "p_exact": 0.4531
+   }
+  },
+  "oneshot vs agent": {
+   "located_all": {
+    "pairs": 36,
+    "both": 28,
+    "only_first": 0,
+    "only_second": 6,
+    "neither": 2,
+    "p_exact": 0.0312
+   },
+   "levers_right": {
+    "pairs": 36,
+    "both": 28,
+    "only_first": 0,
+    "only_second": 6,
+    "neither": 2,
+    "p_exact": 0.0312
+   }
+  }
+ }
+}

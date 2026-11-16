@@ -1,0 +1,1693 @@
+{
+ "runs": {
+  "script": "script-dev",
+  "oneshot": "dev-oneshot-v4",
+  "agent": "dev-agent-v4"
+ },
+ "arms": {
+  "script": {
+   "runs": 16,
+   "scored": 16,
+   "failed_to_run": 0,
+   "located_all": {
+    "k": 12,
+    "n": 16,
+    "pct": 75.0,
+    "ci95": [
+     50.5,
+     89.8
+    ]
+   },
+   "levers_right": {
+    "k": 12,
+    "n": 16,
+    "pct": 75.0,
+    "ci95": [
+     50.5,
+     89.8
+    ]
+   },
+   "detection_right": {
+    "k": 15,
+    "n": 16,
+    "pct": 93.8,
+    "ci95": [
+     71.7,
+     98.9
+    ]
+   },
+   "released": {
+    "k": 16,
+    "n": 16,
+    "pct": 100.0,
+    "ci95": [
+     80.6,
+     100.0
+    ]
+   },
+   "events": 15,
+   "events_located": 14,
+   "events_coarser": 1,
+   "events_missed": 0,
+   "extra_causes": 3,
+   "runs_with_extra": 3,
+   "cost_usd": 0.0,
+   "cost_per_run_usd": 0.0,
+   "seconds_per_run": 0.3
+  },
+  "oneshot": {
+   "runs": 16,
+   "scored": 16,
+   "failed_to_run": 0,
+   "located_all": {
+    "k": 13,
+    "n": 16,
+    "pct": 81.2,
+    "ci95": [
+     57.0,
+     93.4
+    ]
+   },
+   "levers_right": {
+    "k": 13,
+    "n": 16,
+    "pct": 81.2,
+    "ci95": [
+     57.0,
+     93.4
+    ]
+   },
+   "detection_right": {
+    "k": 15,
+    "n": 16,
+    "pct": 93.8,
+    "ci95": [
+     71.7,
+     98.9
+    ]
+   },
+   "released": {
+    "k": 16,
+    "n": 16,
+    "pct": 100.0,
+    "ci95": [
+     80.6,
+     100.0
+    ]
+   },
+   "events": 15,
+   "events_located": 13,
+   "events_coarser": 2,
+   "events_missed": 0,
+   "extra_causes": 1,
+   "runs_with_extra": 1,
+   "cost_usd": 0.0427,
+   "cost_per_run_usd": 0.00267,
+   "seconds_per_run": 515.8,
+   "released_first_try": {
+    "k": 13,
+    "n": 16,
+    "pct": 81.2,
+    "ci95": [
+     57.0,
+     93.4
+    ]
+   },
+   "runs_revised": 3,
+   "model_calls_per_run": 1.19,
+   "tool_calls_per_run": 0.0,
+   "blocks_checked_first_try": 124,
+   "blocks_failed_first_try": 4,
+   "blocks_checked_final": 122,
+   "blocks_failed_final": 0,
+   "input_tokens": 367250,
+   "output_tokens": 101556,
+   "run": {
+    "arm": "oneshot",
+    "set": "dev",
+    "repeat": 1,
+    "batch": true,
+    "model": "claude-haiku-5-5",
+    "effort": "medium",
+    "minutes_this_process": 13.7,
+    "cost_usd": 0.0427,
+    "batches": [
+     {
+      "requests": 16,
+      "minutes": 7.0,
+      "succeeded": 16,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 3,
+      "minutes": 6.2,
+      "succeeded": 3,
+      "errored": 0,
+      "expired": 0
+     }
+    ],
+    "answers_reused_after_interruption": 0
+   }
+  },
+  "agent": {
+   "runs": 16,
+   "scored": 16,
+   "failed_to_run": 0,
+   "located_all": {
+    "k": 16,
+    "n": 16,
+    "pct": 100.0,
+    "ci95": [
+     80.6,
+     100.0
+    ]
+   },
+   "levers_right": {
+    "k": 16,
+    "n": 16,
+    "pct": 100.0,
+    "ci95": [
+     80.6,
+     100.0
+    ]
+   },
+   "detection_right": {
+    "k": 16,
+    "n": 16,
+    "pct": 100.0,
+    "ci95": [
+     80.6,
+     100.0
+    ]
+   },
+   "released": {
+    "k": 15,
+    "n": 16,
+    "pct": 93.8,
+    "ci95": [
+     71.7,
+     98.9
+    ]
+   },
+   "events": 15,
+   "events_located": 15,
+   "events_coarser": 0,
+   "events_missed": 0,
+   "extra_causes": 0,
+   "runs_with_extra": 0,
+   "cost_usd": 0.083,
+   "cost_per_run_usd": 0.00519,
+   "seconds_per_run": 2633.6,
+   "released_first_try": {
+    "k": 3,
+    "n": 16,
+    "pct": 18.8,
+    "ci95": [
+     6.6,
+     43.0
+    ]
+   },
+   "runs_revised": 13,
+   "model_calls_per_run": 6.19,
+   "tool_calls_per_run": 9.19,
+   "blocks_checked_first_try": 145,
+   "blocks_failed_first_try": 28,
+   "blocks_checked_final": 143,
+   "blocks_failed_final": 1,
+   "input_tokens": 1347438,
+   "output_tokens": 173858,
+   "run": {
+    "arm": "agent",
+    "set": "dev",
+    "repeat": 1,
+    "batch": true,
+    "model": "claude-haiku-5-5",
+    "effort": "medium",
+    "minutes_this_process": 63.6,
+    "cost_usd": 0.083,
+    "batches": [
+     {
+      "requests": 3,
+      "minutes": 5.4,
+      "succeeded": 3,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 16,
+      "minutes": 7.0,
+      "succeeded": 16,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 16,
+      "minutes": 5.7,
+      "succeeded": 16,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 16,
+      "minutes": 6.2,
+      "succeeded": 16,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 15,
+      "minutes": 6.2,
+      "succeeded": 15,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 11,
+      "minutes": 6.5,
+      "succeeded": 11,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 10,
+      "minutes": 6.2,
+      "succeeded": 10,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 6,
+      "minutes": 6.2,
+      "succeeded": 6,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 4,
+      "minutes": 6.5,
+      "succeeded": 4,
+      "errored": 0,
+      "expired": 0
+     },
+     {
+      "requests": 2,
+      "minutes": 7.0,
+      "succeeded": 2,
+      "errored": 0,
+      "expired": 0
+     }
+    ],
+    "answers_reused_after_interruption": 0
+   }
+  }
+ },
+ "by_group": {
+  "one segment, one dimension": {
+   "script": {
+    "runs": 10,
+    "scored": 10,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 7,
+     "n": 10,
+     "pct": 70.0,
+     "ci95": [
+      39.7,
+      89.2
+     ]
+    },
+    "levers_right": {
+     "k": 7,
+     "n": 10,
+     "pct": 70.0,
+     "ci95": [
+      39.7,
+      89.2
+     ]
+    },
+    "detection_right": {
+     "k": 10,
+     "n": 10,
+     "pct": 100.0,
+     "ci95": [
+      72.2,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 10,
+     "n": 10,
+     "pct": 100.0,
+     "ci95": [
+      72.2,
+      100.0
+     ]
+    },
+    "events": 10,
+    "events_located": 10,
+    "events_coarser": 0,
+    "events_missed": 0,
+    "extra_causes": 3,
+    "runs_with_extra": 3,
+    "cost_usd": 0.0,
+    "cost_per_run_usd": 0.0,
+    "seconds_per_run": 0.4
+   },
+   "oneshot": {
+    "runs": 10,
+    "scored": 10,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 10,
+     "n": 10,
+     "pct": 100.0,
+     "ci95": [
+      72.2,
+      100.0
+     ]
+    },
+    "levers_right": {
+     "k": 10,
+     "n": 10,
+     "pct": 100.0,
+     "ci95": [
+      72.2,
+      100.0
+     ]
+    },
+    "detection_right": {
+     "k": 10,
+     "n": 10,
+     "pct": 100.0,
+     "ci95": [
+      72.2,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 10,
+     "n": 10,
+     "pct": 100.0,
+     "ci95": [
+      72.2,
+      100.0
+     ]
+    },
+    "events": 10,
+    "events_located": 10,
+    "events_coarser": 0,
+    "events_missed": 0,
+    "extra_causes": 0,
+    "runs_with_extra": 0,
+    "cost_usd": 0.0293,
+    "cost_per_run_usd": 0.00293,
+    "seconds_per_run": 521.2,
+    "released_first_try": {
+     "k": 8,
+     "n": 10,
+     "pct": 80.0,
+     "ci95": [
+      49.0,
+      94.3
+     ]
+    },
+    "runs_revised": 2,
+    "model_calls_per_run": 1.2,
+    "tool_calls_per_run": 0.0,
+    "blocks_checked_first_try": 88,
+    "blocks_failed_first_try": 2,
+    "blocks_checked_final": 88,
+    "blocks_failed_final": 0,
+    "input_tokens": 240138,
+    "output_tokens": 71974
+   },
+   "agent": {
+    "runs": 10,
+    "scored": 10,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 10,
+     "n": 10,
+     "pct": 100.0,
+     "ci95": [
+      72.2,
+      100.0
+     ]
+    },
+    "levers_right": {
+     "k": 10,
+     "n": 10,
+     "pct": 100.0,
+     "ci95": [
+      72.2,
+      100.0
+     ]
+    },
+    "detection_right": {
+     "k": 10,
+     "n": 10,
+     "pct": 100.0,
+     "ci95": [
+      72.2,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 9,
+     "n": 10,
+     "pct": 90.0,
+     "ci95": [
+      59.6,
+      98.2
+     ]
+    },
+    "events": 10,
+    "events_located": 10,
+    "events_coarser": 0,
+    "events_missed": 0,
+    "extra_causes": 0,
+    "runs_with_extra": 0,
+    "cost_usd": 0.0546,
+    "cost_per_run_usd": 0.00546,
+    "seconds_per_run": 2675.9,
+    "released_first_try": {
+     "k": 2,
+     "n": 10,
+     "pct": 20.0,
+     "ci95": [
+      5.7,
+      51.0
+     ]
+    },
+    "runs_revised": 8,
+    "model_calls_per_run": 6.4,
+    "tool_calls_per_run": 9.7,
+    "blocks_checked_first_try": 95,
+    "blocks_failed_first_try": 15,
+    "blocks_checked_final": 93,
+    "blocks_failed_final": 1,
+    "input_tokens": 881396,
+    "output_tokens": 115102
+   }
+  },
+  "one segment, two dimensions": {
+   "script": {
+    "runs": 2,
+    "scored": 2,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 1,
+     "n": 2,
+     "pct": 50.0,
+     "ci95": [
+      9.5,
+      90.5
+     ]
+    },
+    "levers_right": {
+     "k": 1,
+     "n": 2,
+     "pct": 50.0,
+     "ci95": [
+      9.5,
+      90.5
+     ]
+    },
+    "detection_right": {
+     "k": 2,
+     "n": 2,
+     "pct": 100.0,
+     "ci95": [
+      34.2,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 2,
+     "n": 2,
+     "pct": 100.0,
+     "ci95": [
+      34.2,
+      100.0
+     ]
+    },
+    "events": 2,
+    "events_located": 1,
+    "events_coarser": 1,
+    "events_missed": 0,
+    "extra_causes": 0,
+    "runs_with_extra": 0,
+    "cost_usd": 0.0,
+    "cost_per_run_usd": 0.0,
+    "seconds_per_run": 0.3
+   },
+   "oneshot": {
+    "runs": 2,
+    "scored": 2,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 0,
+     "n": 2,
+     "pct": 0.0,
+     "ci95": [
+      0.0,
+      65.8
+     ]
+    },
+    "levers_right": {
+     "k": 0,
+     "n": 2,
+     "pct": 0.0,
+     "ci95": [
+      0.0,
+      65.8
+     ]
+    },
+    "detection_right": {
+     "k": 2,
+     "n": 2,
+     "pct": 100.0,
+     "ci95": [
+      34.2,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 2,
+     "n": 2,
+     "pct": 100.0,
+     "ci95": [
+      34.2,
+      100.0
+     ]
+    },
+    "events": 2,
+    "events_located": 0,
+    "events_coarser": 2,
+    "events_missed": 0,
+    "extra_causes": 0,
+    "runs_with_extra": 0,
+    "cost_usd": 0.0036,
+    "cost_per_run_usd": 0.00181,
+    "seconds_per_run": 445.1,
+    "released_first_try": {
+     "k": 2,
+     "n": 2,
+     "pct": 100.0,
+     "ci95": [
+      34.2,
+      100.0
+     ]
+    },
+    "runs_revised": 0,
+    "model_calls_per_run": 1.0,
+    "tool_calls_per_run": 0.0,
+    "blocks_checked_first_try": 12,
+    "blocks_failed_first_try": 0,
+    "blocks_checked_final": 12,
+    "blocks_failed_final": 0,
+    "input_tokens": 33100,
+    "output_tokens": 8451
+   },
+   "agent": {
+    "runs": 2,
+    "scored": 2,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 2,
+     "n": 2,
+     "pct": 100.0,
+     "ci95": [
+      34.2,
+      100.0
+     ]
+    },
+    "levers_right": {
+     "k": 2,
+     "n": 2,
+     "pct": 100.0,
+     "ci95": [
+      34.2,
+      100.0
+     ]
+    },
+    "detection_right": {
+     "k": 2,
+     "n": 2,
+     "pct": 100.0,
+     "ci95": [
+      34.2,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 2,
+     "n": 2,
+     "pct": 100.0,
+     "ci95": [
+      34.2,
+      100.0
+     ]
+    },
+    "events": 2,
+    "events_located": 2,
+    "events_coarser": 0,
+    "events_missed": 0,
+    "extra_causes": 0,
+    "runs_with_extra": 0,
+    "cost_usd": 0.0098,
+    "cost_per_run_usd": 0.0049,
+    "seconds_per_run": 3010.4,
+    "released_first_try": {
+     "k": 1,
+     "n": 2,
+     "pct": 50.0,
+     "ci95": [
+      9.5,
+      90.5
+     ]
+    },
+    "runs_revised": 1,
+    "model_calls_per_run": 7.0,
+    "tool_calls_per_run": 12.0,
+    "blocks_checked_first_try": 16,
+    "blocks_failed_first_try": 1,
+    "blocks_checked_final": 16,
+    "blocks_failed_final": 0,
+    "input_tokens": 185727,
+    "output_tokens": 21015
+   }
+  },
+  "two causes": {
+   "script": {
+    "runs": 1,
+    "scored": 1,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 1,
+     "n": 1,
+     "pct": 100.0,
+     "ci95": [
+      20.7,
+      100.0
+     ]
+    },
+    "levers_right": {
+     "k": 1,
+     "n": 1,
+     "pct": 100.0,
+     "ci95": [
+      20.7,
+      100.0
+     ]
+    },
+    "detection_right": {
+     "k": 1,
+     "n": 1,
+     "pct": 100.0,
+     "ci95": [
+      20.7,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 1,
+     "n": 1,
+     "pct": 100.0,
+     "ci95": [
+      20.7,
+      100.0
+     ]
+    },
+    "events": 2,
+    "events_located": 2,
+    "events_coarser": 0,
+    "events_missed": 0,
+    "extra_causes": 0,
+    "runs_with_extra": 0,
+    "cost_usd": 0.0,
+    "cost_per_run_usd": 0.0,
+    "seconds_per_run": 0.6
+   },
+   "oneshot": {
+    "runs": 1,
+    "scored": 1,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 1,
+     "n": 1,
+     "pct": 100.0,
+     "ci95": [
+      20.7,
+      100.0
+     ]
+    },
+    "levers_right": {
+     "k": 1,
+     "n": 1,
+     "pct": 100.0,
+     "ci95": [
+      20.7,
+      100.0
+     ]
+    },
+    "detection_right": {
+     "k": 1,
+     "n": 1,
+     "pct": 100.0,
+     "ci95": [
+      20.7,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 1,
+     "n": 1,
+     "pct": 100.0,
+     "ci95": [
+      20.7,
+      100.0
+     ]
+    },
+    "events": 2,
+    "events_located": 2,
+    "events_coarser": 0,
+    "events_missed": 0,
+    "extra_causes": 0,
+    "runs_with_extra": 0,
+    "cost_usd": 0.0046,
+    "cost_per_run_usd": 0.00458,
+    "seconds_per_run": 818.2,
+    "released_first_try": {
+     "k": 0,
+     "n": 1,
+     "pct": 0.0,
+     "ci95": [
+      0.0,
+      79.3
+     ]
+    },
+    "runs_revised": 1,
+    "model_calls_per_run": 2.0,
+    "tool_calls_per_run": 0.0,
+    "blocks_checked_first_try": 8,
+    "blocks_failed_first_try": 2,
+    "blocks_checked_final": 6,
+    "blocks_failed_final": 0,
+    "input_tokens": 50529,
+    "output_tokens": 7931
+   },
+   "agent": {
+    "runs": 1,
+    "scored": 1,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 1,
+     "n": 1,
+     "pct": 100.0,
+     "ci95": [
+      20.7,
+      100.0
+     ]
+    },
+    "levers_right": {
+     "k": 1,
+     "n": 1,
+     "pct": 100.0,
+     "ci95": [
+      20.7,
+      100.0
+     ]
+    },
+    "detection_right": {
+     "k": 1,
+     "n": 1,
+     "pct": 100.0,
+     "ci95": [
+      20.7,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 1,
+     "n": 1,
+     "pct": 100.0,
+     "ci95": [
+      20.7,
+      100.0
+     ]
+    },
+    "events": 2,
+    "events_located": 2,
+    "events_coarser": 0,
+    "events_missed": 0,
+    "extra_causes": 0,
+    "runs_with_extra": 0,
+    "cost_usd": 0.0078,
+    "cost_per_run_usd": 0.00777,
+    "seconds_per_run": 3002.2,
+    "released_first_try": {
+     "k": 0,
+     "n": 1,
+     "pct": 0.0,
+     "ci95": [
+      0.0,
+      79.3
+     ]
+    },
+    "runs_revised": 1,
+    "model_calls_per_run": 7.0,
+    "tool_calls_per_run": 12.0,
+    "blocks_checked_first_try": 11,
+    "blocks_failed_first_try": 4,
+    "blocks_checked_final": 11,
+    "blocks_failed_final": 0,
+    "input_tokens": 114286,
+    "output_tokens": 15237
+   }
+  },
+  "controls": {
+   "script": {
+    "runs": 3,
+    "scored": 3,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 3,
+     "n": 3,
+     "pct": 100.0,
+     "ci95": [
+      43.8,
+      100.0
+     ]
+    },
+    "levers_right": {
+     "k": 3,
+     "n": 3,
+     "pct": 100.0,
+     "ci95": [
+      43.8,
+      100.0
+     ]
+    },
+    "detection_right": {
+     "k": 2,
+     "n": 3,
+     "pct": 66.7,
+     "ci95": [
+      20.8,
+      93.9
+     ]
+    },
+    "released": {
+     "k": 3,
+     "n": 3,
+     "pct": 100.0,
+     "ci95": [
+      43.8,
+      100.0
+     ]
+    },
+    "events": 1,
+    "events_located": 1,
+    "events_coarser": 0,
+    "events_missed": 0,
+    "extra_causes": 0,
+    "runs_with_extra": 0,
+    "cost_usd": 0.0,
+    "cost_per_run_usd": 0.0,
+    "seconds_per_run": 0.0
+   },
+   "oneshot": {
+    "runs": 3,
+    "scored": 3,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 2,
+     "n": 3,
+     "pct": 66.7,
+     "ci95": [
+      20.8,
+      93.9
+     ]
+    },
+    "levers_right": {
+     "k": 2,
+     "n": 3,
+     "pct": 66.7,
+     "ci95": [
+      20.8,
+      93.9
+     ]
+    },
+    "detection_right": {
+     "k": 2,
+     "n": 3,
+     "pct": 66.7,
+     "ci95": [
+      20.8,
+      93.9
+     ]
+    },
+    "released": {
+     "k": 3,
+     "n": 3,
+     "pct": 100.0,
+     "ci95": [
+      43.8,
+      100.0
+     ]
+    },
+    "events": 1,
+    "events_located": 1,
+    "events_coarser": 0,
+    "events_missed": 0,
+    "extra_causes": 1,
+    "runs_with_extra": 1,
+    "cost_usd": 0.0052,
+    "cost_per_run_usd": 0.00173,
+    "seconds_per_run": 444.1,
+    "released_first_try": {
+     "k": 3,
+     "n": 3,
+     "pct": 100.0,
+     "ci95": [
+      43.8,
+      100.0
+     ]
+    },
+    "runs_revised": 0,
+    "model_calls_per_run": 1.0,
+    "tool_calls_per_run": 0.0,
+    "blocks_checked_first_try": 16,
+    "blocks_failed_first_try": 0,
+    "blocks_checked_final": 16,
+    "blocks_failed_final": 0,
+    "input_tokens": 43483,
+    "output_tokens": 13200
+   },
+   "agent": {
+    "runs": 3,
+    "scored": 3,
+    "failed_to_run": 0,
+    "located_all": {
+     "k": 3,
+     "n": 3,
+     "pct": 100.0,
+     "ci95": [
+      43.8,
+      100.0
+     ]
+    },
+    "levers_right": {
+     "k": 3,
+     "n": 3,
+     "pct": 100.0,
+     "ci95": [
+      43.8,
+      100.0
+     ]
+    },
+    "detection_right": {
+     "k": 3,
+     "n": 3,
+     "pct": 100.0,
+     "ci95": [
+      43.8,
+      100.0
+     ]
+    },
+    "released": {
+     "k": 3,
+     "n": 3,
+     "pct": 100.0,
+     "ci95": [
+      43.8,
+      100.0
+     ]
+    },
+    "events": 1,
+    "events_located": 1,
+    "events_coarser": 0,
+    "events_missed": 0,
+    "extra_causes": 0,
+    "runs_with_extra": 0,
+    "cost_usd": 0.0108,
+    "cost_per_run_usd": 0.0036,
+    "seconds_per_run": 2118.6,
+    "released_first_try": {
+     "k": 0,
+     "n": 3,
+     "pct": 0.0,
+     "ci95": [
+      0.0,
+      56.2
+     ]
+    },
+    "runs_revised": 3,
+    "model_calls_per_run": 4.67,
+    "tool_calls_per_run": 4.67,
+    "blocks_checked_first_try": 23,
+    "blocks_failed_first_try": 8,
+    "blocks_checked_final": 23,
+    "blocks_failed_final": 0,
+    "input_tokens": 166029,
+    "output_tokens": 22504
+   }
+  }
+ },
+ "by_case": {
+  "D01": {
+   "family": "traffic_channel",
+   "script": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 1,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "D02": {
+   "family": "traffic_city",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "D03": {
+   "family": "traffic_up_category",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "D04": {
+   "family": "conversion_city",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "D05": {
+   "family": "conversion_category",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "D06": {
+   "family": "supply_merchant",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": false,
+     "error": null
+    }
+   ]
+  },
+  "D07": {
+   "family": "redemption_category",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "D08": {
+   "family": "redemption_merchant_type",
+   "script": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 1,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "D09": {
+   "family": "refund_category",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "D10": {
+   "family": "refund_merchant",
+   "script": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 1,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "D11": {
+   "family": "traffic_city_channel",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 0,
+     "coarser": 1,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "D12": {
+   "family": "conversion_city_category",
+   "script": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 0,
+     "coarser": 1,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 0,
+     "coarser": 1,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "D13": {
+   "family": "traffic_channel+refund_category",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "D14": {
+   "family": "none",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "D15": {
+   "family": "holiday",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  },
+  "D16": {
+   "family": "after_holiday",
+   "script": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "oneshot": [
+    {
+     "located_all": false,
+     "levers_right": false,
+     "extra": 1,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ],
+   "agent": [
+    {
+     "located_all": true,
+     "levers_right": true,
+     "extra": 0,
+     "coarser": 0,
+     "missed": 0,
+     "released": true,
+     "error": null
+    }
+   ]
+  }
+ },
+ "paired": {
+  "script vs oneshot": {
+   "located_all": {
+    "pairs": 16,
+    "both": 10,
+    "only_first": 2,
+    "only_second": 3,
+    "neither": 1,
+    "p_exact": 1.0
+   },
+   "levers_right": {
+    "pairs": 16,
+    "both": 10,
+    "only_first": 2,
+    "only_second": 3,
+    "neither": 1,
+    "p_exact": 1.0
+   }
+  },
+  "script vs agent": {
+   "located_all": {
+    "pairs": 16,
+    "both": 12,
+    "only_first": 0,
+    "only_second": 4,
+    "neither": 0,
+    "p_exact": 0.125
+   },
+   "levers_right": {
+    "pairs": 16,
+    "both": 12,
+    "only_first": 0,
+    "only_second": 4,
+    "neither": 0,
+    "p_exact": 0.125
+   }
+  },
+  "oneshot vs agent": {
+   "located_all": {
+    "pairs": 16,
+    "both": 13,
+    "only_first": 0,
+    "only_second": 3,
+    "neither": 0,
+    "p_exact": 0.25
+   },
+   "levers_right": {
+    "pairs": 16,
+    "both": 13,
+    "only_first": 0,
+    "only_second": 3,
+    "neither": 0,
+    "p_exact": 0.25
+   }
+  }
+ }
+}

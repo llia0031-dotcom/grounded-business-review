@@ -1,0 +1,247 @@
+- id: D01
+  family: traffic_channel
+  seed: 1000
+  week: 2026-W34
+  events:
+  - lever: traffic
+    segment: &id001
+      channel: 搜索
+    size: -0.4
+  truth:
+    causes:
+    - segment: *id001
+      lever: traffic
+      direction: down
+  drafts: 1
+  alerts: 29
+- id: D02
+  family: traffic_city
+  seed: 1001
+  week: 2026-W36
+  events:
+  - lever: traffic
+    segment: &id002
+      city: 杭州
+    size: -0.306
+  truth:
+    causes:
+    - segment: *id002
+      lever: traffic
+      direction: down
+  drafts: 1
+  alerts: 2
+- id: D03
+  family: traffic_up_category
+  seed: 1002
+  week: 2026-W36
+  events:
+  - lever: traffic
+    segment: &id003
+      category: 茶饮咖啡
+    size: 0.878
+  truth:
+    causes:
+    - segment: *id003
+      lever: traffic
+      direction: up
+  drafts: 1
+  alerts: 23
+- id: D04
+  family: conversion_city
+  seed: 1003
+  week: 2026-W36
+  events:
+  - lever: conversion
+    segment: &id004
+      city: 上海
+    size: -0.319
+  truth:
+    causes:
+    - segment: *id004
+      lever: conversion
+      direction: down
+  drafts: 1
+  alerts: 6
+- id: D05
+  family: conversion_category
+  seed: 1004
+  week: 2026-W37
+  events:
+  - lever: conversion
+    segment: &id005
+      category: 茶饮咖啡
+    size: -0.393
+  truth:
+    causes:
+    - segment: *id005
+      lever: conversion
+      direction: down
+  drafts: 1
+  alerts: 7
+- id: D06
+  family: supply_merchant
+  seed: 1005
+  week: 2026-W38
+  events:
+  - lever: supply
+    segment: &id006
+      merchant: 火锅连锁A
+    size: -1.0
+  truth:
+    causes:
+    - segment: *id006
+      lever: supply
+      direction: down
+  drafts: 1
+  alerts: 7
+- id: D07
+  family: redemption_category
+  seed: 1006
+  week: 2026-W34
+  events:
+  - lever: redemption
+    segment: &id007
+      category: 烧烤
+    size: -0.533
+  truth:
+    causes:
+    - segment: *id007
+      lever: redemption
+      direction: down
+  drafts: 1
+  alerts: 3
+- id: D08
+  family: redemption_merchant_type
+  seed: 1007
+  week: 2026-W38
+  events:
+  - lever: redemption
+    segment: &id008
+      merchant_type: 连锁
+    size: -0.428
+  truth:
+    causes:
+    - segment: *id008
+      lever: redemption
+      direction: down
+  drafts: 1
+  alerts: 23
+- id: D09
+  family: refund_category
+  seed: 1008
+  week: 2026-W35
+  events:
+  - lever: refund
+    segment: &id009
+      category: 美发美甲
+    size: 0.207
+  truth:
+    causes:
+    - segment: *id009
+      lever: refund
+      direction: up
+  drafts: 1
+  alerts: 5
+- id: D10
+  family: refund_merchant
+  seed: 1009
+  week: 2026-W36
+  events:
+  - lever: refund
+    segment: &id010
+      merchant: 火锅连锁B
+    size: 0.745
+  truth:
+    causes:
+    - segment: *id010
+      lever: refund
+      direction: up
+  drafts: 1
+  alerts: 13
+- id: D11
+  family: traffic_city_channel
+  seed: 1016
+  week: 2026-W37
+  events:
+  - lever: traffic
+    segment: &id011
+      city: 北京
+      channel: 搜索
+    size: -0.567
+  truth:
+    causes:
+    - segment: *id011
+      lever: traffic
+      direction: down
+  drafts: 7
+  alerts: 3
+- id: D12
+  family: conversion_city_category
+  seed: 1021
+  week: 2026-W34
+  events:
+  - lever: conversion
+    segment: &id012
+      city: 北京
+      category: 快餐小吃
+    size: -0.552
+  truth:
+    causes:
+    - segment: *id012
+      lever: conversion
+      direction: down
+  drafts: 5
+  alerts: 3
+- id: D13
+  family: traffic_channel+refund_category
+  seed: 1022
+  week: 2026-W37
+  events:
+  - lever: traffic
+    segment: &id013
+      channel: 直播
+    size: -0.481
+  - lever: refund
+    segment: &id014
+      category: 美发美甲
+    size: 0.164
+  truth:
+    causes:
+    - segment: *id013
+      lever: traffic
+      direction: down
+    - segment: *id014
+      lever: refund
+      direction: up
+  drafts: 1
+  alerts: 22
+- id: D14
+  family: none
+  seed: 1023
+  week: 2026-W37
+  events: []
+  truth:
+    causes: []
+  drafts: 1
+  alerts: 0
+- id: D15
+  family: holiday
+  seed: 1024
+  week: 2026-W40
+  events: []
+  truth:
+    causes:
+    - segment: {}
+      lever: holiday
+      direction: up
+  drafts: 1
+  alerts: 90
+- id: D16
+  family: after_holiday
+  seed: 1025
+  week: 2026-W42
+  events: []
+  truth:
+    causes: []
+  drafts: 1
+  alerts: 3

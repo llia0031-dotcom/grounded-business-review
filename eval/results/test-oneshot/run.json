@@ -1,0 +1,27 @@
+{
+ "arm": "oneshot",
+ "set": "test",
+ "repeat": 1,
+ "batch": true,
+ "model": "claude-haiku-5-5",
+ "effort": "medium",
+ "minutes_this_process": 15.3,
+ "cost_usd": 0.1139,
+ "batches": [
+  {
+   "requests": 36,
+   "minutes": 6.7,
+   "succeeded": 36,
+   "errored": 0,
+   "expired": 0
+  },
+  {
+   "requests": 17,
+   "minutes": 7.8,
+   "succeeded": 17,
+   "errored": 0,
+   "expired": 0
+  }
+ ],
+ "answers_reused_after_interruption": 0
+}
