@@ -1,0 +1,8 @@
+# Local addition: make the four synthetic scenario weeks readable by workflow code nodes.
+# The code nodes run inside coze-server (CODE_RUNNER_TYPE=local), so mount the data there, read-only.
+# Use together with the other files:
+#   docker compose -f ./docker/docker-compose.yml -f ./docker/compose.minio-fix.yml -f ./docker/compose.bizreview-data.yml up -d
+services:
+  coze-server:
+    volumes:
+      - ./volumes/bizreview-data:/opt/bizreview-data:ro

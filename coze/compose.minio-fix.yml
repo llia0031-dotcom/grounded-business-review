@@ -1,0 +1,24 @@
+# Local fix: the minio/minio image is no longer pullable from Docker Hub ("pull access denied").
+# bitnamilegacy/minio:2025.6.13 is the same MinIO build (2025-06-13T11-33-47Z); its binaries live under
+# /opt/bitnami, so link them to the paths the original entrypoint and healthcheck use.
+# Use: docker compose -f ./docker/docker-compose.yml -f ./docker/compose.minio-fix.yml up -d
+services:
+  minio:
+    image: bitnamilegacy/minio:2025.6.13
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        ln -sf /opt/bitnami/minio-client/bin/mc /usr/bin/mc
+        ln -sf /opt/bitnami/minio/bin/minio /usr/bin/minio
+        (
+          until (/usr/bin/mc alias set localminio http://localhost:9000 $${MINIO_ROOT_USER} $${MINIO_ROOT_PASSWORD}) do
+            echo "Waiting for MinIO to be ready..."
+            sleep 1
+          done
+          /usr/bin/mc mb --ignore-existing localminio/$${STORAGE_BUCKET}
+          /usr/bin/mc cp --recursive /default_icon/ localminio/$${STORAGE_BUCKET}/default_icon/
+          /usr/bin/mc cp --recursive /official_plugin_icon/ localminio/$${STORAGE_BUCKET}/official_plugin_icon/
+          echo "MinIO initialization complete."
+        ) &
+        exec /usr/bin/minio server /data --console-address ":9001"

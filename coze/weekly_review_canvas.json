@@ -1,0 +1,890 @@
+{
+ "nodes": [
+  {
+   "id": "100001",
+   "type": "1",
+   "meta": {
+    "position": {
+     "x": 0,
+     "y": 0
+    }
+   },
+   "data": {
+    "nodeMeta": {
+     "title": "开始",
+     "subTitle": "",
+     "icon": "https://lf3-static.bytednsdoc.com/obj/eden-cn/dvsmryvd_avi_dvsm/ljhwZthlaukjlkulzlp/icon/icon-Start-v2.jpg",
+     "description": "选一周：37、36、40 或 35"
+    },
+    "outputs": [
+     {
+      "type": "string",
+      "name": "week",
+      "required": false,
+      "description": "37 两个原因同时发生；36 平稳的一周；40 含国庆假期；35 一个城市的一个渠道"
+     }
+    ],
+    "trigger_parameters": []
+   }
+  },
+  {
+   "id": "130001",
+   "type": "5",
+   "meta": {
+    "position": {
+     "x": 400,
+     "y": 0
+    }
+   },
+   "data": {
+    "nodeMeta": {
+     "title": "监控和拆解",
+     "subTitle": "代码",
+     "icon": "https://lf3-static.bytednsdoc.com/obj/eden-cn/dvsmryvd_avi_dvsm/ljhwZthlaukjlkulzlp/icon/icon-Code-v2.jpg",
+     "description": "取这一周和前 12 周的指标，判定异动，按维度拆解",
+     "mainColor": "#00B2B2"
+    },
+    "inputs": {
+     "inputParameters": [
+      {
+       "name": "week",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "ref",
+         "content": {
+          "source": "block-output",
+          "blockID": "100001",
+          "name": "week"
+         },
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      }
+     ],
+     "code": "\"\"\"Code node 1 of the workflow: monitor the week and build the material the model writes from.\n\nPaste this file into a Code node (Python). Input variable: `data` (the JSON text fetched by the\nHTTP node; it names its own analysis week). Output variables: `week`, `pack` (the query results as\ntext, numbered q01, q02, ...), `evidence` (JSON text: {\"q01\": \"...\", ...}) and `alerts` (how many alerts).\n\nOnly the Python standard library is used. The rules are the same as the local version:\nthe monitor is sql/monitor/weekly_alerts.sql, the split is bizagent/decompose.py.\n\"\"\"\nimport json\nfrom statistics import median\n\nDIM_LABEL = {\"city\": \"城市\", \"category\": \"品类\", \"channel\": \"渠道\", \"merchant_type\": \"商家类型\"}\nZ_TOTAL, Z_SLICE, SLICE_X, SLICE_SHARE, BASE_N = 3.5, 6.0, 3.0, 0.05, 8\nPACK_METRICS, PACK_FUNNELS = 3, 4\nFUNNEL = [\"visits\", \"conversion_rate\", \"orders\", \"gmv\", \"aov\", \"subsidy_rate\", \"online_stores\", \"active_stores\",\n          \"redeem_gmv\", \"redeem_rate\", \"refund_amt\", \"refund_rate\"]\n\n\ndef fmt(v):\n    if v is None:\n        return \"\"\n    if isinstance(v, str):\n        return v\n    s = \"%.2f\" % v\n    return s.rstrip(\"0\").rstrip(\".\") if \".\" in s else s\n\n\ndef table(head, rows):\n    out = [\"| \" + \" | \".join(head) + \" |\", \"|\" + \"---|\" * len(head)]\n    out += [\"| \" + \" | \".join(fmt(c) for c in r) + \" |\" for r in rows]\n    return \"\\n\".join(out)\n\n\ndef monitor(data: str, week: str = \"\") -> dict:\n    d = json.loads(data)\n    week = week or d[\"week\"]\n    weeks, hol = d[\"weeks\"], set(d[\"holiday_weeks\"])\n    metrics = {m[\"name\"]: m for m in d[\"metrics\"]}\n    order = [m[\"name\"] for m in d[\"metrics\"]]\n    if week not in weeks:\n        return {\"week\": week, \"pack\": \"数据里没有这一周：\" + week, \"evidence\": \"{}\", \"alerts\": 0}\n    base = [w for w in reversed(weeks[: weeks.index(week)]) if w not in hol][:BASE_N]\n    prev = weeks[weeks.index(week) - 1] if weeks.index(week) > 0 else None\n    if len(base) < 6:\n        return {\"week\": week, \"pack\": \"这一周之前可用的基线周不足，无法判定。\", \"evidence\": \"{}\", \"alerts\": 0}\n    cell = {}  # (metric, dim, slice) -> {week: (num, den)}\n    for name, dim, s, w, num, den in d[\"rows\"]:\n        cell.setdefault((name, dim, s), {})[w] = (num, den)\n\n    def value(m, nd):\n        if nd is None:\n            return None\n        num, den = nd\n        if m[\"kind\"] != \"ratio\":\n            return num\n        return None if not den else (100.0 if m[\"unit\"] == \"%\" else 1.0) * num / den\n\n    def weight(m, nd):\n        return 0.0 if nd is None else (nd[1] if m[\"kind\"] == \"ratio\" else nd[0]) or 0.0\n\n    scored = []\n    for (name, dim, s), by_week in cell.items():\n        m = metrics[name]\n        cur, last = value(m, by_week.get(week)), value(m, by_week.get(prev))\n        vals = [value(m, by_week.get(w)) for w in base]\n        vals = [v for v in vals if v is not None]\n        if cur is None or len(vals) < 6:\n            continue\n        med = median(vals)\n        mad = median([abs(v - med) for v in vals])\n        rel = m[\"unit\"] != \"%\"\n        min_change = m[\"min_change\"] * (1 if dim == \"total\" else SLICE_X)\n        mad = max(mad, abs(med) * m[\"min_change\"] / 1000.0 if rel else m[\"min_change\"] / 10.0)\n        change = (100.0 * (cur - med) / abs(med) if med else 0.0) if rel else cur - med\n        wow = None if last is None else ((100.0 * (cur - last) / abs(last) if last else 0.0) if rel else cur - last)\n        z = 0.6745 * (cur - med) / mad if mad else 0.0\n        share = 1.0\n        if dim != \"total\":\n            tot = cell[(name, \"total\", \"全部\")]\n            shares = [weight(m, by_week.get(w)) / weight(m, tot.get(w)) for w in base if weight(m, tot.get(w))]\n            share = sum(shares) / len(shares) if shares else 0.0\n        watched = m[\"monitor\"] if dim == \"total\" else m[\"monitor_slices\"]\n        alert = bool(watched and (dim == \"total\" or share >= SLICE_SHARE)\n                     and abs(z) >= (Z_TOTAL if dim == \"total\" else Z_SLICE) and abs(change) >= min_change)\n        scored.append({\"metric\": name, \"dim\": dim, \"slice\": s, \"cur\": cur, \"last\": last, \"median\": med, \"change\": change,\n                       \"wow\": wow, \"z\": z, \"alert\": alert, \"unit\": \"%\" if rel else \"pp\"})\n\n    evidence, parts = {}, []\n\n    def add(title, notes, head=None, rows=None):\n        qid = \"q%02d\" % (len(evidence) + 1)\n        text = \"\\n\".join([\"# \" + qid + \" \" + title] + notes + ([\"\"] + [table(head, rows)] if head else []))\n        evidence[qid] = text\n        parts.append(text)\n\n    period = \"分析周：%s。对比：基线，即本周之前最近 %d 个非节假日周（%s 至 %s）。\" % (week, len(base), base[-1], base[0])\n    if week in hol:\n        period = period.replace(\"。对比\", \"，这一周含法定节假日。对比\", 1)\n    sign = lambda v, u: \"\" if v is None else (\"%+.2f%s\" % (v, u))\n    head = [\"指标\", \"单位\", \"本周\", \"上周\", \"基线中位数\", \"较上周\", \"较基线\", \"修正Z\", \"是否异动\"]\n    tot = sorted([r for r in scored if r[\"dim\"] == \"total\"], key=lambda r: order.index(r[\"metric\"]))\n    add(\"本周指标总览（全部指标，总量）\",\n        [period, \"较上周、较基线：数量和金额类指标是相对变化（%），百分比类指标是绝对变化（pp，即个百分点）。\",\n         \"是否异动的规则：修正 Z 分数的绝对值不低于 3.5，并且较基线的变化不低于该指标的最小幅度。\"],\n        head, [[metrics[r[\"metric\"]][\"label\"], metrics[r[\"metric\"]][\"unit\"], r[\"cur\"], r[\"last\"], r[\"median\"],\n                sign(r[\"wow\"], r[\"unit\"]), sign(r[\"change\"], r[\"unit\"]), r[\"z\"], \"是\" if r[\"alert\"] else \"否\"] for r in tot])\n    sl = sorted([r for r in scored if r[\"dim\"] != \"total\" and r[\"alert\"]], key=lambda r: -abs(r[\"z\"]))\n    note = [period, \"分组监控只查九个核心指标、基线期平均占比不低于 5% 的分组；规则：修正 Z 分数的绝对值不低于 6，并且较基线的变化不低于该指标最小幅度的 3 倍。\"]\n    if sl:\n        add(\"本周触发异动的分组\", note, head[:2] + [\"维度\", \"分组\"] + head[2:],\n            [[metrics[r[\"metric\"]][\"label\"], metrics[r[\"metric\"]][\"unit\"], DIM_LABEL[r[\"dim\"]], r[\"slice\"], r[\"cur\"], r[\"last\"], r[\"median\"],\n              sign(r[\"wow\"], r[\"unit\"]), sign(r[\"change\"], r[\"unit\"]), r[\"z\"], \"是\" if r[\"alert\"] else \"否\"] for r in sl])\n    else:\n        add(\"本周触发异动的分组\", note + [\"本周没有分组触发异动。\"])\n\n    def two(name, dim, s):\n        by_week = cell.get((name, dim, s), {})\n        n0 = sum((by_week.get(w) or (0, 0))[0] or 0.0 for w in base) / len(base)\n        d0 = sum((by_week.get(w) or (0, 0))[1] or 0.0 for w in base) / len(base)\n        n1, d1 = by_week.get(week) or (0.0, 0.0)\n        return n0, d0, n1 or 0.0, d1 or 0.0\n\n    def breakdown(name, dim):\n        m = metrics[name]\n        slices = sorted({k[2] for k in cell if k[0] == name and k[1] == dim})\n        if not slices:\n            return\n        k = 100.0 if m[\"unit\"] == \"%\" else 1.0\n        N0, D0, N1, D1 = two(name, \"total\", \"全部\")\n        rows = []\n        if m[\"kind\"] == \"ratio\":\n            R0, R1 = k * N0 / D0, k * N1 / D1\n            for s in slices:\n                n0, d0, n1, d1 = two(name, dim, s)\n                r0 = k * n0 / d0 if d0 else None\n                r1 = k * n1 / d1 if d1 else None\n                a, b = (r1 if r0 is None else r0), (r0 if r1 is None else r1)\n                if a is None:\n                    continue\n                w0, w1 = d0 / D0, d1 / D1\n                rate, mix = (w0 + w1) / 2 * (b - a), (w1 - w0) * ((a + b) / 2 - (R0 + R1) / 2)\n                rows.append([s, r0, r1, b - a, rate, mix, rate + mix, 100 * (rate + mix) / (R1 - R0) if R1 != R0 else None, 100 * w0, 100 * w1])\n            rows.sort(key=lambda r: -abs(r[6]))\n            head = [DIM_LABEL[dim], \"基线\" + m[\"label\"], \"本周\" + m[\"label\"], \"变化\", \"率效应\", \"结构效应\", \"合计贡献\", \"贡献度_pct\", \"基线占比_pct\", \"本周占比_pct\"]\n            line = \"%s：基线 %.2f，本周 %.2f，变化 %.2f\" % (m[\"label\"], R0, R1, R1 - R0)\n            extra = [\"率效应：这个分组自己的比率变了带来的影响。结构效应：这个分组在分母里的占比变了带来的影响。两者相加是合计贡献。\"]\n        else:\n            for s in slices:\n                n0, _, n1, _ = two(name, dim, s)\n                rows.append([s, n0, n1, n1 - n0, 100 * (n1 - n0) / n0 if n0 else None,\n                             100 * (n1 - n0) / (N1 - N0) if N1 != N0 else None, 100 * n0 / N0 if N0 else None, 100 * n1 / N1 if N1 else None])\n            rows.sort(key=lambda r: -abs(r[3]))\n            head = [DIM_LABEL[dim], \"基线\", \"本周\", \"变化\", \"变化率_pct\", \"贡献度_pct\", \"基线占比_pct\", \"本周占比_pct\"]\n            line = \"%s：基线（%d 个基线周的平均） %.2f，本周 %.2f，变化 %.2f\" % (m[\"label\"], len(base), N0, N1, N1 - N0)\n            extra = []\n        add(\"拆解：%s 按%s\" % (m[\"label\"], DIM_LABEL[dim]), [period, line] + extra, head, rows[:12])\n\n    alerts = sorted([r for r in scored if r[\"alert\"]], key=lambda r: -abs(r[\"z\"]))\n    picked = []\n    for r in alerts:\n        if r[\"metric\"] not in picked and metrics[r[\"metric\"]][\"kind\"] != \"distinct\":\n            picked.append(r[\"metric\"])\n    for name in picked[:PACK_METRICS]:\n        for dim in DIM_LABEL:\n            breakdown(name, dim)\n    seen = []\n    for r in sl:\n        if (r[\"dim\"], r[\"slice\"]) not in seen:\n            seen.append((r[\"dim\"], r[\"slice\"]))\n    for dim, s in seen[:PACK_FUNNELS]:\n        rows = []\n        for name in FUNNEL:\n            if (name, dim, s) not in cell:\n                continue\n            m = metrics[name]\n            n0, d0, n1, d1 = two(name, dim, s)\n            k = 100.0 if m[\"unit\"] == \"%\" else 1.0\n            v0 = (k * n0 / d0 if d0 else None) if m[\"kind\"] == \"ratio\" else n0\n            v1 = (k * n1 / d1 if d1 else None) if m[\"kind\"] == \"ratio\" else n1\n            if v0 is None or v1 is None:\n                continue\n            rows.append([m[\"label\"], m[\"unit\"], v0, v1, v1 - v0, 100 * (v1 - v0) / abs(v0) if v0 else None])\n        add(\"分组体检（范围：%s=%s）\" % (DIM_LABEL[dim], s), [period, \"变化：本周减基线，单位同该指标（百分比类指标是 pp）。相对变化_pct：变化 ÷ 基线的值。\"],\n            [\"指标\", \"单位\", \"基线\", \"本周\", \"变化\", \"相对变化_pct\"], rows)\n    return {\"week\": week, \"pack\": \"\\n\\n\".join(parts), \"evidence\": json.dumps(evidence, ensure_ascii=False), \"alerts\": len(alerts)}\n\n\nFILES = {\"37\": \"w37_two_causes\", \"36\": \"w36_quiet\", \"40\": \"w40_holiday\", \"35\": \"w35_city_channel\"}\nLOCAL = \"/opt/bizreview-data/\"\nBASE = \"https://raw.githubusercontent.com/llia0031-dotcom/grounded-business-review/main/dify/data/\"\n\n\nasync def main(args: Args) -> Output:\n    import os\n    import re\n    asked = re.findall(r\"\\d+\", str(args.params.get(\"week\") or \"\"))\n    name = FILES.get(asked[-1] if asked else \"\", FILES[\"37\"])\n    if os.path.exists(LOCAL + name + \".json\"):  # mounted into coze-server, see coze/compose.bizreview-data.yml\n        with open(LOCAL + name + \".json\", encoding=\"utf-8\") as f:\n            return monitor(f.read())\n    import httpx\n    r = httpx.get(BASE + name + \".json\", timeout=60, follow_redirects=True)\n    r.raise_for_status()\n    return monitor(r.text)\n",
+     "language": 3,
+     "settingOnError": {
+      "processType": 1,
+      "timeoutMs": 120000,
+      "retryTimes": 0
+     }
+    },
+    "outputs": [
+     {
+      "type": "string",
+      "name": "week"
+     },
+     {
+      "type": "string",
+      "name": "pack"
+     },
+     {
+      "type": "string",
+      "name": "evidence"
+     },
+     {
+      "type": "integer",
+      "name": "alerts"
+     }
+    ]
+   }
+  },
+  {
+   "id": "140001",
+   "type": "3",
+   "meta": {
+    "position": {
+     "x": 800,
+     "y": 0
+    }
+   },
+   "data": {
+    "nodeMeta": {
+     "title": "写周报",
+     "subTitle": "大模型",
+     "icon": "https://lf3-static.bytednsdoc.com/obj/eden-cn/dvsmryvd_avi_dvsm/ljhwZthlaukjlkulzlp/icon/icon-LLM-v2.jpg",
+     "description": "调用大语言模型写周报",
+     "mainColor": "#5C62FF"
+    },
+    "inputs": {
+     "inputParameters": [
+      {
+       "name": "week",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "ref",
+         "content": {
+          "source": "block-output",
+          "blockID": "130001",
+          "name": "week"
+         },
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      },
+      {
+       "name": "pack",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "ref",
+         "content": {
+          "source": "block-output",
+          "blockID": "130001",
+          "name": "pack"
+         },
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      }
+     ],
+     "llmParam": [
+      {
+       "name": "modelType",
+       "input": {
+        "type": "integer",
+        "value": {
+         "type": "literal",
+         "content": "100002",
+         "rawMeta": {
+          "type": 2
+         }
+        }
+       }
+      },
+      {
+       "name": "modleName",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "literal",
+         "content": "Claude Haiku 5.5",
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      },
+      {
+       "name": "generationDiversity",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "literal",
+         "content": "balance",
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      },
+      {
+       "name": "maxTokens",
+       "input": {
+        "type": "integer",
+        "value": {
+         "type": "literal",
+         "content": "20000",
+         "rawMeta": {
+          "type": 2
+         }
+        }
+       }
+      },
+      {
+       "name": "responseFormat",
+       "input": {
+        "type": "integer",
+        "value": {
+         "type": "literal",
+         "content": "0",
+         "rawMeta": {
+          "type": 2
+         }
+        }
+       }
+      },
+      {
+       "name": "prompt",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "literal",
+         "content": "请根据下面的材料，写 {{week}} 这一周的经营分析周报。\n\n{{pack}}",
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      },
+      {
+       "name": "enableChatHistory",
+       "input": {
+        "type": "boolean",
+        "value": {
+         "type": "literal",
+         "content": false,
+         "rawMeta": {
+          "type": 3
+         }
+        }
+       }
+      },
+      {
+       "name": "chatHistoryRound",
+       "input": {
+        "type": "integer",
+        "value": {
+         "type": "literal",
+         "content": "3",
+         "rawMeta": {
+          "type": 2
+         }
+        }
+       }
+      },
+      {
+       "name": "systemPrompt",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "literal",
+         "content": "你是到店团购业务的经营分析师。任务：写本周的经营分析周报，说清楚本周哪些指标异动、原因是什么、建议做什么。\n\n## 业务和数据\n\n用户在平台上买团购券（支付），到店使用（核销），没用的可以退（退款）。平台在核销后收佣金。\n\n维度：城市 city、品类 category、渠道 channel（短视频、直播、搜索、门店页）、商家类型 merchant_type（连锁、单店）、商家 merchant。\n\n周汇总表（week_id 形如 2026-W37）：\n- cube_traffic(week_id, city, category, channel, visits)\n- cube_trade(week_id, city, category, channel, merchant_type, merchant, orders, gmv, subsidy, new_orders, redeem_orders, redeem_gmv, commission, refund_orders, refund_amt)\n- cube_store(week_id, city, category, merchant_type, merchant, online_stores, active_stores, new_stores)\n- metric_weekly(metric, label, grp, unit, dim, slice, week_id, num, den, value, share)：每个指标每周的总量（dim='total'）和按城市、品类、渠道、商家类型的分组值\n- dim_week(week_id, week_start, week_end, is_holiday_week, holiday_names, in_report)\n明细表：\n- order_wide(order_id, user_id, deal_id, store_id, merchant, merchant_type, city, city_tier, category, industry, commission_rate, channel, pay_date, pay_week, order_amount, platform_subsidy, is_first_order)\n- fact_redeem(order_id, redeem_date, redeem_amount)、fact_refund(order_id, refund_date, refund_amount, refund_type)：refund_type 是“主动退”或“过期退”\n- fact_traffic_daily(visit_date, city_id, category_id, channel, visit_cnt)\n- dim_store(store_id, merchant_id, city_id, category_id, open_date)、fact_store_offline(store_id, offline_from, offline_to)\n- dim_date(date, week_id, week_start, day_of_week, is_holiday, holiday_name, is_holiday_week)\n入账时点：支付按支付日，核销按核销日，退款按退款日。\n\n## 指标\n\n| name | 指标 | 分组 | 算法 | 可拆的维度 |\n|---|---|---|---|---|\n| visits | 访问次数（次） | 用户增长 | 可按分组相加 | city、category、channel |\n| buyers | 支付用户数（人） | 用户增长 | 去重计数（各分组不能相加） | city、category、channel、merchant_type、merchant |\n| new_buyers | 新客数（人） | 用户增长 | 可按分组相加 | city、category、channel、merchant_type、merchant |\n| new_buyer_share | 新客订单占比（%） | 用户增长 | 新客首单数 ÷ 支付订单数 | city、category、channel、merchant_type、merchant |\n| orders | 支付订单数（单） | 交易效率 | 可按分组相加 | city、category、channel、merchant_type、merchant |\n| gmv | 支付GMV（元） | 交易效率 | 可按分组相加 | city、category、channel、merchant_type、merchant |\n| conversion_rate | 访问支付转化率（%） | 交易效率 | 支付订单数 ÷ 访问次数 | city、category、channel |\n| aov | 客单价（元） | 交易效率 | 支付GMV ÷ 支付订单数 | city、category、channel、merchant_type、merchant |\n| redeem_gmv | 核销GMV（元） | 交易效率 | 可按分组相加 | city、category、channel、merchant_type、merchant |\n| redeem_rate | 核销率（%） | 交易效率 | 核销GMV ÷ 支付GMV | city、category、channel、merchant_type、merchant |\n| online_stores | 在线门店数（家） | 商家运营 | 可按分组相加 | city、category、merchant_type、merchant |\n| active_stores | 动销门店数（家） | 商家运营 | 可按分组相加 | city、category、merchant_type、merchant |\n| active_store_rate | 动销率（%） | 商家运营 | 动销门店数 ÷ 在线门店数 | city、category、merchant_type、merchant |\n| gmv_per_active_store | 店均GMV（元） | 商家运营 | 支付GMV ÷ 动销门店数 | city、category、merchant_type、merchant |\n| new_stores | 新上线门店数（家） | 商家运营 | 可按分组相加 | city、category、merchant_type、merchant |\n| commission | 佣金收入（元） | 收入健康度 | 可按分组相加 | city、category、channel、merchant_type、merchant |\n| take_rate | 货币化率（%） | 收入健康度 | 佣金收入 ÷ 核销GMV | city、category、channel、merchant_type、merchant |\n| subsidy | 平台补贴（元） | 收入健康度 | 可按分组相加 | city、category、channel、merchant_type、merchant |\n| subsidy_rate | 补贴率（%） | 收入健康度 | 平台补贴 ÷ 支付GMV | city、category、channel、merchant_type、merchant |\n| refund_amt | 退款金额（元） | 收入健康度 | 可按分组相加 | city、category、channel、merchant_type、merchant |\n| refund_rate | 退款率（%） | 收入健康度 | 退款金额 ÷ 支付GMV | city、category、channel、merchant_type、merchant |\n| net_revenue | 净收入（元） | 收入健康度 | 可按分组相加 | city、category、channel、merchant_type、merchant |\n\n读指标时要注意：\n- 核销率、退款率 = 当周核销（退款）金额 ÷ 当周支付GMV，分子分母不是同一批订单。某个分组的支付量突然变了，这两个率会被机械地带动，这不代表核销或退款本身出了问题。判断核销、退款有没有问题，看核销GMV、退款金额本身有没有变，同时看支付GMV 有没有变。\n- 比率指标的变化分成两部分：率效应（分组自己的率变了）和结构效应（分组的占比变了）。客单价、货币化率主要随品类占比变化。\n- 基线是本周之前最近 8 个非节假日周。异动由监控规则判定（总览里的“是否异动”），不要自己另定标准。\n\n## 你拿到的材料\n\n用户消息里是一组已经查好的结果，每个都有编号（q01、q02……）：本周指标总览、触发异动的分组、主要异动指标按各维度的拆解、异动分组的体检。你不能再查别的数据，只能用这些材料。\n\n## 怎么分析\n\n1. 先看总览和触发异动的分组。没有任何异动，就如实写“本周没有异动”，不要硬找原因。\n2. 对每个异动，沿着漏斗从上游往下游找第一个发生变化的环节：门店是否下线 → 访问次数 → 访问支付转化率 → 退款金额 → 核销GMV。上游变了，下游的指标自然跟着变，那些不是另外的原因。\n3. 用拆解把异动定位到分组。一个分组的变化如果几乎都来自它里面更细的一组，就定位到更细的那一组；如果分组里各处都在变，就停在这个分组。\n4. 确定一个原因以后，回头看其他触发异动的分组：它的变化如果主要来自已经确定的原因（例如某个城市的下滑几乎都在出问题的那个渠道里），它就是同一个原因的表现，不是新原因。去掉已确定原因的影响后仍然明显异常的分组，才另列一个原因。\n5. 本周含法定节假日时，整体上涨属于节假日效应。节假日之后的一两周，节前和节日期间支付的订单会陆续到店核销或过期退款，核销和退款金额随之偏高，这也属于节假日的余波。\n\n## 原因清单（causes）\n\n每个原因是：一个分组（segment，用一到两个维度写）、一个环节（lever）、一个方向（direction：up 或 down）。\n\nlever 只能取这几个值：\n- traffic（流量）：该分组的访问次数变了，转化率基本没变。\n- conversion（转化）：访问次数基本没变，访问支付转化率变了，常伴随补贴率变化。\n- supply（供给）：门店下线，在线门店数下降，该商家的订单消失。\n- redemption（核销）：支付基本正常，核销GMV 本身下降。\n- refund（退款）：支付基本正常，退款金额本身上升。\n- holiday（节假日）：本周含法定节假日带来的整体变化，segment 留空。\n\n规则：\n- 一个原因只写一次。同一个原因会带动多个指标（流量降，订单、GMV、核销GMV 都跟着降），那是一个原因。\n- 分组写到刚好：照“怎么分析”第 3 条，不要写得过粗，也不要把一个大分组拆成它下面的每个小组。\n- 没有异动，或者找不到集中的分组和环节，causes 留空。证据不够的不要列为原因，可以在 note 里写“值得继续观察”。\n\n## 报告正文（blocks）\n\n报告由若干段组成，每段一两句话，简体中文，大白话。kind 取值：summary（摘要）、finding（发现）、cause（原因）、advice（建议）、note（说明口径或局限）。\n\n每一段的要求：\n- finding（发现）必须写出具体数字：本周是多少、对比期是多少、变了多少。只说“明显下降”不算发现。\n- cause（原因）必须引用支持它的那一行查询结果。\n- 本周有异动时，至少要有一段 finding。\n\n数字规则是硬性的。程序会逐段核对，有一段对不上，整份报告就不放行：\n1. 一段话里出现的每个数字，都必须出现在这段话引用的行里。\n2. 引用写在 evidence 里：source 是查询编号（如 q03），quote 是从那个查询结果里原样复制的一整行（表格里的一整行，或表格上方的一整行说明）。不要改动，不要把几行拼成一行。一段话可以引用多行。\n3. 数字照抄。可以四舍五入，但至少保留两位有效数字。不要自己做加减乘除，不要自己算差值、倍数、占比；需要的数必须是查询结果里现成的。\n4. 计数、序号和中文数字也算数字：“两个渠道”“这三项”“两者”“第一”“8 个指标”“一周内”“前一周”“一两周”都会被核对。引用的行里没有这个数，就换个说法（“这些”“它们”“都”“首先”“本周内”“上周”“近期”）。“基线是前 8 周”“阈值是 3.5”这类说法，要引用写着这句话的那一行说明。\n5. 没有引用的段落里不能有任何数字。建议里不要写数字。\n6. 说到本周就写“本周”或查询结果里的周编号；百分点写 pp。\n\n最后只输出规定格式的 JSON。\n\n## 输出格式\n\n只输出一个 JSON 对象，不要加解释，不要用代码块包起来。结构：\n{\"has_anomaly\": true 或 false,\n \"causes\": [{\"segment\": [{\"dimension\": \"city|category|channel|merchant_type|merchant\", \"value\": \"分组名\"}], \"lever\": \"traffic|conversion|supply|redemption|refund|holiday\", \"direction\": \"up|down\"}],\n \"blocks\": [{\"kind\": \"summary|finding|cause|advice|note\", \"text\": \"一两句话\", \"evidence\": [{\"source\": \"q01\", \"quote\": \"原样复制的一整行\"}]}]}\n\n段落的类别由 kind 表示，text 里不要再写“发现一”“原因二”“1)”这类编号或序号：它们也会被当成数字核对。",
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      }
+     ],
+     "settingOnError": {
+      "processType": 1,
+      "retryTimes": 1,
+      "timeoutMs": 300000
+     }
+    },
+    "outputs": [
+     {
+      "type": "string",
+      "name": "output"
+     }
+    ],
+    "version": "3"
+   }
+  },
+  {
+   "id": "150001",
+   "type": "5",
+   "meta": {
+    "position": {
+     "x": 1200,
+     "y": 0
+    }
+   },
+   "data": {
+    "nodeMeta": {
+     "title": "数字核对",
+     "subTitle": "代码",
+     "icon": "https://lf3-static.bytednsdoc.com/obj/eden-cn/dvsmryvd_avi_dvsm/ljhwZthlaukjlkulzlp/icon/icon-Code-v2.jpg",
+     "description": "每段引用的行要在查询结果里，段里的数字要在引用的行里",
+     "mainColor": "#00B2B2"
+    },
+    "inputs": {
+     "inputParameters": [
+      {
+       "name": "report",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "ref",
+         "content": {
+          "source": "block-output",
+          "blockID": "140001",
+          "name": "output"
+         },
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      },
+      {
+       "name": "evidence",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "ref",
+         "content": {
+          "source": "block-output",
+          "blockID": "130001",
+          "name": "evidence"
+         },
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      }
+     ],
+     "code": "#!/usr/bin/env python3\n\"\"\"Check that each claim is backed, word for word, by the sources it cites.\n\nFor every claim in a claims file this script checks two things:\n  1. every quote appears in the cited source file (spacing, letter case, curly\n     quotes, dashes and full-width characters are ignored; if that fails, a\n     second pass also ignores punctuation);\n  2. every number the claim states also appears in its quotes. Dates, times\n     and amounts are where invented or shifted facts hide most often.\n\nIt cannot tell whether a real quote actually means what the claim says. That\njudgement stays with the agent and the reader.\n\nUsage:\n  python check_evidence.py CLAIMS.json --sources PATH [PATH ...]\n                           [--format text|markdown|json] [--lang en|zh]\n\nExit codes: 0 = every claim is supported, 1 = at least one claim is not,\n            2 = the input could not be read.\nStandard library only; Python 3.9 or later.\n\"\"\"\n\nimport json\nimport re\nimport unicodedata\nfrom decimal import ROUND_HALF_UP, Decimal, InvalidOperation\nfrom pathlib import Path\n\n__version__ = \"0.4.0\"\n\nTEXT_EXTENSIONS = {\n    \".md\", \".markdown\", \".txt\", \".rst\", \".csv\", \".tsv\", \".json\", \".jsonl\",\n    \".yaml\", \".yml\", \".html\", \".htm\", \".xml\", \".tex\",\n}\nMAX_SOURCE_BYTES = 5_000_000\n\n# Markdown table bars and code ticks are dropped in the loose pass, like punctuation,\n# so a quote copied from a table row without its bars still matches.\nLOOSE_DROP = {\"|\", \"`\"}\n\n# Characters treated as the same when matching quotes.\nCHAR_MAP = {\n    \"\\u2018\": \"'\", \"\\u2019\": \"'\", \"\\u201a\": \"'\", \"\\u201b\": \"'\", \"\\u2032\": \"'\",\n    \"\\u201c\": '\"', \"\\u201d\": '\"', \"\\u201e\": '\"', \"\\u201f\": '\"', \"\\u2033\": '\"',\n    \"\\u300c\": '\"', \"\\u300d\": '\"', \"\\u300e\": '\"', \"\\u300f\": '\"',\n    \"\\u2010\": \"-\", \"\\u2011\": \"-\", \"\\u2012\": \"-\", \"\\u2013\": \"-\", \"\\u2014\": \"-\",\n    \"\\u2015\": \"-\", \"\\u2212\": \"-\",\n}\n\nSTATUS_ORDER = [\n    \"unknown_source\",\n    \"quote_not_found\",\n    \"quote_too_short\",\n    \"no_evidence\",\n    \"numbers_not_in_quote\",\n    \"supported\",\n]\n\nLABELS = {\n    \"en\": {\n        \"supported\": \"Supported\",\n        \"unknown_source\": \"Cited source not found\",\n        \"quote_not_found\": \"Quote not in source\",\n        \"quote_too_short\": \"Quote too short to check\",\n        \"no_evidence\": \"No evidence given\",\n        \"numbers_not_in_quote\": \"Numbers not in the quote\",\n        \"missing\": \"missing numbers\",\n        \"rounded\": \"matched after rounding\",\n        \"line\": \"line\",\n        \"loose\": \"matched after ignoring punctuation\",\n        \"summary\": \"{ok} of {n} claims supported; {bad} not supported.\",\n        \"header\": [\"#\", \"Claim\", \"Result\", \"Evidence\"],\n    },\n    \"zh\": {\n        \"supported\": \"有依据\",\n        \"unknown_source\": \"找不到所引的资料\",\n        \"quote_not_found\": \"原文里没有这句引文\",\n        \"quote_too_short\": \"引文太短，无法核对\",\n        \"no_evidence\": \"没有给出依据\",\n        \"numbers_not_in_quote\": \"数字在引文里找不到\",\n        \"missing\": \"找不到的数字\",\n        \"rounded\": \"四舍五入后对上\",\n        \"line\": \"第 {n} 行\",\n        \"loose\": \"忽略标点后对上\",\n        \"summary\": \"{n} 条说法中 {ok} 条有依据，{bad} 条没有。\",\n        \"header\": [\"#\", \"说法\", \"结果\", \"依据\"],\n    },\n}\n\n\n# ---------------------------------------------------------------- matching\n\ndef _is_cjk(ch: str) -> bool:\n    code = ord(ch)\n    return (\n        0x3400 <= code <= 0x9FFF\n        or 0xF900 <= code <= 0xFAFF\n        or 0x20000 <= code <= 0x2FA1F\n        or 0x3040 <= code <= 0x30FF\n        or 0xAC00 <= code <= 0xD7AF\n    )\n\n\ndef normalize_with_map(text: str, loose: bool = False):\n    \"\"\"Return (normalized text, map from each normalized char to its index in `text`).\n\n    Strict form: NFKC, curly quotes and dashes unified, runs of whitespace become\n    one space, lower case. Loose form additionally drops all whitespace and\n    punctuation, so a missing comma or an extra space does not block a match.\n    \"\"\"\n    out, index_map = [], []\n    pending_space = False\n    for i, ch in enumerate(text):\n        for c in unicodedata.normalize(\"NFKC\", ch):\n            c = CHAR_MAP.get(c, c)\n            if c.isspace():\n                pending_space = bool(out)\n                continue\n            if loose and (unicodedata.category(c).startswith(\"P\") or c in LOOSE_DROP):\n                continue\n            if pending_space and not loose:\n                out.append(\" \")\n                index_map.append(i)\n            pending_space = False\n            for lc in c.lower():\n                out.append(lc)\n                index_map.append(i)\n    return \"\".join(out), index_map\n\n\ndef _trim_quote(q: str) -> str:\n    \"\"\"Drop punctuation and spaces at both ends (a quote often loses its full stop).\"\"\"\n    start, end = 0, len(q)\n    while start < end and (q[start].isspace() or unicodedata.category(q[start]).startswith(\"P\")):\n        start += 1\n    while end > start and (q[end - 1].isspace() or unicodedata.category(q[end - 1]).startswith(\"P\")):\n        end -= 1\n    return q[start:end]\n\n\nclass Source:\n    def __init__(self, source_id: str, path: Path, text: str):\n        self.id = source_id\n        self.path = path\n        self.text = unicodedata.normalize(\"NFC\", text)\n        self.strict, self.strict_map = normalize_with_map(self.text)\n        self.loose, self.loose_map = normalize_with_map(self.text, loose=True)\n\n    def line_of(self, index: int) -> int:\n        return self.text.count(\"\\n\", 0, index) + 1\n\n    def find(self, quote: str):\n        \"\"\"Return (match_type, line) or (None, None).\"\"\"\n        q = _trim_quote(normalize_with_map(unicodedata.normalize(\"NFC\", quote))[0])\n        if q:\n            at = self.strict.find(q)\n            if at != -1:\n                return \"exact\", self.line_of(self.strict_map[at])\n        ql = normalize_with_map(unicodedata.normalize(\"NFC\", quote), loose=True)[0]\n        if ql:\n            at = self.loose.find(ql)\n            if at != -1:\n                return \"loose\", self.line_of(self.loose_map[at])\n        return None, None\n\n\ndef quote_long_enough(quote: str) -> bool:\n    ql = normalize_with_map(quote, loose=True)[0]\n    if any(_is_cjk(c) for c in ql):\n        return len(ql) >= 4\n    return len(ql) >= 6\n\n\n# ---------------------------------------------------------------- numbers\n\nEN_NUMBER_WORDS = {\n    \"zero\": 0, \"two\": 2, \"three\": 3, \"four\": 4, \"five\": 5, \"six\": 6, \"seven\": 7,\n    \"eight\": 8, \"nine\": 9, \"ten\": 10, \"eleven\": 11, \"twelve\": 12, \"thirteen\": 13,\n    \"fourteen\": 14, \"fifteen\": 15, \"sixteen\": 16, \"seventeen\": 17, \"eighteen\": 18,\n    \"nineteen\": 19, \"twenty\": 20, \"thirty\": 30, \"forty\": 40, \"fifty\": 50,\n    \"sixty\": 60, \"seventy\": 70, \"eighty\": 80, \"ninety\": 90, \"hundred\": 100,\n}\n# \"one\" is left out on purpose: in prose it is usually a pronoun (\"one of the ...\").\nMONTHS = {\n    \"january\": 1, \"february\": 2, \"march\": 3, \"april\": 4, \"may\": 5, \"june\": 6,\n    \"july\": 7, \"august\": 8, \"september\": 9, \"october\": 10, \"november\": 11,\n    \"december\": 12, \"jan\": 1, \"feb\": 2, \"mar\": 3, \"apr\": 4, \"jun\": 6, \"jul\": 7,\n    \"aug\": 8, \"sep\": 9, \"sept\": 9, \"oct\": 10, \"nov\": 11, \"dec\": 12,\n}\nMONTH_RE = \"|\".join(sorted(MONTHS, key=len, reverse=True))\nCN_DIGITS = {\"零\": 0, \"〇\": 0, \"一\": 1, \"二\": 2, \"两\": 2, \"三\": 3, \"四\": 4,\n             \"五\": 5, \"六\": 6, \"七\": 7, \"八\": 8, \"九\": 9}\nCN_UNITS = {\"十\": 10, \"百\": 100, \"千\": 1000}\n# A lone 一 is usually \"a\" (\"一封邮件\" = an email); in a claim it counts only\n# before a unit of time or quantity.\nCN_ONE_UNITS = \"月日号天周年岁人名位次场份条项倍\"\nCN_ONE_UNIT_WORDS = (\"小时\", \"分钟\", \"星期\", \"个月\", \"个小时\", \"个星期\", \"个工作日\", \"个钟\")\n# Words whose numerals are not numbers: 十分 (very), 千万 (by all means),\n# 万一 (in case), 一一 (one by one), 统一 (unify), 唯一 (only), 第一 (first) ...\nCN_NOT_NUMBERS = [\n    r\"十分(?!钟)\", r\"千万\", r\"万一\", r\"一一\", r\"[统唯同之第专逐单划这那每哪某]一\",\n    r\"一(?=[些样直定般切起共致旦边下律概并])\", r\"零(?=[基门成风距])\",\n    r\"(?:周|星期|礼拜)[一二三四五六七日天]\",  # weekdays: 周五 is Friday, not 5\n    r\"二维码\", r\"三明治\", r\"四处\", r\"十字\",  # QR code, sandwich, everywhere, cross\n    r\"(?:没有|没|无|未)一(?=[次个件条项处位名回])\",  # 没有一次: not once\n    r\"一[次个件条项处位名回]?(?=[都也](?:没|不|未|无))\",  # 一次都没变: never changed\n    r\"(?<![零〇一二两三四五六七八九十\\d.])[百千](?=[万亿])\",  # 每百万: per million\n    r\"(?<=[数几上成])[百千]\",  # 数百, 上千: hundreds, thousands\n]\n\n\ndef _cn_to_int(s: str) -> int:\n    total, current = 0, 0\n    for ch in s:\n        if ch in CN_DIGITS:\n            current = CN_DIGITS[ch]\n        else:\n            total += (current or 1) * CN_UNITS[ch]\n            current = 0\n    return total + current\n\n\ndef _convert_chinese_numerals(text: str, generous: bool = False) -> str:\n    # 百分之五十 -> 50%\n    text = re.sub(r\"百分之([零〇一二两三四五六七八九十百]+)\", lambda m: str(_cn_to_int(m.group(1))) + \"%\", text)\n    protected = set()\n    for pattern in CN_NOT_NUMBERS:\n        for m in re.finditer(pattern, text):\n            protected.update(range(m.start(), m.end()))\n\n    def repl(m: re.Match) -> str:\n        run = m.group(0)\n        if protected.intersection(range(m.start(), m.end())):\n            return run\n        if run == \"一\" and not generous:\n            after = text[m.end():m.end() + 4]\n            if not after or (after[0] not in CN_ONE_UNITS and not after.startswith(CN_ONE_UNIT_WORDS)):\n                return run\n        # Spaces keep a converted numeral from merging with digits next to it.\n        if len(run) > 1 and all(c in CN_DIGITS for c in run):\n            return \" \" + \"\".join(str(CN_DIGITS[c]) for c in run) + \" \"  # 二〇二六 -> 2026\n        return f\" {_cn_to_int(run)} \"\n\n    return re.sub(r\"[零〇一二两三四五六七八九十百千]+\", repl, text)\n\n\ndef _to_24h(text: str) -> str:\n    def en(m: re.Match) -> str:\n        hour, minute, ampm = int(m.group(1)), m.group(2) or \"00\", m.group(3).replace(\".\", \"\").lower()\n        if hour > 12:\n            return m.group(0)\n        if ampm == \"pm\" and hour < 12:\n            hour += 12\n        if ampm == \"am\" and hour == 12:\n            hour = 0\n        return f\"{hour}:{minute}\"\n\n    text = re.sub(r\"(?<![\\d.:])(\\d{1,2})(?:[:.](\\d{2}))?\\s*(a\\.?m\\.?|p\\.?m\\.?)(?![a-z])\", en, text, flags=re.I)\n\n    def zh(m: re.Match) -> str:\n        hour = int(m.group(2))\n        if hour < 12:\n            hour += 12\n        return f\"{m.group(1)}{hour}{m.group(3)}\"  # the part of the day stays, so _zh_clock sees a time\n\n    return re.sub(r\"(下午|晚上|傍晚)\\s*(\\d{1,2})\\s*([点時时:：])\", zh, text)\n\n\n# 10点半 -> 10:30, 10点15分 -> 10:15, and 10点 -> 10:00 where it reads as a clock time\n# (after a part of the day, or before 前/后/到/截止 ...). \"有3点要注意\" (three points) stays 3.\nZH_DAY_PARTS = r\"(?:上午|中午|下午|晚上|傍晚|早上|早晨|凌晨)\"\nZH_AFTER_CLOCK = r\"(?=整|钟|前|后|以前|之前|以后|之后|到|至|开|关|闭|起|截止|结束|左右|准时|$|[，。,.;；、!！?？)）\\s])\"\n\n\ndef _zh_clock(text: str) -> str:\n    text = re.sub(r\"(\\d{1,2})\\s*[点時时]\\s*半\", lambda m: f\"{int(m.group(1))}:30\", text)\n    text = re.sub(r\"(\\d{1,2})\\s*[点時时]\\s*(\\d{1,2})\\s*分\", lambda m: f\"{int(m.group(1))}:{int(m.group(2)):02d}\", text)\n    text = re.sub(ZH_DAY_PARTS + r\"\\s*(\\d{1,2})\\s*[点時时]\", lambda m: f\"{int(m.group(1))}:00\", text)\n    return re.sub(r\"(\\d{1,2})\\s*[点時时]\" + ZH_AFTER_CLOCK, lambda m: f\"{int(m.group(1))}:00\", text)\n\n\n# A clock time is compared as one token, so 13:30 does not pass on a quote that\n# only has 13:00 and 14:30.\nTIME_RE = re.compile(r\"(?<![\\d:])(\\d{1,2}):(\\d{2})(?![\\d:])\")\nSECONDS_RE = re.compile(r\"(?<![\\d:])(\\d{1,2}):(\\d{2}):(\\d{2})(?![\\d:])\")\n\n\ndef _canonical(token: str) -> str:\n    if \".\" in token:\n        whole, frac = token.split(\".\", 1)\n        whole = str(int(whole))\n        frac = frac.rstrip(\"0\")\n        return f\"{whole}.{frac}\" if frac else whole\n    return str(int(token))\n\n\ndef _canon_dec(value: Decimal) -> str:\n    return _canonical(format(value.normalize(), \"f\"))\n\n\n# Fractions compare as fractions: 三分之一, one-third and (in a quote) 1/3 are all \"1/3\".\nEN_NUMERATORS = {\"a\": 1, \"an\": 1, \"one\": 1, \"two\": 2, \"three\": 3, \"four\": 4, \"five\": 5,\n                 \"six\": 6, \"seven\": 7, \"eight\": 8, \"nine\": 9}\nEN_DENOMINATORS = {\"half\": 2, \"halves\": 2, \"third\": 3, \"thirds\": 3, \"quarter\": 4, \"quarters\": 4,\n                   \"fourth\": 4, \"fourths\": 4, \"fifth\": 5, \"fifths\": 5, \"sixth\": 6, \"sixths\": 6,\n                   \"eighth\": 8, \"eighths\": 8, \"tenth\": 10, \"tenths\": 10}\nCN_FRACTION_RE = re.compile(r\"([零〇一二两三四五六七八九十百\\d]+)分之([零〇一二两三四五六七八九十\\d]+)\")\nEN_FRACTION_RE = re.compile(\n    r\"\\b(one|two|three|four|five|six|seven|eight|nine|an?)[\\s-]+(\" + \"|\".join(EN_DENOMINATORS) + r\")\\b\", re.I)\n# 万, 亿, thousand, million and billion scale the number before them: 4.3万 = 43,000.\nSCALES = {\"万\": 10_000, \"亿\": 100_000_000, \"thousand\": 1_000, \"million\": 1_000_000, \"billion\": 1_000_000_000}\nSCALE_RE = re.compile(r\"(\\d+(?:\\.\\d+)?)\\s*(万|亿|thousand\\b|million\\b|billion\\b)\", re.I)\nPERCENT_RE = re.compile(r\"(\\d+(?:\\.\\d+)?)\\s*(?:%|percent\\b|per cent\\b)\", re.I)\n\n\ndef _cn_or_digits(s: str) -> int:\n    return int(s) if s.isdigit() else _cn_to_int(s)\n\n\ndef _take_fractions(t: str, generous: bool, fractions: set) -> str:\n    def cn(m: re.Match) -> str:\n        if m.group(1) == \"百\":\n            return m.group(0)  # 百分之 is a percentage, handled elsewhere\n        fractions.add(f\"{_cn_or_digits(m.group(2))}/{_cn_or_digits(m.group(1))}\")\n        return \" \"\n\n    def en(m: re.Match) -> str:\n        num = m.group(1).lower()\n        den = m.group(2).lower()\n        if num in (\"a\", \"an\") and den in (\"quarter\", \"quarters\", \"half\", \"halves\") and \\\n                not re.match(r\"\\s+of\\b\", m.string[m.end():m.end() + 4], re.I):\n            return m.group(0)  # \"once a quarter\" is three months, \"a half\" may be time; \"a quarter of\" is 1/4\n        fractions.add(f\"{EN_NUMERATORS[num]}/{EN_DENOMINATORS[m.group(2).lower()]}\")\n        return \" \"\n\n    t = CN_FRACTION_RE.sub(cn, t)\n    t = EN_FRACTION_RE.sub(en, t)\n    if generous:\n        for a, b in re.findall(r\"(?<![\\d/.])(\\d{1,2})/(\\d{1,2})(?![\\d/])\", t):\n            fractions.add(f\"{int(a)}/{int(b)}\")\n    return t\n\n\ndef _scale(t: str, generous: bool) -> str:\n    def repl(m: re.Match) -> str:\n        try:\n            value = Decimal(m.group(1)) * SCALES[m.group(2).lower()]\n        except InvalidOperation:\n            return m.group(0)\n        scaled = format(value.normalize(), \"f\")\n        return f\" {m.group(1)} {scaled} \" if generous else f\" {scaled} \"\n\n    return SCALE_RE.sub(repl, t)\n\n\ndef numbers_in(text: str, generous: bool = False) -> set:\n    \"\"\"Every number a sentence states, in a form that can be compared across languages.\n\n    Claims are read strictly. Quotes are read generously (`generous=True`): \"one\",\n    \"a week\", \"none\" and a lone 一 also count, so a claim is not flagged just because\n    its source wrote the number as a word.\n    \"\"\"\n    t = unicodedata.normalize(\"NFKC\", text)\n    fractions = set()\n    t = _take_fractions(t, generous, fractions)\n    t = _convert_chinese_numerals(t, generous)\n    t = _to_24h(t)\n    t = _zh_clock(t)\n    t = re.sub(r\"(?<=\\d),(?=\\d{3}(?!\\d))\", \"\", t)  # 20,000 -> 20000\n    t = _scale(t, generous)\n    times = set()\n\n    def take_time(m: re.Match) -> str:\n        hour, minute = int(m.group(1)), int(m.group(2))\n        if hour > 24 or minute > 59:\n            return m.group(0)\n        times.add(f\"{hour}:{minute:02d}\")\n        return \" \"\n\n    def take_seconds(m: re.Match) -> str:\n        hour, minute, second = int(m.group(1)), int(m.group(2)), int(m.group(3))\n        if hour > 24 or minute > 59 or second > 59:\n            return m.group(0)\n        times.add(f\"{hour}:{minute:02d}:{second:02d}\")\n        if generous:\n            times.add(f\"{hour}:{minute:02d}\")  # 22:18:30 in a quote also says 22:18\n        return \" \"\n\n    t = SECONDS_RE.sub(take_seconds, t)\n    t = TIME_RE.sub(take_time, t)\n    found = {_canonical(n) for n in re.findall(r\"\\d+(?:\\.\\d+)?\", t)} | times | fractions\n    low = t.lower()\n    for word in re.findall(r\"[a-z]+\", low):\n        if word in EN_NUMBER_WORDS:\n            found.add(str(EN_NUMBER_WORDS[word]))\n    if generous and re.search(r\"\\b(?:one|single|an?\\s+(?:day|week|month|year|hour|minute|time|person|place))\\b\", low):\n        found.add(\"1\")\n    if generous and re.search(r\"\\bnone\\b\", low):\n        found.add(\"0\")\n    # Month names count only next to a day number or a year, so the verb \"may\" is never May.\n    for m in re.finditer(rf\"\\b\\d{{1,2}}(?:st|nd|rd|th)?\\s+(?:of\\s+)?({MONTH_RE})\\b\"\n                         rf\"|\\b({MONTH_RE})\\.?\\s+\\d{{1,2}}\\b\"\n                         rf\"|\\b({MONTH_RE})\\.?,?\\s+(?:19|20)\\d\\d\\b\", low):\n        found.add(str(MONTHS[m.group(1) or m.group(2) or m.group(3)]))\n    return found\n\n\ndef percents_in(text: str) -> set:\n    \"\"\"Numbers written as percentages (99.6%, 百分之五十), so a claim's 99.6% can match a quote's 0.996.\"\"\"\n    t = _convert_chinese_numerals(unicodedata.normalize(\"NFKC\", text), generous=True)\n    return {_canonical(n) for n in PERCENT_RE.findall(t)}\n\n\n# A name with digits attached (ranker-v3.2, echo-asr-2025-08-28, p90, B02) is a name,\n# not a quantity, when it also appears in a cited source. Currency codes (RM4,350) and\n# quarters or halves of a year (Q3, H1, FY2026) stay numbers.\nIDENTIFIER_RE = re.compile(r\"(?<![A-Za-z0-9])[A-Za-z][A-Za-z0-9]*(?:[-_.][A-Za-z0-9]+)*(?![A-Za-z0-9])\")\nNUMBER_PREFIXES = {\"rm\", \"rmb\", \"myr\", \"usd\", \"us\", \"sgd\", \"hkd\", \"hk\", \"aud\", \"eur\", \"gbp\", \"cny\", \"jpy\",\n                   \"cad\", \"nzd\", \"inr\", \"rs\", \"nt\", \"q\", \"h\", \"fy\"}\n\n\ndef _names_with_numbers(text: str) -> list:\n    out = []\n    for m in IDENTIFIER_RE.finditer(unicodedata.normalize(\"NFKC\", text)):\n        token = m.group(0)\n        prefix = re.match(r\"[A-Za-z]+\", token).group(0).lower()\n        if any(ch.isdigit() for ch in token) and not (prefix in NUMBER_PREFIXES and token[len(prefix):][:1].isdigit()):\n            out.append(token)\n    return out\n\n\ndef _title_phrases(src) -> set:\n    \"\"\"The cited document's own name, from its file name and first heading: 'update notice 2'.\"\"\"\n    stem = re.sub(r\"^[A-Za-z]*\\d+[-_ ]+\", \"\", Path(src.id).stem)\n    names = {re.sub(r\"[-_]+\", \" \", stem)}\n    heading = re.search(r\"^#{1,6}\\s+(.+?)\\s*$\", src.text, re.M)\n    if heading:\n        names.add(heading.group(1))\n        names.add(heading.group(1).rsplit(\":\", 1)[-1])\n    phrases = set()\n    for name in names:\n        name = \" \".join(unicodedata.normalize(\"NFKC\", name).lower().split())\n        if re.search(r\"\\d\", name) and re.search(r\"[a-z一-鿿]\", name):\n            phrases.add(name)\n    return phrases\n\n\ndef _context_of(src, line: int) -> str:\n    \"\"\"The paragraph that holds a quote's first line, with the nearest heading above it.\"\"\"\n    lines = src.text.splitlines()\n    i = max(0, min(line - 1, len(lines) - 1))\n    start, end = i, i\n    while start > 0 and lines[start - 1].strip():\n        start -= 1\n    while end + 1 < len(lines) and lines[end + 1].strip():\n        end += 1\n    heading = next((lines[j] for j in range(start - 1, -1, -1) if re.match(r\"\\s*#{1,6}\\s\", lines[j])), \"\")\n    return unicodedata.normalize(\"NFKC\", \"\\n\".join([heading] + lines[start:end + 1]))\n\n\n# Chinese ordinals: 第 6 条, 第二轮, 第四遍. One is a name, not a quantity, when the same ordinal\n# is in the quote's paragraph or the heading above it (a rule quoted from under \"第 6 条\").\nORDINAL_RE = re.compile(r\"第\\s*([零〇一二两三四五六七八九十百]+|\\d+)\\s*(?=([一-鿿]))\")\n# A quoted name in a claim: “一次提示词”组, \"strict-v2\".\nQUOTED_RE = re.compile(r\"[“\\\"「『`]([^“”\\\"「」『』`\\n]{1,30})[”\\\"」』`]\")\n# A mixed-case or all-capital name and a version after a space: SigLIP 2, GPT 4.\nSPACED_NAME_RE = re.compile(r\"(?<![A-Za-z0-9])([A-Za-z]*[a-z][A-Z][A-Za-z]*|[A-Z][A-Z0-9]+)\\s+(\\d+(?:\\.\\d+)?)(?![\\d.,:/%])\")\nNOT_SPACED_NAMES = {\"am\", \"pm\", \"myt\", \"utc\", \"gmt\"} | set(MONTHS)\n\n\ndef _ordinals(text: str) -> set:\n    return {f\"{_cn_or_digits(m.group(1))}{m.group(2)}\" for m in ORDINAL_RE.finditer(text)}\n\n\ndef _without_names(text: str, cited, contexts=()) -> str:\n    \"\"\"The claim with names taken out, so their digits are not compared as quantities.\n\n    Taken out: the cited documents' titles; names with digits (ranker-v3.2, SigLIP 2) and\n    quoted names that a cited source contains; ordinals that the quote's paragraph or the\n    heading above it contains.\n    \"\"\"\n    t = unicodedata.normalize(\"NFKC\", text)\n    for src in cited:\n        for phrase in _title_phrases(src):\n            pattern = r\"[\\s_-]+\".join(re.escape(w) for w in phrase.split())\n            t = re.sub(r\"(?<![A-Za-z0-9])\" + pattern + r\"(?![A-Za-z0-9])\", \" \", t, flags=re.I)\n    haystack = \" \".join(unicodedata.normalize(\"NFKC\", s.text).lower() + \" \" + s.id.lower() for s in cited)\n    flat = \" \".join(haystack.split())\n\n    def in_sources(phrase: str) -> bool:\n        return \" \".join(phrase.lower().split()) in flat\n\n    t = QUOTED_RE.sub(lambda m: \" \" if in_sources(m.group(1)) else m.group(0), t)\n    t = SPACED_NAME_RE.sub(\n        lambda m: \" \" if (m.group(1).lower() not in NUMBER_PREFIXES | NOT_SPACED_NAMES and in_sources(m.group(0)))\n        else m.group(0), t)\n    for token in _names_with_numbers(t):\n        if re.search(r\"(?<![a-z0-9])\" + re.escape(token.lower()) + r\"(?![a-z0-9])\", haystack):\n            t = re.sub(r\"(?<![A-Za-z0-9])\" + re.escape(token) + r\"(?![A-Za-z0-9])\", \" \", t)\n    nearby = set().union(*(_ordinals(c) for c in contexts)) if contexts else set()\n    t = ORDINAL_RE.sub(lambda m: \" \" if f\"{_cn_or_digits(m.group(1))}{m.group(2)}\" in nearby else m.group(0), t)\n    return t\n\n\n# ---------------------------------------------------------------- loading\n\ndef load_sources(paths):\n    sources = {}\n    for raw in paths:\n        p = Path(raw)\n        if p.is_dir():\n            for f in sorted(p.rglob(\"*\")):\n                if f.is_file() and f.suffix.lower() in TEXT_EXTENSIONS:\n                    _add_source(sources, f.relative_to(p).as_posix(), f)\n        elif p.is_file():\n            _add_source(sources, p.name, p)\n        else:\n            raise ValueError(f\"source path not found: {raw}\")\n    if not sources:\n        raise ValueError(\"no readable source files were given\")\n    return sources\n\n\ndef _add_source(sources, source_id, path):\n    if path.stat().st_size > MAX_SOURCE_BYTES:\n        raise ValueError(f\"source file too large (over 5 MB): {path}\")\n    try:\n        text = path.read_text(encoding=\"utf-8-sig\")\n    except UnicodeDecodeError as err:\n        raise ValueError(f\"source file is not UTF-8 text: {path}\") from err\n    sources[source_id] = Source(source_id, path, text)\n\n\ndef resolve_source(sources, ref: str):\n    ref = (ref or \"\").strip().replace(\"\\\\\", \"/\")\n    if ref in sources:\n        return sources[ref]\n    matches = [s for sid, s in sources.items() if sid.endswith(\"/\" + ref) or Path(sid).name == ref or Path(sid).stem == ref]\n    return matches[0] if len(matches) == 1 else None\n\n\ndef load_claims(path):\n    try:\n        data = json.loads(Path(path).read_text(encoding=\"utf-8-sig\"))\n    except FileNotFoundError as err:\n        raise ValueError(f\"claims file not found: {path}\") from err\n    except json.JSONDecodeError as err:\n        raise ValueError(f\"claims file is not valid JSON: {err}\") from err\n    claims = data.get(\"claims\") if isinstance(data, dict) else data\n    if not isinstance(claims, list):\n        raise ValueError('claims file must be a list of claims or an object with a \"claims\" list')\n    for n, c in enumerate(claims, 1):\n        if not isinstance(c, dict) or not isinstance(c.get(\"text\"), str):\n            raise ValueError(f'claim {n} needs a \"text\" string')\n        ev = c.get(\"evidence\", [])\n        if not isinstance(ev, list) or any(not isinstance(e, dict) for e in ev):\n            raise ValueError(f'claim {n}: \"evidence\" must be a list of {{\"source\", \"quote\"}} objects')\n        c.setdefault(\"id\", str(n))\n    return claims\n\n\n# ---------------------------------------------------------------- checking\n\nNUMBER_WITH_UNIT_RE = re.compile(\n    r\"(?<![\\d.:/])(\\d+(?:\\.(\\d+))?)(?:\\s*(万|亿|thousand\\b|million\\b|billion\\b))?(?![\\d:/])\", re.I)\n\n\ndef _number_steps(text: str) -> dict:\n    \"\"\"For each number the claim states, the step it is written to and its significant digits.\n\n    0.31 is written to 0.01 (2 digits), 156 to 1 (3 digits), 8.5万 to 1000 (2 digits).\n    \"\"\"\n    t = _convert_chinese_numerals(unicodedata.normalize(\"NFKC\", text))\n    t = re.sub(r\"(?<=\\d),(?=\\d{3}(?!\\d))\", \"\", t)\n    steps = {}\n    for m in NUMBER_WITH_UNIT_RE.finditer(t):\n        mantissa, frac, unit = m.group(1), m.group(2) or \"\", m.group(3)\n        scale = SCALES[unit.lower()] if unit else 1\n        digits = mantissa.replace(\".\", \"\").lstrip(\"0\")\n        steps[_canon_dec(Decimal(mantissa) * scale)] = (Decimal(1).scaleb(-len(frac)) * scale, len(digits))\n    return steps\n\n\ndef _rounded_from(n, steps, quote_numbers):\n    \"\"\"The quote number that rounds to the claim's n at the precision the claim uses, if any.\n\n    0.31 matches 0.314 and 17% matches 16.5%, but only when the claim keeps at least two\n    significant digits (0.3 for 0.314 stays flagged), and never by rounding an integer to\n    tens (120 does not match 123).\n    \"\"\"\n    if n not in steps or \"/\" in n or \":\" in n:\n        return None\n    step, significant = steps[n]\n    if significant < 2:\n        return None\n    target = Decimal(n)\n    for q in sorted(quote_numbers):\n        if \"/\" in q or \":\" in q:\n            continue\n        value = Decimal(q)\n        if value != target and (value / step).quantize(Decimal(1), rounding=ROUND_HALF_UP) * step == target:\n            return q\n    return None\n\n\ndef _same_as_percent(n, claim_percents, quote_numbers, quote_percents) -> bool:\n    \"\"\"99.6% in a claim matches 0.996 in a quote, and 0.996 matches 99.6%.\"\"\"\n    if \"/\" in n or \":\" in n:\n        return False\n    d = Decimal(n)\n    if n in claim_percents and _canon_dec(d / 100) in quote_numbers:\n        return True\n    return d < 1 and _canon_dec(d * 100) in quote_percents\n\n\ndef check_claim(claim, sources):\n    problems = set()\n    evidence_out = []\n    quote_numbers = set()\n    quote_percents = set()\n    cited = []\n    contexts = []  # the paragraph around each found quote and the heading above it\n    years_in_sources = set()\n    for e in claim.get(\"evidence\", []):\n        quote = str(e.get(\"quote\", \"\"))\n        src = resolve_source(sources, str(e.get(\"source\", \"\")))\n        item = {\"source\": e.get(\"source\"), \"quote\": quote, \"found\": False, \"match\": None, \"line\": None}\n        if src is None:\n            problems.add(\"unknown_source\")\n        elif not quote_long_enough(quote):\n            problems.add(\"quote_too_short\")\n        else:\n            match, line = src.find(quote)\n            if match:\n                item.update(found=True, match=match, line=line, source=src.id)\n                quote_numbers |= numbers_in(quote, generous=True)\n                quote_percents |= percents_in(quote)\n                if src not in cited:\n                    cited.append(src)\n                contexts.append(_context_of(src, line))\n                years_in_sources |= set(re.findall(r\"(?<!\\d)(?:19|20)\\d\\d(?!\\d)\", unicodedata.normalize(\"NFKC\", src.text)))\n            else:\n                problems.add(\"quote_not_found\")\n        evidence_out.append(item)\n\n    if not evidence_out:\n        problems.add(\"no_evidence\")\n\n    missing = []\n    rounded = []\n    if not problems:\n        claim_text = _without_names(claim[\"text\"], cited, contexts)\n        claim_percents = percents_in(claim_text)\n        claim_steps = _number_steps(claim_text)\n        for n in sorted(numbers_in(claim_text), key=lambda x: (len(x), x)):\n            if n in quote_numbers:\n                continue\n            if re.fullmatch(r\"(19|20)\\d\\d\", n) and n in years_in_sources:\n                continue  # documents often state the year once, away from the date\n            if _same_as_percent(n, claim_percents, quote_numbers, quote_percents):\n                continue\n            source_number = _rounded_from(n, claim_steps, quote_numbers)\n            if source_number is not None:\n                rounded.append({\"claim\": n, \"quote\": source_number})\n                continue\n            missing.append(n)\n        if missing:\n            problems.add(\"numbers_not_in_quote\")\n\n    status = next(s for s in STATUS_ORDER if s in problems or s == \"supported\")\n    return {\n        \"id\": str(claim[\"id\"]),\n        \"text\": claim[\"text\"],\n        \"status\": status,\n        \"problems\": sorted(problems, key=STATUS_ORDER.index),\n        \"missing_numbers\": missing,\n        \"rounded\": rounded,\n        \"evidence\": evidence_out,\n    }\n\n\ndef check(claims, sources):\n    results = [check_claim(c, sources) for c in claims]\n    ok = sum(r[\"status\"] == \"supported\" for r in results)\n    return {\"summary\": {\"claims\": len(results), \"supported\": ok, \"not_supported\": len(results) - ok}, \"claims\": results}\n\n\n# ---------------------------------------------------------------- output\n\ndef _where(e, L):\n    if not e[\"found\"]:\n        return f'{e[\"source\"]}: \"{e[\"quote\"]}\"'\n    line = L[\"line\"].format(n=e[\"line\"]) if \"{n}\" in L[\"line\"] else f'{L[\"line\"]} {e[\"line\"]}'\n    loose = f' ({L[\"loose\"]})' if e[\"match\"] == \"loose\" else \"\"\n    return f'{e[\"source\"]}, {line}{loose}: \"{e[\"quote\"]}\"'\n\n\ndef _rounded_text(r) -> str:\n    return \", \".join(f'{x[\"claim\"]} ← {x[\"quote\"]}' for x in r[\"rounded\"])\n\n\ndef render(report, fmt=\"text\", lang=\"en\"):\n    if fmt == \"json\":\n        return json.dumps(report, ensure_ascii=False, indent=2)\n    L = LABELS[lang]\n    s = report[\"summary\"]\n    summary = L[\"summary\"].format(n=s[\"claims\"], ok=s[\"supported\"], bad=s[\"not_supported\"])\n    lines = []\n    if fmt == \"markdown\":\n        lines += [\"| \" + \" | \".join(L[\"header\"]) + \" |\", \"|---|---|---|---|\"]\n        for r in report[\"claims\"]:\n            result = L[r[\"status\"]]\n            if r[\"missing_numbers\"]:\n                result += f' ({L[\"missing\"]}: {\", \".join(r[\"missing_numbers\"])})'\n            if r.get(\"rounded\"):\n                result += f' ({L[\"rounded\"]}: {_rounded_text(r)})'\n            ev = \"<br>\".join(_where(e, L) for e in r[\"evidence\"]) or \"—\"\n            cell = lambda x: x.replace(\"|\", \"\\\\|\").replace(\"\\n\", \" \")\n            lines.append(f'| {r[\"id\"]} | {cell(r[\"text\"])} | {cell(result)} | {cell(ev)} |')\n        lines += [\"\", summary]\n    else:\n        for r in report[\"claims\"]:\n            mark = \"OK \" if r[\"status\"] == \"supported\" else \"!! \"\n            lines.append(f'{mark}[{r[\"id\"]}] {L[r[\"status\"]]}: {r[\"text\"]}')\n            if r[\"missing_numbers\"]:\n                lines.append(f'     {L[\"missing\"]}: {\", \".join(r[\"missing_numbers\"])}')\n            if r.get(\"rounded\"):\n                lines.append(f'     {L[\"rounded\"]}: {_rounded_text(r)}')\n            for e in r[\"evidence\"]:\n                lines.append(f\"     - {_where(e, L)}\")\n        lines += [\"\", summary]\n    return \"\\n\".join(lines)\n\n\n# ---------------------------------------------------------------------------------------------\n# Code node 2 of the workflow: the number check and the final report.\n# Everything above this line is evidence-check's script (version 0.4.0, MIT), unchanged except that\n# its command-line entry point is left out. Input variables: `report` (the model's JSON answer),\n# `evidence` (JSON text from code node 1). Output variables: `released` (1 or 0), `feedback` (what\n# to tell the model when it is 0), `markdown` (the report as text), `checked`, `failed`.\n# ---------------------------------------------------------------------------------------------\nKIND_TITLE = [(\"summary\", \"一、摘要\"), (\"finding\", \"二、发现\"), (\"cause\", \"三、原因\"), (\"advice\", \"四、建议\"), (\"note\", \"五、说明\")]\nLEVER = {\"traffic\": \"流量\", \"conversion\": \"转化\", \"supply\": \"供给\", \"redemption\": \"核销\", \"refund\": \"退款\", \"holiday\": \"节假日\"}\nDIM = {\"city\": \"城市\", \"category\": \"品类\", \"channel\": \"渠道\", \"merchant_type\": \"商家类型\", \"merchant\": \"商家\"}\nFAIL = {\n    \"unknown_source\": \"引用的查询编号不存在\",\n    \"quote_not_found\": \"引用的那一行在查询结果里找不到（要整行原样复制，不要改动、不要把几行拼成一行）\",\n    \"quote_too_short\": \"引用太短，要引用查询结果里的整行\",\n    \"no_evidence\": \"这段话里有数字，但没有引用任何查询结果\",\n    \"numbers_not_in_quote\": \"这些数字不在这段话引用的行里\",\n    \"finding_without_number\": \"“发现”段必须写出具体数字，并引用数字所在的那一行\",\n    \"cause_without_evidence\": \"“原因”段必须引用至少一行查询结果\",\n}\n\n\n_CN_NUMBER = re.compile(r\"[前上这同第每近头]?[一二两三四五六七八九十百]{1,3}[一-鿿]?\")\n\n\ndef chinese_number_phrases(text: str) -> list:\n    \"\"\"Phrases such as 两者, 一周内, 发现二 that the check reads as numbers; used to make feedback specific.\"\"\"\n    out = []\n    for m in _CN_NUMBER.finditer(text):\n        s = m.group(0)\n        if s not in out and numbers_in(s):\n            out.append(s)\n    return out\n\n\ndef check(report: str, evidence: str) -> dict:\n    try:\n        text = report.strip()\n        if text.startswith(\"```\"):\n            text = text.strip(\"`\")\n            text = text[text.index(\"{\"):]\n        data = json.loads(text[text.index(\"{\"): text.rindex(\"}\") + 1])\n    except Exception:\n        return {\"released\": 0, \"feedback\": \"- 输出不是合法的 JSON，请只输出规定格式的 JSON。\", \"markdown\": report, \"checked\": 0, \"failed\": 1}\n    sources = {qid: Source(qid, None, body) for qid, body in json.loads(evidence).items()}\n    blocks = [b for b in data.get(\"blocks\", []) if isinstance(b, dict)]\n    results, problems = [], []\n    for i, b in enumerate(blocks):\n        body = str(b.get(\"text\", \"\")).replace(\"个百分点\", \" pp\").replace(\"百分点\", \" pp\")\n        evid = [e for e in (b.get(\"evidence\") or []) if isinstance(e, dict)]\n        numbers = numbers_in(body)\n        if b.get(\"kind\") == \"finding\" and not numbers:\n            results.append((i, \"finding_without_number\", [], []))\n        elif b.get(\"kind\") == \"cause\" and not evid:\n            results.append((i, \"cause_without_evidence\", [], []))\n        elif not evid and not numbers:\n            results.append((i, \"no_number\", [], []))\n        else:\n            r = check_claim({\"id\": str(i), \"text\": body, \"evidence\": evid}, sources)\n            results.append((i, r[\"status\"], r[\"missing_numbers\"], [e[\"quote\"] for e in r[\"evidence\"] if not e[\"found\"]]))\n    if not blocks:\n        problems.append(\"报告是空的\")\n    elif data.get(\"has_anomaly\") and not any(b.get(\"kind\") == \"finding\" for b in blocks):\n        problems.append(\"报告说本周有异动，但没有“发现”段（kind=finding）\")\n    bad = [r for r in results if r[1] not in (\"supported\", \"no_number\")]\n    lines = [\"- 整份报告：\" + p for p in problems]\n    for i, status, missing, lost in bad:\n        msg = FAIL.get(status, status)\n        if missing:\n            msg += \"：\" + \"、\".join(missing)\n        if status in (\"numbers_not_in_quote\", \"no_evidence\"):\n            words = chinese_number_phrases(str(blocks[i].get(\"text\", \"\")))\n            if words:\n                msg += \"。这段话里的中文数字也算数字：\" + \"、\".join(\"“%s”\" % w for w in words[:6]) + \"，请换成不带数字的说法\"\n        if lost:\n            msg += \"；找不到的引用：\" + \"；\".join(q[:60] for q in lost)\n        lines.append(\"- 第 %d 段（%s…）：%s\" % (i + 1, str(blocks[i].get(\"text\", \"\"))[:30], msg))\n    released = not bad and not problems\n    status = dict((r[0], r[1]) for r in results)\n    md = [\"# 经营分析周报\", \"\",\n          \"> 数字核对：%s。%d 段含数字或引用，%d 段没通过。\" % (\"已放行\" if released else \"未放行\", sum(r[1] != \"no_number\" for r in results), len(bad)), \"\"]\n    causes = [c for c in data.get(\"causes\", []) if isinstance(c, dict)]\n    if causes:\n        md += [\"**原因清单**\", \"\"]\n        for c in causes:\n            seg = \"、\".join(\"%s=%s\" % (DIM.get(s.get(\"dimension\"), s.get(\"dimension\")), s.get(\"value\")) for s in (c.get(\"segment\") or []) if isinstance(s, dict))\n            md.append(\"- %s：%s\" % (seg or \"全部\", LEVER.get(c.get(\"lever\"), \"待查\")))\n        md.append(\"\")\n    for kind, title in KIND_TITLE:\n        items = [(i, b) for i, b in enumerate(blocks) if b.get(\"kind\", \"finding\") == kind]\n        if not items:\n            continue\n        md += [\"## \" + title, \"\"]\n        for i, b in items:\n            refs = sorted(set(str(e.get(\"source\")) for e in (b.get(\"evidence\") or []) if isinstance(e, dict) and e.get(\"source\")))\n            mark = \"\" if status.get(i) in (\"supported\", \"no_number\") else \" **［未通过核对］**\"\n            md.append(\"- \" + str(b.get(\"text\", \"\")) + (\"（出处：\" + \"、\".join(refs) + \"）\" if refs else \"\") + mark)\n        md.append(\"\")\n    md.append(\"数据是合成的，不是任何平台的真实经营数据。\")\n    return {\"released\": 1 if released else 0, \"feedback\": \"\\n\".join(lines), \"markdown\": \"\\n\".join(md),\n            \"checked\": sum(r[1] != \"no_number\" for r in results), \"failed\": len(bad)}\n\n\nasync def main(args: Args) -> Output:\n    return check(args.params.get(\"report\") or \"\", args.params.get(\"evidence\") or \"{}\")\n",
+     "language": 3,
+     "settingOnError": {
+      "processType": 1,
+      "timeoutMs": 120000,
+      "retryTimes": 0
+     }
+    },
+    "outputs": [
+     {
+      "type": "integer",
+      "name": "released"
+     },
+     {
+      "type": "string",
+      "name": "feedback"
+     },
+     {
+      "type": "string",
+      "name": "markdown"
+     },
+     {
+      "type": "integer",
+      "name": "checked"
+     },
+     {
+      "type": "integer",
+      "name": "failed"
+     }
+    ]
+   }
+  },
+  {
+   "id": "160001",
+   "type": "8",
+   "meta": {
+    "position": {
+     "x": 1600,
+     "y": 0
+    }
+   },
+   "data": {
+    "nodeMeta": {
+     "title": "放行了吗",
+     "subTitle": "选择器",
+     "icon": "https://lf3-static.bytednsdoc.com/obj/eden-cn/dvsmryvd_avi_dvsm/ljhwZthlaukjlkulzlp/icon/icon-Condition-v2.jpg",
+     "description": "全部通过就放行",
+     "mainColor": "#00B2B2"
+    },
+    "inputs": {
+     "branches": [
+      {
+       "condition": {
+        "logic": 2,
+        "conditions": [
+         {
+          "operator": 1,
+          "left": {
+           "input": {
+            "type": "integer",
+            "value": {
+             "type": "ref",
+             "content": {
+              "source": "block-output",
+              "blockID": "150001",
+              "name": "released"
+             },
+             "rawMeta": {
+              "type": 2
+             }
+            }
+           }
+          },
+          "right": {
+           "input": {
+            "type": "integer",
+            "value": {
+             "type": "literal",
+             "content": 1,
+             "rawMeta": {
+              "type": 2
+             }
+            }
+           }
+          }
+         }
+        ]
+       }
+      }
+     ]
+    }
+   }
+  },
+  {
+   "id": "170001",
+   "type": "3",
+   "meta": {
+    "position": {
+     "x": 2000,
+     "y": 260
+    }
+   },
+   "data": {
+    "nodeMeta": {
+     "title": "改一次",
+     "subTitle": "大模型",
+     "icon": "https://lf3-static.bytednsdoc.com/obj/eden-cn/dvsmryvd_avi_dvsm/ljhwZthlaukjlkulzlp/icon/icon-LLM-v2.jpg",
+     "description": "调用大语言模型写周报",
+     "mainColor": "#5C62FF"
+    },
+    "inputs": {
+     "inputParameters": [
+      {
+       "name": "week",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "ref",
+         "content": {
+          "source": "block-output",
+          "blockID": "130001",
+          "name": "week"
+         },
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      },
+      {
+       "name": "pack",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "ref",
+         "content": {
+          "source": "block-output",
+          "blockID": "130001",
+          "name": "pack"
+         },
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      },
+      {
+       "name": "draft",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "ref",
+         "content": {
+          "source": "block-output",
+          "blockID": "140001",
+          "name": "output"
+         },
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      },
+      {
+       "name": "feedback",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "ref",
+         "content": {
+          "source": "block-output",
+          "blockID": "150001",
+          "name": "feedback"
+         },
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      }
+     ],
+     "llmParam": [
+      {
+       "name": "modelType",
+       "input": {
+        "type": "integer",
+        "value": {
+         "type": "literal",
+         "content": "100002",
+         "rawMeta": {
+          "type": 2
+         }
+        }
+       }
+      },
+      {
+       "name": "modleName",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "literal",
+         "content": "Claude Haiku 5.5",
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      },
+      {
+       "name": "generationDiversity",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "literal",
+         "content": "balance",
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      },
+      {
+       "name": "maxTokens",
+       "input": {
+        "type": "integer",
+        "value": {
+         "type": "literal",
+         "content": "20000",
+         "rawMeta": {
+          "type": 2
+         }
+        }
+       }
+      },
+      {
+       "name": "responseFormat",
+       "input": {
+        "type": "integer",
+        "value": {
+         "type": "literal",
+         "content": "0",
+         "rawMeta": {
+          "type": 2
+         }
+        }
+       }
+      },
+      {
+       "name": "prompt",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "literal",
+         "content": "请根据下面的材料，写 {{week}} 这一周的经营分析周报。\n\n{{pack}}\n\n上一次写的周报（JSON）：\n{{draft}}\n\n这份报告没有通过数字核对，问题如下：\n{{feedback}}\n\n请只修改有问题的段落。数字不在引用行里的：补上写有这个数的那一行引用，或者把数改成引用行里的写法。计数词和序号（如“两个”“第一”）换成不带数的说法。不要靠删掉关键数字来通过核对，“发现”段必须保留具体数字。然后重新输出完整的 JSON。原因清单如果没有问题就保持不变。",
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      },
+      {
+       "name": "enableChatHistory",
+       "input": {
+        "type": "boolean",
+        "value": {
+         "type": "literal",
+         "content": false,
+         "rawMeta": {
+          "type": 3
+         }
+        }
+       }
+      },
+      {
+       "name": "chatHistoryRound",
+       "input": {
+        "type": "integer",
+        "value": {
+         "type": "literal",
+         "content": "3",
+         "rawMeta": {
+          "type": 2
+         }
+        }
+       }
+      },
+      {
+       "name": "systemPrompt",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "literal",
+         "content": "你是到店团购业务的经营分析师。任务：写本周的经营分析周报，说清楚本周哪些指标异动、原因是什么、建议做什么。\n\n## 业务和数据\n\n用户在平台上买团购券（支付），到店使用（核销），没用的可以退（退款）。平台在核销后收佣金。\n\n维度：城市 city、品类 category、渠道 channel（短视频、直播、搜索、门店页）、商家类型 merchant_type（连锁、单店）、商家 merchant。\n\n周汇总表（week_id 形如 2026-W37）：\n- cube_traffic(week_id, city, category, channel, visits)\n- cube_trade(week_id, city, category, channel, merchant_type, merchant, orders, gmv, subsidy, new_orders, redeem_orders, redeem_gmv, commission, refund_orders, refund_amt)\n- cube_store(week_id, city, category, merchant_type, merchant, online_stores, active_stores, new_stores)\n- metric_weekly(metric, label, grp, unit, dim, slice, week_id, num, den, value, share)：每个指标每周的总量（dim='total'）和按城市、品类、渠道、商家类型的分组值\n- dim_week(week_id, week_start, week_end, is_holiday_week, holiday_names, in_report)\n明细表：\n- order_wide(order_id, user_id, deal_id, store_id, merchant, merchant_type, city, city_tier, category, industry, commission_rate, channel, pay_date, pay_week, order_amount, platform_subsidy, is_first_order)\n- fact_redeem(order_id, redeem_date, redeem_amount)、fact_refund(order_id, refund_date, refund_amount, refund_type)：refund_type 是“主动退”或“过期退”\n- fact_traffic_daily(visit_date, city_id, category_id, channel, visit_cnt)\n- dim_store(store_id, merchant_id, city_id, category_id, open_date)、fact_store_offline(store_id, offline_from, offline_to)\n- dim_date(date, week_id, week_start, day_of_week, is_holiday, holiday_name, is_holiday_week)\n入账时点：支付按支付日，核销按核销日，退款按退款日。\n\n## 指标\n\n| name | 指标 | 分组 | 算法 | 可拆的维度 |\n|---|---|---|---|---|\n| visits | 访问次数（次） | 用户增长 | 可按分组相加 | city、category、channel |\n| buyers | 支付用户数（人） | 用户增长 | 去重计数（各分组不能相加） | city、category、channel、merchant_type、merchant |\n| new_buyers | 新客数（人） | 用户增长 | 可按分组相加 | city、category、channel、merchant_type、merchant |\n| new_buyer_share | 新客订单占比（%） | 用户增长 | 新客首单数 ÷ 支付订单数 | city、category、channel、merchant_type、merchant |\n| orders | 支付订单数（单） | 交易效率 | 可按分组相加 | city、category、channel、merchant_type、merchant |\n| gmv | 支付GMV（元） | 交易效率 | 可按分组相加 | city、category、channel、merchant_type、merchant |\n| conversion_rate | 访问支付转化率（%） | 交易效率 | 支付订单数 ÷ 访问次数 | city、category、channel |\n| aov | 客单价（元） | 交易效率 | 支付GMV ÷ 支付订单数 | city、category、channel、merchant_type、merchant |\n| redeem_gmv | 核销GMV（元） | 交易效率 | 可按分组相加 | city、category、channel、merchant_type、merchant |\n| redeem_rate | 核销率（%） | 交易效率 | 核销GMV ÷ 支付GMV | city、category、channel、merchant_type、merchant |\n| online_stores | 在线门店数（家） | 商家运营 | 可按分组相加 | city、category、merchant_type、merchant |\n| active_stores | 动销门店数（家） | 商家运营 | 可按分组相加 | city、category、merchant_type、merchant |\n| active_store_rate | 动销率（%） | 商家运营 | 动销门店数 ÷ 在线门店数 | city、category、merchant_type、merchant |\n| gmv_per_active_store | 店均GMV（元） | 商家运营 | 支付GMV ÷ 动销门店数 | city、category、merchant_type、merchant |\n| new_stores | 新上线门店数（家） | 商家运营 | 可按分组相加 | city、category、merchant_type、merchant |\n| commission | 佣金收入（元） | 收入健康度 | 可按分组相加 | city、category、channel、merchant_type、merchant |\n| take_rate | 货币化率（%） | 收入健康度 | 佣金收入 ÷ 核销GMV | city、category、channel、merchant_type、merchant |\n| subsidy | 平台补贴（元） | 收入健康度 | 可按分组相加 | city、category、channel、merchant_type、merchant |\n| subsidy_rate | 补贴率（%） | 收入健康度 | 平台补贴 ÷ 支付GMV | city、category、channel、merchant_type、merchant |\n| refund_amt | 退款金额（元） | 收入健康度 | 可按分组相加 | city、category、channel、merchant_type、merchant |\n| refund_rate | 退款率（%） | 收入健康度 | 退款金额 ÷ 支付GMV | city、category、channel、merchant_type、merchant |\n| net_revenue | 净收入（元） | 收入健康度 | 可按分组相加 | city、category、channel、merchant_type、merchant |\n\n读指标时要注意：\n- 核销率、退款率 = 当周核销（退款）金额 ÷ 当周支付GMV，分子分母不是同一批订单。某个分组的支付量突然变了，这两个率会被机械地带动，这不代表核销或退款本身出了问题。判断核销、退款有没有问题，看核销GMV、退款金额本身有没有变，同时看支付GMV 有没有变。\n- 比率指标的变化分成两部分：率效应（分组自己的率变了）和结构效应（分组的占比变了）。客单价、货币化率主要随品类占比变化。\n- 基线是本周之前最近 8 个非节假日周。异动由监控规则判定（总览里的“是否异动”），不要自己另定标准。\n\n## 你拿到的材料\n\n用户消息里是一组已经查好的结果，每个都有编号（q01、q02……）：本周指标总览、触发异动的分组、主要异动指标按各维度的拆解、异动分组的体检。你不能再查别的数据，只能用这些材料。\n\n## 怎么分析\n\n1. 先看总览和触发异动的分组。没有任何异动，就如实写“本周没有异动”，不要硬找原因。\n2. 对每个异动，沿着漏斗从上游往下游找第一个发生变化的环节：门店是否下线 → 访问次数 → 访问支付转化率 → 退款金额 → 核销GMV。上游变了，下游的指标自然跟着变，那些不是另外的原因。\n3. 用拆解把异动定位到分组。一个分组的变化如果几乎都来自它里面更细的一组，就定位到更细的那一组；如果分组里各处都在变，就停在这个分组。\n4. 确定一个原因以后，回头看其他触发异动的分组：它的变化如果主要来自已经确定的原因（例如某个城市的下滑几乎都在出问题的那个渠道里），它就是同一个原因的表现，不是新原因。去掉已确定原因的影响后仍然明显异常的分组，才另列一个原因。\n5. 本周含法定节假日时，整体上涨属于节假日效应。节假日之后的一两周，节前和节日期间支付的订单会陆续到店核销或过期退款，核销和退款金额随之偏高，这也属于节假日的余波。\n\n## 原因清单（causes）\n\n每个原因是：一个分组（segment，用一到两个维度写）、一个环节（lever）、一个方向（direction：up 或 down）。\n\nlever 只能取这几个值：\n- traffic（流量）：该分组的访问次数变了，转化率基本没变。\n- conversion（转化）：访问次数基本没变，访问支付转化率变了，常伴随补贴率变化。\n- supply（供给）：门店下线，在线门店数下降，该商家的订单消失。\n- redemption（核销）：支付基本正常，核销GMV 本身下降。\n- refund（退款）：支付基本正常，退款金额本身上升。\n- holiday（节假日）：本周含法定节假日带来的整体变化，segment 留空。\n\n规则：\n- 一个原因只写一次。同一个原因会带动多个指标（流量降，订单、GMV、核销GMV 都跟着降），那是一个原因。\n- 分组写到刚好：照“怎么分析”第 3 条，不要写得过粗，也不要把一个大分组拆成它下面的每个小组。\n- 没有异动，或者找不到集中的分组和环节，causes 留空。证据不够的不要列为原因，可以在 note 里写“值得继续观察”。\n\n## 报告正文（blocks）\n\n报告由若干段组成，每段一两句话，简体中文，大白话。kind 取值：summary（摘要）、finding（发现）、cause（原因）、advice（建议）、note（说明口径或局限）。\n\n每一段的要求：\n- finding（发现）必须写出具体数字：本周是多少、对比期是多少、变了多少。只说“明显下降”不算发现。\n- cause（原因）必须引用支持它的那一行查询结果。\n- 本周有异动时，至少要有一段 finding。\n\n数字规则是硬性的。程序会逐段核对，有一段对不上，整份报告就不放行：\n1. 一段话里出现的每个数字，都必须出现在这段话引用的行里。\n2. 引用写在 evidence 里：source 是查询编号（如 q03），quote 是从那个查询结果里原样复制的一整行（表格里的一整行，或表格上方的一整行说明）。不要改动，不要把几行拼成一行。一段话可以引用多行。\n3. 数字照抄。可以四舍五入，但至少保留两位有效数字。不要自己做加减乘除，不要自己算差值、倍数、占比；需要的数必须是查询结果里现成的。\n4. 计数、序号和中文数字也算数字：“两个渠道”“这三项”“两者”“第一”“8 个指标”“一周内”“前一周”“一两周”都会被核对。引用的行里没有这个数，就换个说法（“这些”“它们”“都”“首先”“本周内”“上周”“近期”）。“基线是前 8 周”“阈值是 3.5”这类说法，要引用写着这句话的那一行说明。\n5. 没有引用的段落里不能有任何数字。建议里不要写数字。\n6. 说到本周就写“本周”或查询结果里的周编号；百分点写 pp。\n\n最后只输出规定格式的 JSON。\n\n## 输出格式\n\n只输出一个 JSON 对象，不要加解释，不要用代码块包起来。结构：\n{\"has_anomaly\": true 或 false,\n \"causes\": [{\"segment\": [{\"dimension\": \"city|category|channel|merchant_type|merchant\", \"value\": \"分组名\"}], \"lever\": \"traffic|conversion|supply|redemption|refund|holiday\", \"direction\": \"up|down\"}],\n \"blocks\": [{\"kind\": \"summary|finding|cause|advice|note\", \"text\": \"一两句话\", \"evidence\": [{\"source\": \"q01\", \"quote\": \"原样复制的一整行\"}]}]}\n\n段落的类别由 kind 表示，text 里不要再写“发现一”“原因二”“1)”这类编号或序号：它们也会被当成数字核对。",
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      }
+     ],
+     "settingOnError": {
+      "processType": 1,
+      "retryTimes": 1,
+      "timeoutMs": 300000
+     }
+    },
+    "outputs": [
+     {
+      "type": "string",
+      "name": "output"
+     }
+    ],
+    "version": "3"
+   }
+  },
+  {
+   "id": "180001",
+   "type": "5",
+   "meta": {
+    "position": {
+     "x": 2400,
+     "y": 260
+    }
+   },
+   "data": {
+    "nodeMeta": {
+     "title": "再核对",
+     "subTitle": "代码",
+     "icon": "https://lf3-static.bytednsdoc.com/obj/eden-cn/dvsmryvd_avi_dvsm/ljhwZthlaukjlkulzlp/icon/icon-Code-v2.jpg",
+     "description": "改过的周报再核对一次",
+     "mainColor": "#00B2B2"
+    },
+    "inputs": {
+     "inputParameters": [
+      {
+       "name": "report",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "ref",
+         "content": {
+          "source": "block-output",
+          "blockID": "170001",
+          "name": "output"
+         },
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      },
+      {
+       "name": "evidence",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "ref",
+         "content": {
+          "source": "block-output",
+          "blockID": "130001",
+          "name": "evidence"
+         },
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      }
+     ],
+     "code": "#!/usr/bin/env python3\n\"\"\"Check that each claim is backed, word for word, by the sources it cites.\n\nFor every claim in a claims file this script checks two things:\n  1. every quote appears in the cited source file (spacing, letter case, curly\n     quotes, dashes and full-width characters are ignored; if that fails, a\n     second pass also ignores punctuation);\n  2. every number the claim states also appears in its quotes. Dates, times\n     and amounts are where invented or shifted facts hide most often.\n\nIt cannot tell whether a real quote actually means what the claim says. That\njudgement stays with the agent and the reader.\n\nUsage:\n  python check_evidence.py CLAIMS.json --sources PATH [PATH ...]\n                           [--format text|markdown|json] [--lang en|zh]\n\nExit codes: 0 = every claim is supported, 1 = at least one claim is not,\n            2 = the input could not be read.\nStandard library only; Python 3.9 or later.\n\"\"\"\n\nimport json\nimport re\nimport unicodedata\nfrom decimal import ROUND_HALF_UP, Decimal, InvalidOperation\nfrom pathlib import Path\n\n__version__ = \"0.4.0\"\n\nTEXT_EXTENSIONS = {\n    \".md\", \".markdown\", \".txt\", \".rst\", \".csv\", \".tsv\", \".json\", \".jsonl\",\n    \".yaml\", \".yml\", \".html\", \".htm\", \".xml\", \".tex\",\n}\nMAX_SOURCE_BYTES = 5_000_000\n\n# Markdown table bars and code ticks are dropped in the loose pass, like punctuation,\n# so a quote copied from a table row without its bars still matches.\nLOOSE_DROP = {\"|\", \"`\"}\n\n# Characters treated as the same when matching quotes.\nCHAR_MAP = {\n    \"\\u2018\": \"'\", \"\\u2019\": \"'\", \"\\u201a\": \"'\", \"\\u201b\": \"'\", \"\\u2032\": \"'\",\n    \"\\u201c\": '\"', \"\\u201d\": '\"', \"\\u201e\": '\"', \"\\u201f\": '\"', \"\\u2033\": '\"',\n    \"\\u300c\": '\"', \"\\u300d\": '\"', \"\\u300e\": '\"', \"\\u300f\": '\"',\n    \"\\u2010\": \"-\", \"\\u2011\": \"-\", \"\\u2012\": \"-\", \"\\u2013\": \"-\", \"\\u2014\": \"-\",\n    \"\\u2015\": \"-\", \"\\u2212\": \"-\",\n}\n\nSTATUS_ORDER = [\n    \"unknown_source\",\n    \"quote_not_found\",\n    \"quote_too_short\",\n    \"no_evidence\",\n    \"numbers_not_in_quote\",\n    \"supported\",\n]\n\nLABELS = {\n    \"en\": {\n        \"supported\": \"Supported\",\n        \"unknown_source\": \"Cited source not found\",\n        \"quote_not_found\": \"Quote not in source\",\n        \"quote_too_short\": \"Quote too short to check\",\n        \"no_evidence\": \"No evidence given\",\n        \"numbers_not_in_quote\": \"Numbers not in the quote\",\n        \"missing\": \"missing numbers\",\n        \"rounded\": \"matched after rounding\",\n        \"line\": \"line\",\n        \"loose\": \"matched after ignoring punctuation\",\n        \"summary\": \"{ok} of {n} claims supported; {bad} not supported.\",\n        \"header\": [\"#\", \"Claim\", \"Result\", \"Evidence\"],\n    },\n    \"zh\": {\n        \"supported\": \"有依据\",\n        \"unknown_source\": \"找不到所引的资料\",\n        \"quote_not_found\": \"原文里没有这句引文\",\n        \"quote_too_short\": \"引文太短，无法核对\",\n        \"no_evidence\": \"没有给出依据\",\n        \"numbers_not_in_quote\": \"数字在引文里找不到\",\n        \"missing\": \"找不到的数字\",\n        \"rounded\": \"四舍五入后对上\",\n        \"line\": \"第 {n} 行\",\n        \"loose\": \"忽略标点后对上\",\n        \"summary\": \"{n} 条说法中 {ok} 条有依据，{bad} 条没有。\",\n        \"header\": [\"#\", \"说法\", \"结果\", \"依据\"],\n    },\n}\n\n\n# ---------------------------------------------------------------- matching\n\ndef _is_cjk(ch: str) -> bool:\n    code = ord(ch)\n    return (\n        0x3400 <= code <= 0x9FFF\n        or 0xF900 <= code <= 0xFAFF\n        or 0x20000 <= code <= 0x2FA1F\n        or 0x3040 <= code <= 0x30FF\n        or 0xAC00 <= code <= 0xD7AF\n    )\n\n\ndef normalize_with_map(text: str, loose: bool = False):\n    \"\"\"Return (normalized text, map from each normalized char to its index in `text`).\n\n    Strict form: NFKC, curly quotes and dashes unified, runs of whitespace become\n    one space, lower case. Loose form additionally drops all whitespace and\n    punctuation, so a missing comma or an extra space does not block a match.\n    \"\"\"\n    out, index_map = [], []\n    pending_space = False\n    for i, ch in enumerate(text):\n        for c in unicodedata.normalize(\"NFKC\", ch):\n            c = CHAR_MAP.get(c, c)\n            if c.isspace():\n                pending_space = bool(out)\n                continue\n            if loose and (unicodedata.category(c).startswith(\"P\") or c in LOOSE_DROP):\n                continue\n            if pending_space and not loose:\n                out.append(\" \")\n                index_map.append(i)\n            pending_space = False\n            for lc in c.lower():\n                out.append(lc)\n                index_map.append(i)\n    return \"\".join(out), index_map\n\n\ndef _trim_quote(q: str) -> str:\n    \"\"\"Drop punctuation and spaces at both ends (a quote often loses its full stop).\"\"\"\n    start, end = 0, len(q)\n    while start < end and (q[start].isspace() or unicodedata.category(q[start]).startswith(\"P\")):\n        start += 1\n    while end > start and (q[end - 1].isspace() or unicodedata.category(q[end - 1]).startswith(\"P\")):\n        end -= 1\n    return q[start:end]\n\n\nclass Source:\n    def __init__(self, source_id: str, path: Path, text: str):\n        self.id = source_id\n        self.path = path\n        self.text = unicodedata.normalize(\"NFC\", text)\n        self.strict, self.strict_map = normalize_with_map(self.text)\n        self.loose, self.loose_map = normalize_with_map(self.text, loose=True)\n\n    def line_of(self, index: int) -> int:\n        return self.text.count(\"\\n\", 0, index) + 1\n\n    def find(self, quote: str):\n        \"\"\"Return (match_type, line) or (None, None).\"\"\"\n        q = _trim_quote(normalize_with_map(unicodedata.normalize(\"NFC\", quote))[0])\n        if q:\n            at = self.strict.find(q)\n            if at != -1:\n                return \"exact\", self.line_of(self.strict_map[at])\n        ql = normalize_with_map(unicodedata.normalize(\"NFC\", quote), loose=True)[0]\n        if ql:\n            at = self.loose.find(ql)\n            if at != -1:\n                return \"loose\", self.line_of(self.loose_map[at])\n        return None, None\n\n\ndef quote_long_enough(quote: str) -> bool:\n    ql = normalize_with_map(quote, loose=True)[0]\n    if any(_is_cjk(c) for c in ql):\n        return len(ql) >= 4\n    return len(ql) >= 6\n\n\n# ---------------------------------------------------------------- numbers\n\nEN_NUMBER_WORDS = {\n    \"zero\": 0, \"two\": 2, \"three\": 3, \"four\": 4, \"five\": 5, \"six\": 6, \"seven\": 7,\n    \"eight\": 8, \"nine\": 9, \"ten\": 10, \"eleven\": 11, \"twelve\": 12, \"thirteen\": 13,\n    \"fourteen\": 14, \"fifteen\": 15, \"sixteen\": 16, \"seventeen\": 17, \"eighteen\": 18,\n    \"nineteen\": 19, \"twenty\": 20, \"thirty\": 30, \"forty\": 40, \"fifty\": 50,\n    \"sixty\": 60, \"seventy\": 70, \"eighty\": 80, \"ninety\": 90, \"hundred\": 100,\n}\n# \"one\" is left out on purpose: in prose it is usually a pronoun (\"one of the ...\").\nMONTHS = {\n    \"january\": 1, \"february\": 2, \"march\": 3, \"april\": 4, \"may\": 5, \"june\": 6,\n    \"july\": 7, \"august\": 8, \"september\": 9, \"october\": 10, \"november\": 11,\n    \"december\": 12, \"jan\": 1, \"feb\": 2, \"mar\": 3, \"apr\": 4, \"jun\": 6, \"jul\": 7,\n    \"aug\": 8, \"sep\": 9, \"sept\": 9, \"oct\": 10, \"nov\": 11, \"dec\": 12,\n}\nMONTH_RE = \"|\".join(sorted(MONTHS, key=len, reverse=True))\nCN_DIGITS = {\"零\": 0, \"〇\": 0, \"一\": 1, \"二\": 2, \"两\": 2, \"三\": 3, \"四\": 4,\n             \"五\": 5, \"六\": 6, \"七\": 7, \"八\": 8, \"九\": 9}\nCN_UNITS = {\"十\": 10, \"百\": 100, \"千\": 1000}\n# A lone 一 is usually \"a\" (\"一封邮件\" = an email); in a claim it counts only\n# before a unit of time or quantity.\nCN_ONE_UNITS = \"月日号天周年岁人名位次场份条项倍\"\nCN_ONE_UNIT_WORDS = (\"小时\", \"分钟\", \"星期\", \"个月\", \"个小时\", \"个星期\", \"个工作日\", \"个钟\")\n# Words whose numerals are not numbers: 十分 (very), 千万 (by all means),\n# 万一 (in case), 一一 (one by one), 统一 (unify), 唯一 (only), 第一 (first) ...\nCN_NOT_NUMBERS = [\n    r\"十分(?!钟)\", r\"千万\", r\"万一\", r\"一一\", r\"[统唯同之第专逐单划这那每哪某]一\",\n    r\"一(?=[些样直定般切起共致旦边下律概并])\", r\"零(?=[基门成风距])\",\n    r\"(?:周|星期|礼拜)[一二三四五六七日天]\",  # weekdays: 周五 is Friday, not 5\n    r\"二维码\", r\"三明治\", r\"四处\", r\"十字\",  # QR code, sandwich, everywhere, cross\n    r\"(?:没有|没|无|未)一(?=[次个件条项处位名回])\",  # 没有一次: not once\n    r\"一[次个件条项处位名回]?(?=[都也](?:没|不|未|无))\",  # 一次都没变: never changed\n    r\"(?<![零〇一二两三四五六七八九十\\d.])[百千](?=[万亿])\",  # 每百万: per million\n    r\"(?<=[数几上成])[百千]\",  # 数百, 上千: hundreds, thousands\n]\n\n\ndef _cn_to_int(s: str) -> int:\n    total, current = 0, 0\n    for ch in s:\n        if ch in CN_DIGITS:\n            current = CN_DIGITS[ch]\n        else:\n            total += (current or 1) * CN_UNITS[ch]\n            current = 0\n    return total + current\n\n\ndef _convert_chinese_numerals(text: str, generous: bool = False) -> str:\n    # 百分之五十 -> 50%\n    text = re.sub(r\"百分之([零〇一二两三四五六七八九十百]+)\", lambda m: str(_cn_to_int(m.group(1))) + \"%\", text)\n    protected = set()\n    for pattern in CN_NOT_NUMBERS:\n        for m in re.finditer(pattern, text):\n            protected.update(range(m.start(), m.end()))\n\n    def repl(m: re.Match) -> str:\n        run = m.group(0)\n        if protected.intersection(range(m.start(), m.end())):\n            return run\n        if run == \"一\" and not generous:\n            after = text[m.end():m.end() + 4]\n            if not after or (after[0] not in CN_ONE_UNITS and not after.startswith(CN_ONE_UNIT_WORDS)):\n                return run\n        # Spaces keep a converted numeral from merging with digits next to it.\n        if len(run) > 1 and all(c in CN_DIGITS for c in run):\n            return \" \" + \"\".join(str(CN_DIGITS[c]) for c in run) + \" \"  # 二〇二六 -> 2026\n        return f\" {_cn_to_int(run)} \"\n\n    return re.sub(r\"[零〇一二两三四五六七八九十百千]+\", repl, text)\n\n\ndef _to_24h(text: str) -> str:\n    def en(m: re.Match) -> str:\n        hour, minute, ampm = int(m.group(1)), m.group(2) or \"00\", m.group(3).replace(\".\", \"\").lower()\n        if hour > 12:\n            return m.group(0)\n        if ampm == \"pm\" and hour < 12:\n            hour += 12\n        if ampm == \"am\" and hour == 12:\n            hour = 0\n        return f\"{hour}:{minute}\"\n\n    text = re.sub(r\"(?<![\\d.:])(\\d{1,2})(?:[:.](\\d{2}))?\\s*(a\\.?m\\.?|p\\.?m\\.?)(?![a-z])\", en, text, flags=re.I)\n\n    def zh(m: re.Match) -> str:\n        hour = int(m.group(2))\n        if hour < 12:\n            hour += 12\n        return f\"{m.group(1)}{hour}{m.group(3)}\"  # the part of the day stays, so _zh_clock sees a time\n\n    return re.sub(r\"(下午|晚上|傍晚)\\s*(\\d{1,2})\\s*([点時时:：])\", zh, text)\n\n\n# 10点半 -> 10:30, 10点15分 -> 10:15, and 10点 -> 10:00 where it reads as a clock time\n# (after a part of the day, or before 前/后/到/截止 ...). \"有3点要注意\" (three points) stays 3.\nZH_DAY_PARTS = r\"(?:上午|中午|下午|晚上|傍晚|早上|早晨|凌晨)\"\nZH_AFTER_CLOCK = r\"(?=整|钟|前|后|以前|之前|以后|之后|到|至|开|关|闭|起|截止|结束|左右|准时|$|[，。,.;；、!！?？)）\\s])\"\n\n\ndef _zh_clock(text: str) -> str:\n    text = re.sub(r\"(\\d{1,2})\\s*[点時时]\\s*半\", lambda m: f\"{int(m.group(1))}:30\", text)\n    text = re.sub(r\"(\\d{1,2})\\s*[点時时]\\s*(\\d{1,2})\\s*分\", lambda m: f\"{int(m.group(1))}:{int(m.group(2)):02d}\", text)\n    text = re.sub(ZH_DAY_PARTS + r\"\\s*(\\d{1,2})\\s*[点時时]\", lambda m: f\"{int(m.group(1))}:00\", text)\n    return re.sub(r\"(\\d{1,2})\\s*[点時时]\" + ZH_AFTER_CLOCK, lambda m: f\"{int(m.group(1))}:00\", text)\n\n\n# A clock time is compared as one token, so 13:30 does not pass on a quote that\n# only has 13:00 and 14:30.\nTIME_RE = re.compile(r\"(?<![\\d:])(\\d{1,2}):(\\d{2})(?![\\d:])\")\nSECONDS_RE = re.compile(r\"(?<![\\d:])(\\d{1,2}):(\\d{2}):(\\d{2})(?![\\d:])\")\n\n\ndef _canonical(token: str) -> str:\n    if \".\" in token:\n        whole, frac = token.split(\".\", 1)\n        whole = str(int(whole))\n        frac = frac.rstrip(\"0\")\n        return f\"{whole}.{frac}\" if frac else whole\n    return str(int(token))\n\n\ndef _canon_dec(value: Decimal) -> str:\n    return _canonical(format(value.normalize(), \"f\"))\n\n\n# Fractions compare as fractions: 三分之一, one-third and (in a quote) 1/3 are all \"1/3\".\nEN_NUMERATORS = {\"a\": 1, \"an\": 1, \"one\": 1, \"two\": 2, \"three\": 3, \"four\": 4, \"five\": 5,\n                 \"six\": 6, \"seven\": 7, \"eight\": 8, \"nine\": 9}\nEN_DENOMINATORS = {\"half\": 2, \"halves\": 2, \"third\": 3, \"thirds\": 3, \"quarter\": 4, \"quarters\": 4,\n                   \"fourth\": 4, \"fourths\": 4, \"fifth\": 5, \"fifths\": 5, \"sixth\": 6, \"sixths\": 6,\n                   \"eighth\": 8, \"eighths\": 8, \"tenth\": 10, \"tenths\": 10}\nCN_FRACTION_RE = re.compile(r\"([零〇一二两三四五六七八九十百\\d]+)分之([零〇一二两三四五六七八九十\\d]+)\")\nEN_FRACTION_RE = re.compile(\n    r\"\\b(one|two|three|four|five|six|seven|eight|nine|an?)[\\s-]+(\" + \"|\".join(EN_DENOMINATORS) + r\")\\b\", re.I)\n# 万, 亿, thousand, million and billion scale the number before them: 4.3万 = 43,000.\nSCALES = {\"万\": 10_000, \"亿\": 100_000_000, \"thousand\": 1_000, \"million\": 1_000_000, \"billion\": 1_000_000_000}\nSCALE_RE = re.compile(r\"(\\d+(?:\\.\\d+)?)\\s*(万|亿|thousand\\b|million\\b|billion\\b)\", re.I)\nPERCENT_RE = re.compile(r\"(\\d+(?:\\.\\d+)?)\\s*(?:%|percent\\b|per cent\\b)\", re.I)\n\n\ndef _cn_or_digits(s: str) -> int:\n    return int(s) if s.isdigit() else _cn_to_int(s)\n\n\ndef _take_fractions(t: str, generous: bool, fractions: set) -> str:\n    def cn(m: re.Match) -> str:\n        if m.group(1) == \"百\":\n            return m.group(0)  # 百分之 is a percentage, handled elsewhere\n        fractions.add(f\"{_cn_or_digits(m.group(2))}/{_cn_or_digits(m.group(1))}\")\n        return \" \"\n\n    def en(m: re.Match) -> str:\n        num = m.group(1).lower()\n        den = m.group(2).lower()\n        if num in (\"a\", \"an\") and den in (\"quarter\", \"quarters\", \"half\", \"halves\") and \\\n                not re.match(r\"\\s+of\\b\", m.string[m.end():m.end() + 4], re.I):\n            return m.group(0)  # \"once a quarter\" is three months, \"a half\" may be time; \"a quarter of\" is 1/4\n        fractions.add(f\"{EN_NUMERATORS[num]}/{EN_DENOMINATORS[m.group(2).lower()]}\")\n        return \" \"\n\n    t = CN_FRACTION_RE.sub(cn, t)\n    t = EN_FRACTION_RE.sub(en, t)\n    if generous:\n        for a, b in re.findall(r\"(?<![\\d/.])(\\d{1,2})/(\\d{1,2})(?![\\d/])\", t):\n            fractions.add(f\"{int(a)}/{int(b)}\")\n    return t\n\n\ndef _scale(t: str, generous: bool) -> str:\n    def repl(m: re.Match) -> str:\n        try:\n            value = Decimal(m.group(1)) * SCALES[m.group(2).lower()]\n        except InvalidOperation:\n            return m.group(0)\n        scaled = format(value.normalize(), \"f\")\n        return f\" {m.group(1)} {scaled} \" if generous else f\" {scaled} \"\n\n    return SCALE_RE.sub(repl, t)\n\n\ndef numbers_in(text: str, generous: bool = False) -> set:\n    \"\"\"Every number a sentence states, in a form that can be compared across languages.\n\n    Claims are read strictly. Quotes are read generously (`generous=True`): \"one\",\n    \"a week\", \"none\" and a lone 一 also count, so a claim is not flagged just because\n    its source wrote the number as a word.\n    \"\"\"\n    t = unicodedata.normalize(\"NFKC\", text)\n    fractions = set()\n    t = _take_fractions(t, generous, fractions)\n    t = _convert_chinese_numerals(t, generous)\n    t = _to_24h(t)\n    t = _zh_clock(t)\n    t = re.sub(r\"(?<=\\d),(?=\\d{3}(?!\\d))\", \"\", t)  # 20,000 -> 20000\n    t = _scale(t, generous)\n    times = set()\n\n    def take_time(m: re.Match) -> str:\n        hour, minute = int(m.group(1)), int(m.group(2))\n        if hour > 24 or minute > 59:\n            return m.group(0)\n        times.add(f\"{hour}:{minute:02d}\")\n        return \" \"\n\n    def take_seconds(m: re.Match) -> str:\n        hour, minute, second = int(m.group(1)), int(m.group(2)), int(m.group(3))\n        if hour > 24 or minute > 59 or second > 59:\n            return m.group(0)\n        times.add(f\"{hour}:{minute:02d}:{second:02d}\")\n        if generous:\n            times.add(f\"{hour}:{minute:02d}\")  # 22:18:30 in a quote also says 22:18\n        return \" \"\n\n    t = SECONDS_RE.sub(take_seconds, t)\n    t = TIME_RE.sub(take_time, t)\n    found = {_canonical(n) for n in re.findall(r\"\\d+(?:\\.\\d+)?\", t)} | times | fractions\n    low = t.lower()\n    for word in re.findall(r\"[a-z]+\", low):\n        if word in EN_NUMBER_WORDS:\n            found.add(str(EN_NUMBER_WORDS[word]))\n    if generous and re.search(r\"\\b(?:one|single|an?\\s+(?:day|week|month|year|hour|minute|time|person|place))\\b\", low):\n        found.add(\"1\")\n    if generous and re.search(r\"\\bnone\\b\", low):\n        found.add(\"0\")\n    # Month names count only next to a day number or a year, so the verb \"may\" is never May.\n    for m in re.finditer(rf\"\\b\\d{{1,2}}(?:st|nd|rd|th)?\\s+(?:of\\s+)?({MONTH_RE})\\b\"\n                         rf\"|\\b({MONTH_RE})\\.?\\s+\\d{{1,2}}\\b\"\n                         rf\"|\\b({MONTH_RE})\\.?,?\\s+(?:19|20)\\d\\d\\b\", low):\n        found.add(str(MONTHS[m.group(1) or m.group(2) or m.group(3)]))\n    return found\n\n\ndef percents_in(text: str) -> set:\n    \"\"\"Numbers written as percentages (99.6%, 百分之五十), so a claim's 99.6% can match a quote's 0.996.\"\"\"\n    t = _convert_chinese_numerals(unicodedata.normalize(\"NFKC\", text), generous=True)\n    return {_canonical(n) for n in PERCENT_RE.findall(t)}\n\n\n# A name with digits attached (ranker-v3.2, echo-asr-2025-08-28, p90, B02) is a name,\n# not a quantity, when it also appears in a cited source. Currency codes (RM4,350) and\n# quarters or halves of a year (Q3, H1, FY2026) stay numbers.\nIDENTIFIER_RE = re.compile(r\"(?<![A-Za-z0-9])[A-Za-z][A-Za-z0-9]*(?:[-_.][A-Za-z0-9]+)*(?![A-Za-z0-9])\")\nNUMBER_PREFIXES = {\"rm\", \"rmb\", \"myr\", \"usd\", \"us\", \"sgd\", \"hkd\", \"hk\", \"aud\", \"eur\", \"gbp\", \"cny\", \"jpy\",\n                   \"cad\", \"nzd\", \"inr\", \"rs\", \"nt\", \"q\", \"h\", \"fy\"}\n\n\ndef _names_with_numbers(text: str) -> list:\n    out = []\n    for m in IDENTIFIER_RE.finditer(unicodedata.normalize(\"NFKC\", text)):\n        token = m.group(0)\n        prefix = re.match(r\"[A-Za-z]+\", token).group(0).lower()\n        if any(ch.isdigit() for ch in token) and not (prefix in NUMBER_PREFIXES and token[len(prefix):][:1].isdigit()):\n            out.append(token)\n    return out\n\n\ndef _title_phrases(src) -> set:\n    \"\"\"The cited document's own name, from its file name and first heading: 'update notice 2'.\"\"\"\n    stem = re.sub(r\"^[A-Za-z]*\\d+[-_ ]+\", \"\", Path(src.id).stem)\n    names = {re.sub(r\"[-_]+\", \" \", stem)}\n    heading = re.search(r\"^#{1,6}\\s+(.+?)\\s*$\", src.text, re.M)\n    if heading:\n        names.add(heading.group(1))\n        names.add(heading.group(1).rsplit(\":\", 1)[-1])\n    phrases = set()\n    for name in names:\n        name = \" \".join(unicodedata.normalize(\"NFKC\", name).lower().split())\n        if re.search(r\"\\d\", name) and re.search(r\"[a-z一-鿿]\", name):\n            phrases.add(name)\n    return phrases\n\n\ndef _context_of(src, line: int) -> str:\n    \"\"\"The paragraph that holds a quote's first line, with the nearest heading above it.\"\"\"\n    lines = src.text.splitlines()\n    i = max(0, min(line - 1, len(lines) - 1))\n    start, end = i, i\n    while start > 0 and lines[start - 1].strip():\n        start -= 1\n    while end + 1 < len(lines) and lines[end + 1].strip():\n        end += 1\n    heading = next((lines[j] for j in range(start - 1, -1, -1) if re.match(r\"\\s*#{1,6}\\s\", lines[j])), \"\")\n    return unicodedata.normalize(\"NFKC\", \"\\n\".join([heading] + lines[start:end + 1]))\n\n\n# Chinese ordinals: 第 6 条, 第二轮, 第四遍. One is a name, not a quantity, when the same ordinal\n# is in the quote's paragraph or the heading above it (a rule quoted from under \"第 6 条\").\nORDINAL_RE = re.compile(r\"第\\s*([零〇一二两三四五六七八九十百]+|\\d+)\\s*(?=([一-鿿]))\")\n# A quoted name in a claim: “一次提示词”组, \"strict-v2\".\nQUOTED_RE = re.compile(r\"[“\\\"「『`]([^“”\\\"「」『』`\\n]{1,30})[”\\\"」』`]\")\n# A mixed-case or all-capital name and a version after a space: SigLIP 2, GPT 4.\nSPACED_NAME_RE = re.compile(r\"(?<![A-Za-z0-9])([A-Za-z]*[a-z][A-Z][A-Za-z]*|[A-Z][A-Z0-9]+)\\s+(\\d+(?:\\.\\d+)?)(?![\\d.,:/%])\")\nNOT_SPACED_NAMES = {\"am\", \"pm\", \"myt\", \"utc\", \"gmt\"} | set(MONTHS)\n\n\ndef _ordinals(text: str) -> set:\n    return {f\"{_cn_or_digits(m.group(1))}{m.group(2)}\" for m in ORDINAL_RE.finditer(text)}\n\n\ndef _without_names(text: str, cited, contexts=()) -> str:\n    \"\"\"The claim with names taken out, so their digits are not compared as quantities.\n\n    Taken out: the cited documents' titles; names with digits (ranker-v3.2, SigLIP 2) and\n    quoted names that a cited source contains; ordinals that the quote's paragraph or the\n    heading above it contains.\n    \"\"\"\n    t = unicodedata.normalize(\"NFKC\", text)\n    for src in cited:\n        for phrase in _title_phrases(src):\n            pattern = r\"[\\s_-]+\".join(re.escape(w) for w in phrase.split())\n            t = re.sub(r\"(?<![A-Za-z0-9])\" + pattern + r\"(?![A-Za-z0-9])\", \" \", t, flags=re.I)\n    haystack = \" \".join(unicodedata.normalize(\"NFKC\", s.text).lower() + \" \" + s.id.lower() for s in cited)\n    flat = \" \".join(haystack.split())\n\n    def in_sources(phrase: str) -> bool:\n        return \" \".join(phrase.lower().split()) in flat\n\n    t = QUOTED_RE.sub(lambda m: \" \" if in_sources(m.group(1)) else m.group(0), t)\n    t = SPACED_NAME_RE.sub(\n        lambda m: \" \" if (m.group(1).lower() not in NUMBER_PREFIXES | NOT_SPACED_NAMES and in_sources(m.group(0)))\n        else m.group(0), t)\n    for token in _names_with_numbers(t):\n        if re.search(r\"(?<![a-z0-9])\" + re.escape(token.lower()) + r\"(?![a-z0-9])\", haystack):\n            t = re.sub(r\"(?<![A-Za-z0-9])\" + re.escape(token) + r\"(?![A-Za-z0-9])\", \" \", t)\n    nearby = set().union(*(_ordinals(c) for c in contexts)) if contexts else set()\n    t = ORDINAL_RE.sub(lambda m: \" \" if f\"{_cn_or_digits(m.group(1))}{m.group(2)}\" in nearby else m.group(0), t)\n    return t\n\n\n# ---------------------------------------------------------------- loading\n\ndef load_sources(paths):\n    sources = {}\n    for raw in paths:\n        p = Path(raw)\n        if p.is_dir():\n            for f in sorted(p.rglob(\"*\")):\n                if f.is_file() and f.suffix.lower() in TEXT_EXTENSIONS:\n                    _add_source(sources, f.relative_to(p).as_posix(), f)\n        elif p.is_file():\n            _add_source(sources, p.name, p)\n        else:\n            raise ValueError(f\"source path not found: {raw}\")\n    if not sources:\n        raise ValueError(\"no readable source files were given\")\n    return sources\n\n\ndef _add_source(sources, source_id, path):\n    if path.stat().st_size > MAX_SOURCE_BYTES:\n        raise ValueError(f\"source file too large (over 5 MB): {path}\")\n    try:\n        text = path.read_text(encoding=\"utf-8-sig\")\n    except UnicodeDecodeError as err:\n        raise ValueError(f\"source file is not UTF-8 text: {path}\") from err\n    sources[source_id] = Source(source_id, path, text)\n\n\ndef resolve_source(sources, ref: str):\n    ref = (ref or \"\").strip().replace(\"\\\\\", \"/\")\n    if ref in sources:\n        return sources[ref]\n    matches = [s for sid, s in sources.items() if sid.endswith(\"/\" + ref) or Path(sid).name == ref or Path(sid).stem == ref]\n    return matches[0] if len(matches) == 1 else None\n\n\ndef load_claims(path):\n    try:\n        data = json.loads(Path(path).read_text(encoding=\"utf-8-sig\"))\n    except FileNotFoundError as err:\n        raise ValueError(f\"claims file not found: {path}\") from err\n    except json.JSONDecodeError as err:\n        raise ValueError(f\"claims file is not valid JSON: {err}\") from err\n    claims = data.get(\"claims\") if isinstance(data, dict) else data\n    if not isinstance(claims, list):\n        raise ValueError('claims file must be a list of claims or an object with a \"claims\" list')\n    for n, c in enumerate(claims, 1):\n        if not isinstance(c, dict) or not isinstance(c.get(\"text\"), str):\n            raise ValueError(f'claim {n} needs a \"text\" string')\n        ev = c.get(\"evidence\", [])\n        if not isinstance(ev, list) or any(not isinstance(e, dict) for e in ev):\n            raise ValueError(f'claim {n}: \"evidence\" must be a list of {{\"source\", \"quote\"}} objects')\n        c.setdefault(\"id\", str(n))\n    return claims\n\n\n# ---------------------------------------------------------------- checking\n\nNUMBER_WITH_UNIT_RE = re.compile(\n    r\"(?<![\\d.:/])(\\d+(?:\\.(\\d+))?)(?:\\s*(万|亿|thousand\\b|million\\b|billion\\b))?(?![\\d:/])\", re.I)\n\n\ndef _number_steps(text: str) -> dict:\n    \"\"\"For each number the claim states, the step it is written to and its significant digits.\n\n    0.31 is written to 0.01 (2 digits), 156 to 1 (3 digits), 8.5万 to 1000 (2 digits).\n    \"\"\"\n    t = _convert_chinese_numerals(unicodedata.normalize(\"NFKC\", text))\n    t = re.sub(r\"(?<=\\d),(?=\\d{3}(?!\\d))\", \"\", t)\n    steps = {}\n    for m in NUMBER_WITH_UNIT_RE.finditer(t):\n        mantissa, frac, unit = m.group(1), m.group(2) or \"\", m.group(3)\n        scale = SCALES[unit.lower()] if unit else 1\n        digits = mantissa.replace(\".\", \"\").lstrip(\"0\")\n        steps[_canon_dec(Decimal(mantissa) * scale)] = (Decimal(1).scaleb(-len(frac)) * scale, len(digits))\n    return steps\n\n\ndef _rounded_from(n, steps, quote_numbers):\n    \"\"\"The quote number that rounds to the claim's n at the precision the claim uses, if any.\n\n    0.31 matches 0.314 and 17% matches 16.5%, but only when the claim keeps at least two\n    significant digits (0.3 for 0.314 stays flagged), and never by rounding an integer to\n    tens (120 does not match 123).\n    \"\"\"\n    if n not in steps or \"/\" in n or \":\" in n:\n        return None\n    step, significant = steps[n]\n    if significant < 2:\n        return None\n    target = Decimal(n)\n    for q in sorted(quote_numbers):\n        if \"/\" in q or \":\" in q:\n            continue\n        value = Decimal(q)\n        if value != target and (value / step).quantize(Decimal(1), rounding=ROUND_HALF_UP) * step == target:\n            return q\n    return None\n\n\ndef _same_as_percent(n, claim_percents, quote_numbers, quote_percents) -> bool:\n    \"\"\"99.6% in a claim matches 0.996 in a quote, and 0.996 matches 99.6%.\"\"\"\n    if \"/\" in n or \":\" in n:\n        return False\n    d = Decimal(n)\n    if n in claim_percents and _canon_dec(d / 100) in quote_numbers:\n        return True\n    return d < 1 and _canon_dec(d * 100) in quote_percents\n\n\ndef check_claim(claim, sources):\n    problems = set()\n    evidence_out = []\n    quote_numbers = set()\n    quote_percents = set()\n    cited = []\n    contexts = []  # the paragraph around each found quote and the heading above it\n    years_in_sources = set()\n    for e in claim.get(\"evidence\", []):\n        quote = str(e.get(\"quote\", \"\"))\n        src = resolve_source(sources, str(e.get(\"source\", \"\")))\n        item = {\"source\": e.get(\"source\"), \"quote\": quote, \"found\": False, \"match\": None, \"line\": None}\n        if src is None:\n            problems.add(\"unknown_source\")\n        elif not quote_long_enough(quote):\n            problems.add(\"quote_too_short\")\n        else:\n            match, line = src.find(quote)\n            if match:\n                item.update(found=True, match=match, line=line, source=src.id)\n                quote_numbers |= numbers_in(quote, generous=True)\n                quote_percents |= percents_in(quote)\n                if src not in cited:\n                    cited.append(src)\n                contexts.append(_context_of(src, line))\n                years_in_sources |= set(re.findall(r\"(?<!\\d)(?:19|20)\\d\\d(?!\\d)\", unicodedata.normalize(\"NFKC\", src.text)))\n            else:\n                problems.add(\"quote_not_found\")\n        evidence_out.append(item)\n\n    if not evidence_out:\n        problems.add(\"no_evidence\")\n\n    missing = []\n    rounded = []\n    if not problems:\n        claim_text = _without_names(claim[\"text\"], cited, contexts)\n        claim_percents = percents_in(claim_text)\n        claim_steps = _number_steps(claim_text)\n        for n in sorted(numbers_in(claim_text), key=lambda x: (len(x), x)):\n            if n in quote_numbers:\n                continue\n            if re.fullmatch(r\"(19|20)\\d\\d\", n) and n in years_in_sources:\n                continue  # documents often state the year once, away from the date\n            if _same_as_percent(n, claim_percents, quote_numbers, quote_percents):\n                continue\n            source_number = _rounded_from(n, claim_steps, quote_numbers)\n            if source_number is not None:\n                rounded.append({\"claim\": n, \"quote\": source_number})\n                continue\n            missing.append(n)\n        if missing:\n            problems.add(\"numbers_not_in_quote\")\n\n    status = next(s for s in STATUS_ORDER if s in problems or s == \"supported\")\n    return {\n        \"id\": str(claim[\"id\"]),\n        \"text\": claim[\"text\"],\n        \"status\": status,\n        \"problems\": sorted(problems, key=STATUS_ORDER.index),\n        \"missing_numbers\": missing,\n        \"rounded\": rounded,\n        \"evidence\": evidence_out,\n    }\n\n\ndef check(claims, sources):\n    results = [check_claim(c, sources) for c in claims]\n    ok = sum(r[\"status\"] == \"supported\" for r in results)\n    return {\"summary\": {\"claims\": len(results), \"supported\": ok, \"not_supported\": len(results) - ok}, \"claims\": results}\n\n\n# ---------------------------------------------------------------- output\n\ndef _where(e, L):\n    if not e[\"found\"]:\n        return f'{e[\"source\"]}: \"{e[\"quote\"]}\"'\n    line = L[\"line\"].format(n=e[\"line\"]) if \"{n}\" in L[\"line\"] else f'{L[\"line\"]} {e[\"line\"]}'\n    loose = f' ({L[\"loose\"]})' if e[\"match\"] == \"loose\" else \"\"\n    return f'{e[\"source\"]}, {line}{loose}: \"{e[\"quote\"]}\"'\n\n\ndef _rounded_text(r) -> str:\n    return \", \".join(f'{x[\"claim\"]} ← {x[\"quote\"]}' for x in r[\"rounded\"])\n\n\ndef render(report, fmt=\"text\", lang=\"en\"):\n    if fmt == \"json\":\n        return json.dumps(report, ensure_ascii=False, indent=2)\n    L = LABELS[lang]\n    s = report[\"summary\"]\n    summary = L[\"summary\"].format(n=s[\"claims\"], ok=s[\"supported\"], bad=s[\"not_supported\"])\n    lines = []\n    if fmt == \"markdown\":\n        lines += [\"| \" + \" | \".join(L[\"header\"]) + \" |\", \"|---|---|---|---|\"]\n        for r in report[\"claims\"]:\n            result = L[r[\"status\"]]\n            if r[\"missing_numbers\"]:\n                result += f' ({L[\"missing\"]}: {\", \".join(r[\"missing_numbers\"])})'\n            if r.get(\"rounded\"):\n                result += f' ({L[\"rounded\"]}: {_rounded_text(r)})'\n            ev = \"<br>\".join(_where(e, L) for e in r[\"evidence\"]) or \"—\"\n            cell = lambda x: x.replace(\"|\", \"\\\\|\").replace(\"\\n\", \" \")\n            lines.append(f'| {r[\"id\"]} | {cell(r[\"text\"])} | {cell(result)} | {cell(ev)} |')\n        lines += [\"\", summary]\n    else:\n        for r in report[\"claims\"]:\n            mark = \"OK \" if r[\"status\"] == \"supported\" else \"!! \"\n            lines.append(f'{mark}[{r[\"id\"]}] {L[r[\"status\"]]}: {r[\"text\"]}')\n            if r[\"missing_numbers\"]:\n                lines.append(f'     {L[\"missing\"]}: {\", \".join(r[\"missing_numbers\"])}')\n            if r.get(\"rounded\"):\n                lines.append(f'     {L[\"rounded\"]}: {_rounded_text(r)}')\n            for e in r[\"evidence\"]:\n                lines.append(f\"     - {_where(e, L)}\")\n        lines += [\"\", summary]\n    return \"\\n\".join(lines)\n\n\n# ---------------------------------------------------------------------------------------------\n# Code node 2 of the workflow: the number check and the final report.\n# Everything above this line is evidence-check's script (version 0.4.0, MIT), unchanged except that\n# its command-line entry point is left out. Input variables: `report` (the model's JSON answer),\n# `evidence` (JSON text from code node 1). Output variables: `released` (1 or 0), `feedback` (what\n# to tell the model when it is 0), `markdown` (the report as text), `checked`, `failed`.\n# ---------------------------------------------------------------------------------------------\nKIND_TITLE = [(\"summary\", \"一、摘要\"), (\"finding\", \"二、发现\"), (\"cause\", \"三、原因\"), (\"advice\", \"四、建议\"), (\"note\", \"五、说明\")]\nLEVER = {\"traffic\": \"流量\", \"conversion\": \"转化\", \"supply\": \"供给\", \"redemption\": \"核销\", \"refund\": \"退款\", \"holiday\": \"节假日\"}\nDIM = {\"city\": \"城市\", \"category\": \"品类\", \"channel\": \"渠道\", \"merchant_type\": \"商家类型\", \"merchant\": \"商家\"}\nFAIL = {\n    \"unknown_source\": \"引用的查询编号不存在\",\n    \"quote_not_found\": \"引用的那一行在查询结果里找不到（要整行原样复制，不要改动、不要把几行拼成一行）\",\n    \"quote_too_short\": \"引用太短，要引用查询结果里的整行\",\n    \"no_evidence\": \"这段话里有数字，但没有引用任何查询结果\",\n    \"numbers_not_in_quote\": \"这些数字不在这段话引用的行里\",\n    \"finding_without_number\": \"“发现”段必须写出具体数字，并引用数字所在的那一行\",\n    \"cause_without_evidence\": \"“原因”段必须引用至少一行查询结果\",\n}\n\n\n_CN_NUMBER = re.compile(r\"[前上这同第每近头]?[一二两三四五六七八九十百]{1,3}[一-鿿]?\")\n\n\ndef chinese_number_phrases(text: str) -> list:\n    \"\"\"Phrases such as 两者, 一周内, 发现二 that the check reads as numbers; used to make feedback specific.\"\"\"\n    out = []\n    for m in _CN_NUMBER.finditer(text):\n        s = m.group(0)\n        if s not in out and numbers_in(s):\n            out.append(s)\n    return out\n\n\ndef check(report: str, evidence: str) -> dict:\n    try:\n        text = report.strip()\n        if text.startswith(\"```\"):\n            text = text.strip(\"`\")\n            text = text[text.index(\"{\"):]\n        data = json.loads(text[text.index(\"{\"): text.rindex(\"}\") + 1])\n    except Exception:\n        return {\"released\": 0, \"feedback\": \"- 输出不是合法的 JSON，请只输出规定格式的 JSON。\", \"markdown\": report, \"checked\": 0, \"failed\": 1}\n    sources = {qid: Source(qid, None, body) for qid, body in json.loads(evidence).items()}\n    blocks = [b for b in data.get(\"blocks\", []) if isinstance(b, dict)]\n    results, problems = [], []\n    for i, b in enumerate(blocks):\n        body = str(b.get(\"text\", \"\")).replace(\"个百分点\", \" pp\").replace(\"百分点\", \" pp\")\n        evid = [e for e in (b.get(\"evidence\") or []) if isinstance(e, dict)]\n        numbers = numbers_in(body)\n        if b.get(\"kind\") == \"finding\" and not numbers:\n            results.append((i, \"finding_without_number\", [], []))\n        elif b.get(\"kind\") == \"cause\" and not evid:\n            results.append((i, \"cause_without_evidence\", [], []))\n        elif not evid and not numbers:\n            results.append((i, \"no_number\", [], []))\n        else:\n            r = check_claim({\"id\": str(i), \"text\": body, \"evidence\": evid}, sources)\n            results.append((i, r[\"status\"], r[\"missing_numbers\"], [e[\"quote\"] for e in r[\"evidence\"] if not e[\"found\"]]))\n    if not blocks:\n        problems.append(\"报告是空的\")\n    elif data.get(\"has_anomaly\") and not any(b.get(\"kind\") == \"finding\" for b in blocks):\n        problems.append(\"报告说本周有异动，但没有“发现”段（kind=finding）\")\n    bad = [r for r in results if r[1] not in (\"supported\", \"no_number\")]\n    lines = [\"- 整份报告：\" + p for p in problems]\n    for i, status, missing, lost in bad:\n        msg = FAIL.get(status, status)\n        if missing:\n            msg += \"：\" + \"、\".join(missing)\n        if status in (\"numbers_not_in_quote\", \"no_evidence\"):\n            words = chinese_number_phrases(str(blocks[i].get(\"text\", \"\")))\n            if words:\n                msg += \"。这段话里的中文数字也算数字：\" + \"、\".join(\"“%s”\" % w for w in words[:6]) + \"，请换成不带数字的说法\"\n        if lost:\n            msg += \"；找不到的引用：\" + \"；\".join(q[:60] for q in lost)\n        lines.append(\"- 第 %d 段（%s…）：%s\" % (i + 1, str(blocks[i].get(\"text\", \"\"))[:30], msg))\n    released = not bad and not problems\n    status = dict((r[0], r[1]) for r in results)\n    md = [\"# 经营分析周报\", \"\",\n          \"> 数字核对：%s。%d 段含数字或引用，%d 段没通过。\" % (\"已放行\" if released else \"未放行\", sum(r[1] != \"no_number\" for r in results), len(bad)), \"\"]\n    causes = [c for c in data.get(\"causes\", []) if isinstance(c, dict)]\n    if causes:\n        md += [\"**原因清单**\", \"\"]\n        for c in causes:\n            seg = \"、\".join(\"%s=%s\" % (DIM.get(s.get(\"dimension\"), s.get(\"dimension\")), s.get(\"value\")) for s in (c.get(\"segment\") or []) if isinstance(s, dict))\n            md.append(\"- %s：%s\" % (seg or \"全部\", LEVER.get(c.get(\"lever\"), \"待查\")))\n        md.append(\"\")\n    for kind, title in KIND_TITLE:\n        items = [(i, b) for i, b in enumerate(blocks) if b.get(\"kind\", \"finding\") == kind]\n        if not items:\n            continue\n        md += [\"## \" + title, \"\"]\n        for i, b in items:\n            refs = sorted(set(str(e.get(\"source\")) for e in (b.get(\"evidence\") or []) if isinstance(e, dict) and e.get(\"source\")))\n            mark = \"\" if status.get(i) in (\"supported\", \"no_number\") else \" **［未通过核对］**\"\n            md.append(\"- \" + str(b.get(\"text\", \"\")) + (\"（出处：\" + \"、\".join(refs) + \"）\" if refs else \"\") + mark)\n        md.append(\"\")\n    md.append(\"数据是合成的，不是任何平台的真实经营数据。\")\n    return {\"released\": 1 if released else 0, \"feedback\": \"\\n\".join(lines), \"markdown\": \"\\n\".join(md),\n            \"checked\": sum(r[1] != \"no_number\" for r in results), \"failed\": len(bad)}\n\n\nasync def main(args: Args) -> Output:\n    return check(args.params.get(\"report\") or \"\", args.params.get(\"evidence\") or \"{}\")\n",
+     "language": 3,
+     "settingOnError": {
+      "processType": 1,
+      "timeoutMs": 120000,
+      "retryTimes": 0
+     }
+    },
+    "outputs": [
+     {
+      "type": "integer",
+      "name": "released"
+     },
+     {
+      "type": "string",
+      "name": "feedback"
+     },
+     {
+      "type": "string",
+      "name": "markdown"
+     },
+     {
+      "type": "integer",
+      "name": "checked"
+     },
+     {
+      "type": "integer",
+      "name": "failed"
+     }
+    ]
+   }
+  },
+  {
+   "id": "190001",
+   "type": "32",
+   "meta": {
+    "position": {
+     "x": 2800,
+     "y": 0
+    }
+   },
+   "data": {
+    "nodeMeta": {
+     "title": "取最后一版",
+     "subTitle": "变量聚合",
+     "icon": "https://lf3-static.bytednsdoc.com/obj/eden-cn/dvsmryvd_avi_dvsm/ljhwZthlaukjlkulzlp/icon/VariableMerge-icon.jpg",
+     "description": "改过就取改过的那版，没改就取第一版"
+    },
+    "inputs": {
+     "mergeGroups": [
+      {
+       "name": "Group1",
+       "variables": [
+        {
+         "type": "string",
+         "value": {
+          "type": "ref",
+          "content": {
+           "source": "block-output",
+           "blockID": "180001",
+           "name": "markdown"
+          },
+          "rawMeta": {
+           "type": 1
+          }
+         }
+        },
+        {
+         "type": "string",
+         "value": {
+          "type": "ref",
+          "content": {
+           "source": "block-output",
+           "blockID": "150001",
+           "name": "markdown"
+          },
+          "rawMeta": {
+           "type": 1
+          }
+         }
+        }
+       ]
+      }
+     ]
+    },
+    "outputs": [
+     {
+      "type": "string",
+      "name": "Group1"
+     }
+    ]
+   }
+  },
+  {
+   "id": "900001",
+   "type": "2",
+   "meta": {
+    "position": {
+     "x": 3200,
+     "y": 0
+    }
+   },
+   "data": {
+    "nodeMeta": {
+     "title": "结束",
+     "subTitle": "",
+     "icon": "https://lf3-static.bytednsdoc.com/obj/eden-cn/dvsmryvd_avi_dvsm/ljhwZthlaukjlkulzlp/icon/icon-End-v2.jpg",
+     "description": "输出周报"
+    },
+    "inputs": {
+     "terminatePlan": "returnVariables",
+     "inputParameters": [
+      {
+       "name": "report",
+       "input": {
+        "type": "string",
+        "value": {
+         "type": "ref",
+         "content": {
+          "source": "block-output",
+          "blockID": "190001",
+          "name": "Group1"
+         },
+         "rawMeta": {
+          "type": 1
+         }
+        }
+       }
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "edges": [
+  {
+   "sourceNodeID": "100001",
+   "targetNodeID": "130001",
+   "sourcePortID": ""
+  },
+  {
+   "sourceNodeID": "130001",
+   "targetNodeID": "140001",
+   "sourcePortID": ""
+  },
+  {
+   "sourceNodeID": "140001",
+   "targetNodeID": "150001",
+   "sourcePortID": ""
+  },
+  {
+   "sourceNodeID": "150001",
+   "targetNodeID": "160001",
+   "sourcePortID": ""
+  },
+  {
+   "sourceNodeID": "160001",
+   "targetNodeID": "190001",
+   "sourcePortID": "true"
+  },
+  {
+   "sourceNodeID": "160001",
+   "targetNodeID": "170001",
+   "sourcePortID": "false"
+  },
+  {
+   "sourceNodeID": "170001",
+   "targetNodeID": "180001",
+   "sourcePortID": ""
+  },
+  {
+   "sourceNodeID": "180001",
+   "targetNodeID": "190001",
+   "sourcePortID": ""
+  },
+  {
+   "sourceNodeID": "190001",
+   "targetNodeID": "900001",
+   "sourcePortID": ""
+  }
+ ],
+ "versions": {
+  "loop": "v2"
+ }
+}

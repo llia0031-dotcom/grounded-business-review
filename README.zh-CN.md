@@ -37,7 +37,7 @@ flowchart LR
 1. **指标字典**（[`metrics/metrics.yaml`](metrics/metrics.yaml)）：用户增长、交易效率、商家运营、收入健康度四组，22 个指标，每个写明口径、能按哪些维度拆、由哪些下一层指标驱动。[`sql/metrics/`](sql/metrics/) 里有从明细表直接算的 SQL，自检会核对两边一致。
 2. **每周监控**（[`sql/monitor/weekly_alerts.sql`](sql/monitor/weekly_alerts.sql)）：和前 8 个非节假日周比，用中位数和 MAD 算修正 Z 分数，再加最小变化幅度。总量和分组（城市、品类、渠道、商家类型）都查。
 3. **拆解**（[`bizagent/decompose.py`](bizagent/decompose.py)，纯 SQL 版在 [`sql/analysis/`](sql/analysis/)）：加法指标算贡献度；比率指标拆成“这一组自己的率变了”和“这一组的占比变了”，两部分相加正好等于总变化。
-4. **周报和数字核对**（[`bizagent/evidence.py`](bizagent/evidence.py)）：每次查询的结果存成一个文件。周报里带数字的段落必须引用数字所在的那一行，用 [evidence-check](https://github.com/Jason-d-e/evidence-check) 的脚本逐段核对：引用的行要一字不差地在文件里，段落里的每个数字要在引用的行里。有一段没过，整份不放行。
+4. **周报和数字核对**（[`bizagent/evidence.py`](bizagent/evidence.py)）：每次查询的结果存成一个文件。周报里带数字的段落必须引用数字所在的那一行，用 [evidence-check](https://github.com/llia0031-dotcom/evidence-check) 的脚本逐段核对：引用的行要一字不差地在文件里，段落里的每个数字要在引用的行里。有一段没过，整份不放行。
 
 公式和规则都来自公开的做法，出处写在 [`docs/METHOD.md`](docs/METHOD.md)。
 
@@ -62,6 +62,7 @@ flowchart LR
 | Excel 周报：选一周，总览、异动判定、贡献度、率效应和结构效应全部由公式重算 | [`reports/经营周报_2026-W37.xlsx`](reports/经营周报_2026-W37.xlsx) |
 | 图：周趋势、贡献度、率效应和结构效应 | [`reports/`](reports/) |
 | 平台版：同一条流程搭成 Dify 工作流 | [`dify/`](dify/) |
+| 同一条流程搭在开源版扣子（Coze Studio）里，在本机跑 | [`coze/`](coze/) |
 
 两份周报都找对了两个原因（直播渠道流量下降、美发美甲主动退款上升），也都没放行：第 1 次 15 段里 2 段没过（“两类”“本周一起”），第 2 次 12 段里 1 段没过（“上一日”）。这几处的中文数字被当成数字，引用的行里没有。没过的段落在报告里逐段标出。
 
@@ -73,6 +74,12 @@ Excel 里的公式用 Excel 实际重算过，和 SQL 算出的 108 个数逐个
 
 
 ![Dify 里的工作流](dify/screenshots/workflow.png)
+
+### 扣子开源版
+
+同样的节点、代码和提示词也搭成了开源版扣子 [Coze Studio](https://github.com/coze-dev/coze-studio) 的工作流，在本机跑，模型用 `claude-haiku-5-5`。怎么装、平台上要处理的三处差别和试跑记录见 [`coze/README.md`](coze/README.md)；工作流文件由 [`bizagent/coze_canvas.py`](bizagent/coze_canvas.py) 生成。
+
+![扣子开源版里的工作流，走了“改一次”那条路的一次运行](coze/screenshots/workflow_run.png)
 
 ## 自己跑一遍
 
@@ -116,9 +123,9 @@ python -m bizagent.cli check 报告.json --evidence 查询结果文件夹
 
 这是“让 AI 拿出证据”这组项目里的一个：每一句话能指到出处，每个做法上线前先拿出评测。
 
-- 核对用的是 [evidence-check](https://github.com/Jason-d-e/evidence-check)，同一个脚本，原样放在 `vendor/`。在别的项目里它核对的是政策条款和文档原文，这里核对的是查询结果里的数字。
-- 评测的做法和其他项目一样：答案在出题时定好，计划先写后跑，和更简单的做法比，费用照实记。总表和评测卡在 [evidence-first](https://github.com/Jason-d-e/evidence-first)。
-- [grounded-labelling-pipeline](https://github.com/Jason-d-e/grounded-labelling-pipeline) 里有每周的指标报告和灰度上线；[sellpoint-check](https://github.com/Jason-d-e/sellpoint-check) 里有另一组 SQL 分析和团购门店页的原型。
+- 核对用的是 [evidence-check](https://github.com/llia0031-dotcom/evidence-check)，同一个脚本，原样放在 `vendor/`。在别的项目里它核对的是政策条款和文档原文，这里核对的是查询结果里的数字。
+- 评测的做法和其他项目一样：答案在出题时定好，计划先写后跑，和更简单的做法比，费用照实记。总表和评测卡在 [evidence-first](https://github.com/llia0031-dotcom/evidence-first)。
+- [grounded-labelling-pipeline](https://github.com/llia0031-dotcom/grounded-labelling-pipeline) 里有每周的指标报告和灰度上线；[sellpoint-check](https://github.com/llia0031-dotcom/sellpoint-check) 里有另一组 SQL 分析和团购门店页的原型。
 
 ## 相关工作
 
